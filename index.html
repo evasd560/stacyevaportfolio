@@ -422,6 +422,9 @@
     #sq-wrapper {
       z-index: 2;
       margin-top: -45vh;
+      /* The wrapper's own box covers Selected Work's bottom while it overlaps;
+         it must let swipes and clicks through to the postcards until it lands */
+      pointer-events: var(--sq-pe, auto);
     }
     .sq-in-1 {
       opacity: var(--sq-so1, 1);
