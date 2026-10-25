@@ -1,0 +1,2009 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rebuilding Vêtir — Stacy Dias</title>
+  <meta name="description" content="Case study: taking Vêtir from a scattered MVP to an integrated shopping and styling ecosystem, powered by AI.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Display:ital,wght@0,400..600;1,400..600&family=Hanken+Grotesk:ital,wght@0,400..800;1,400..800&family=Geist+Mono:wght@400;500&family=Shadows+Into+Light&display=swap" rel="stylesheet">
+  <style>
+    /* ---------- Tokens ---------- */
+    :root {
+      --paper: #F5F2EC;
+      --paper-2: #ECE7DE;
+      --ink: #111111;
+      --ink-2: #4A4744;
+      --ink-3: #8C8883;
+      --rule: #D9D3C8;
+      --gold: #B08D57;
+      --gold-soft: #EFE4D0;
+      --blue: #007AFF;              /* iOS system blue: receipt stamp */
+      --white: #FFFFFF;
+      --cut: #CBC1B1;               /* cutout placeholder fill */
+      --cut-dark: #B2A694;
+      --kraft: #C39A6B;
+      --sans: "Hanken Grotesk", "Helvetica Neue", Helvetica, Arial, sans-serif;
+      --brand: "Helvetica Neue", Helvetica, Arial, sans-serif;   /* Vêtir's own product type: wordmark + DS specimen */
+      --serif: "Noto Serif Display", "Times New Roman", serif;
+      --mono: "Geist Mono", ui-monospace, monospace;
+      --hand: "Shadows Into Light", cursive;
+      --max: 1200px;
+      --gutter: clamp(16px, 4vw, 48px);
+      --r-card: 16px;              /* shared card radius: prints (02), feedback cards (03), serving card (04) */
+      --r-inner: 8px;              /* screens/placeholders inside a card */
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    /* The page's voice is Hanken Grotesk; Vêtir's own type (Helvetica Neue) stays on its wordmark and the DS type specimen */
+    .stage .word, #system .spread .page.left { font-family: var(--brand); }
+    @media (max-width: 640px) { .br-wide { display: none; } .hero .sub { max-width: 30ch; } }
+    /* Noto Serif Display's lowercase runs ~10% taller than Hanken's, so the italic half of a
+       heading is set slightly smaller to read as the same size as the bold half */
+    h2 em, h3 em, .kicker-line em { font-size: 0.92em; }
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--sans);
+      font-size: 17px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+    img { max-width: 100%; display: block; }
+    a { color: inherit; }
+    main, header, footer { position: relative; z-index: 1; }
+
+    .wrap { max-width: var(--max); margin: 0 auto; padding: 0 var(--gutter); position: relative; }
+
+    .mono {
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .serif-i { font-family: var(--serif); font-style: italic; font-weight: 400; }
+
+    /* Analog moments sit on real paper; digital sections stay flat cream */
+    .paper-bg {
+      background-color: #EEE9E3;
+      background-image: url("img/Vetir/paper-bg.jpg");
+      background-size: max(100%, 1024px) auto;
+      background-position: center top;
+      background-repeat: repeat-y;
+    }
+
+    /* ---------- Top bar + progress ---------- */
+    .topbar {
+      position: sticky; top: 0; z-index: 50;
+      background: color-mix(in srgb, var(--paper) 55%, transparent);
+      backdrop-filter: blur(16px) saturate(1.4);
+      -webkit-backdrop-filter: blur(16px) saturate(1.4);
+      border-bottom: 1px solid color-mix(in srgb, var(--rule) 60%, transparent);
+    }
+    .topbar .wrap { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; height: 56px; gap: 16px; }
+    .topbar a { text-decoration: none; }
+    .topbar .back:hover { color: var(--gold); }
+    .topbar .brand { font-weight: 700; letter-spacing: -0.02em; font-size: 18px; }
+    .topbar .brand span { font-weight: 400; color: var(--ink-3); }
+    .progress { position: absolute; left: 0; bottom: -1px; height: 2px; width: 100%; transform-origin: 0 50%; transform: scaleX(0); background: var(--ink); }
+
+    /* ---------- Placeholder helpers ---------- */
+    .tbd {
+      display: inline;
+      font-family: var(--mono);
+      font-size: 0.72em;
+      letter-spacing: 0.02em;
+      background: var(--gold-soft);
+      color: #7A5E2E;
+      border: 1px dashed var(--gold);
+      border-radius: 4px;
+      padding: 0.1em 0.45em;
+    }
+    .ph {
+      position: relative;
+      margin: 0;
+      background:
+        repeating-linear-gradient(135deg, transparent 0 14px, rgba(17,17,17,0.035) 14px 15px),
+        var(--paper-2);
+      border: 1px dashed #BDB5A8;
+      border-radius: 10px;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center;
+      padding: 16px;
+      color: var(--ink-3);
+      overflow: hidden;
+    }
+    .ph .ph-tag { font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-2); margin-bottom: 6px; }
+    .ph .ph-desc { font-size: 13px; line-height: 1.45; max-width: 34ch; }
+    .ph .ph-spec { font-family: var(--mono); font-size: 10px; margin-top: 10px; opacity: 0.8; }
+    .ph > svg { width: 24px; height: 24px; margin-bottom: 8px; opacity: 0.5; }
+    .ph.phone { aspect-ratio: 393 / 852; border-radius: 30px; border-width: 1.5px; }
+    .ph.desktop { aspect-ratio: 16 / 10; padding-top: 34px; }
+    .ph.desktop::before {
+      content: ""; position: absolute; top: 0; left: 0; right: 0; height: 24px;
+      border-bottom: 1px dashed #BDB5A8;
+      background:
+        radial-gradient(circle at 14px 12px, #CFC8BC 4px, transparent 4.5px),
+        radial-gradient(circle at 28px 12px, #CFC8BC 4px, transparent 4.5px),
+        radial-gradient(circle at 42px 12px, #CFC8BC 4px, transparent 4.5px);
+    }
+    .ph.wide { aspect-ratio: 16 / 7; }
+    .ph.after { border-color: var(--gold); }
+    .ph.video .ph-tag::before { content: "▶ "; }
+
+    /* Cutout silhouettes: stand-ins for transparent PNGs */
+    .cut { color: var(--cut); filter: drop-shadow(0 14px 14px rgba(40, 30, 10, 0.16)); }
+    .cut svg { width: 100%; height: auto; display: block; overflow: visible; }
+    .cut-tag {
+      position: absolute; font-family: var(--mono); font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--ink-3); background: rgba(255,255,255,0.8); padding: 2px 5px; border-radius: 3px; white-space: nowrap;
+    }
+
+    figcaption, .cap { font-size: 13px; color: var(--ink-3); margin-top: 10px; line-height: 1.5; }
+    figcaption b, .cap b { color: var(--ink); font-weight: 500; }
+
+    /* ---------- Hero ---------- */
+    .hero { padding: clamp(32px, 5vw, 64px) 0 clamp(40px, 6vw, 72px); overflow: hidden; }
+    .hero .kicker { color: var(--ink-3); display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; }
+    .hero .pre {
+      text-align: center; font-family: var(--serif); font-style: italic;
+      font-size: clamp(28px, 4vw, 52px); line-height: 1; margin: 18px 0 0; color: var(--ink-2);
+    }
+    .stage {
+      position: relative;
+      height: clamp(300px, 42vw, 600px);
+    }
+    .stage .word {
+      position: absolute; left: 50%; top: 50%; transform: translate(-50%, -54%);
+      margin: 0; z-index: 2;
+      font-weight: 700; letter-spacing: -0.065em; line-height: 0.8;
+      font-size: clamp(120px, 25vw, 360px);
+      white-space: nowrap;
+    }
+    /* Avatar PNGs carry ~4.5% transparent padding below the feet; offset so feet meet the ground */
+    .stage .model {
+      position: absolute; bottom: -4.5%; height: 100%; width: auto;
+      transform: translateX(-50%);
+      filter: drop-shadow(0 18px 18px rgba(40, 30, 10, 0.16));
+    }
+    .stage .model.front { z-index: 3; }
+    .stage .model.back { z-index: 1; }
+    .stage .m1 { left: 12.5%; }
+    .stage .m2 { left: 35.5%; }
+    .stage .m3 { left: 62%; }
+    .stage .m4 { left: 86%; }
+    .hero .sub {
+      text-align: center; font-size: clamp(20px, 2.4vw, 28px); line-height: 1.3; letter-spacing: -0.015em;
+      max-width: none; margin: 36px auto 0;
+    }
+    .meta {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px;
+      margin-top: clamp(40px, 6vw, 64px); padding-top: 20px; border-top: 1px solid var(--ink);
+    }
+    .meta dt { color: var(--ink-3); margin-bottom: 4px; }
+    .meta dd { margin: 0; font-size: 15px; line-height: 1.45; }
+
+    /* ---------- Floating section guide ---------- */
+    .guide {
+      position: fixed; left: clamp(14px, 1.6vw, 26px); top: 50%; z-index: 40;
+      transform: translate(-6px, -50%); opacity: 0; pointer-events: none;
+      display: flex; flex-direction: column; gap: 14px; padding: 12px 18px 12px 0;
+      --g: rgba(17, 17, 17, 0.28); --g-on: var(--ink); --g-text: var(--ink-2);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+    .guide.show { opacity: 1; transform: translate(0, -50%); pointer-events: auto; }
+    .guide.dark { --g: rgba(245, 242, 236, 0.3); --g-on: #F5F2EC; --g-text: rgba(245, 242, 236, 0.8); }
+    .g-act { display: flex; flex-direction: column; gap: 7px; }
+    .g-act-name, .guide a span {
+      font-family: var(--mono); font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; white-space: nowrap;
+      color: var(--g-text); opacity: 0; transform: translateX(-4px); transition: opacity 0.25s ease, transform 0.25s ease;
+    }
+    .g-act-name { color: var(--g); margin-bottom: 1px; }
+    .guide a { display: flex; align-items: center; gap: 10px; height: 10px; text-decoration: none; }
+    .guide a i { display: block; width: 12px; height: 1px; background: var(--g); transition: width 0.3s ease, background 0.3s ease; }
+    .guide a.on i { width: 22px; background: var(--g-on); }
+    .guide a.on span { color: var(--g-on); }
+    /* labels only appear while the guide is hovered or focused */
+    .guide:hover .g-act-name, .guide:hover a span, .guide:focus-within .g-act-name, .guide:focus-within a span { opacity: 1; transform: none; }
+    .guide a:focus-visible { outline: 1px solid var(--gold); outline-offset: 3px; }
+    @media (max-width: 1180px) { .guide { display: none; } }
+
+    /* ---------- Sections ---------- */
+    section.cs { padding: clamp(64px, 10vw, 128px) 0; border-top: 1px solid var(--rule); scroll-margin-top: 56px; }
+    .cs-head { display: grid; grid-template-columns: 220px 1fr; gap: 24px; margin-bottom: clamp(32px, 5vw, 56px); position: relative; }
+    .cs-num { color: var(--ink-3); padding-top: 12px; }
+    .cs-num b { color: var(--gold); font-weight: 500; }
+    .cs-head h2 { margin: 0; font-size: clamp(34px, 5.2vw, 64px); line-height: 1; letter-spacing: -0.04em; font-weight: 700; max-width: 18ch; }
+    .cs-head h2 em { font-family: var(--serif); font-style: italic; font-weight: 400; letter-spacing: -0.01em; }
+    .cs-body { display: grid; grid-template-columns: 220px 1fr; gap: 24px; }
+    .cs-body > .col { grid-column: 2; min-width: 0; }
+    .cs-head h2.h2-two { max-width: none; }
+    .prose { max-width: 62ch; }
+    .prose.wide-prose { max-width: 84ch; }
+    .prose p { margin: 0 0 1.1em; }
+    .prose strong { font-weight: 600; }
+    .lede { font-size: clamp(20px, 2.2vw, 24px); line-height: 1.4; letter-spacing: -0.01em; }
+    .pin-stamp {
+      position: absolute; right: 0; top: -20px; width: clamp(70px, 8vw, 104px);
+      transform: rotate(7deg); filter: drop-shadow(0 8px 14px rgba(40, 20, 60, 0.18));
+      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .pin-stamp:hover { transform: rotate(0deg) scale(1.06); }
+    .pin-stamp.left-tilt { transform: rotate(-6deg); }
+
+    /* ---------- Stat strip ---------- */
+    .stats { display: grid; grid-template-columns: repeat(5, 1fr); border-top: 1px solid var(--ink); border-bottom: 1px solid var(--rule); margin-top: 48px; }
+    .stat { padding: 22px 18px 22px 0; border-right: 1px solid var(--rule); }
+    .stat + .stat { padding-left: 18px; }
+    .stat:last-child { border-right: 0; }
+    .stat .n { font-size: clamp(36px, 4.4vw, 56px); font-weight: 700; letter-spacing: -0.045em; line-height: 1; }
+    .stat .n small { font-size: 0.45em; letter-spacing: -0.02em; }
+    .stat .l { font-size: 13px; color: var(--ink-2); margin-top: 10px; line-height: 1.4; }
+    .stat.pending .n { color: var(--ink-3); }
+
+
+    /* Overview "At a glance": 3 × 2 grid */
+    .glance-label { color: var(--ink-3); margin-top: 48px; }
+    .stats.glance { grid-template-columns: repeat(3, 1fr); margin-top: 12px; border-bottom: 0; }
+    .stats.glance .stat { padding: 22px 18px 22px 0; border-right: 1px solid var(--rule); border-bottom: 1px solid var(--rule); }
+    .stats.glance .stat:nth-child(3n+2), .stats.glance .stat:nth-child(3n) { padding-left: 18px; }
+    .stats.glance .stat:nth-child(3n) { border-right: 0; }
+    .stats.glance .stat:nth-child(3n+1) { padding-left: 0; }
+    .kicker-line { font-size: clamp(20px, 2.2vw, 26px); line-height: 1.3; letter-spacing: -0.015em; margin-top: 1.6em !important; color: var(--ink); }
+    .kicker-line em { font-family: var(--serif); font-style: italic; }
+
+    /* ---------- Before: scattered prints ---------- */
+    .prints { position: relative; height: clamp(420px, 46vw, 580px); margin: 24px 0 0; }
+    .print {
+      position: absolute; background: #fff; padding: 10px 10px 28px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.06), 0 24px 40px -20px rgba(40, 30, 10, 0.35);
+      border-radius: var(--r-card);
+    }
+    .print .ph { border-radius: var(--r-inner); }
+    .print .ph.phone { border-radius: 18px; }
+    .print .label { position: absolute; left: 12px; bottom: 7px; font-family: var(--mono); font-size: 9px; letter-spacing: 0.1em; color: var(--ink-3); text-transform: uppercase; }
+    /* Web homepage in the centre, two phones fanned out on each side */
+    .p1 { width: 40%; left: 30%; top: 14%; transform: rotate(-3deg); z-index: 4; }
+    .p2 { width: 15%; left: 2%; top: 2%; transform: rotate(-6deg); z-index: 2; }
+    .p4 { width: 15%; left: 16%; top: 30%; transform: rotate(5deg); z-index: 3; }
+    .p3 { width: 15%; left: 69%; top: 4%; transform: rotate(5deg); z-index: 3; }
+    .p5 { width: 15%; left: 83%; top: 26%; transform: rotate(-4deg); z-index: 2; }
+    /* Still screenshots: fill the phone frame from the top */
+    .shot.static img { height: 100%; object-fit: cover; object-position: top; }
+    .ring { position: absolute; z-index: 6; width: 26px; height: 12px; border: 2.5px solid #8E8E8E; border-radius: 50%; box-shadow: 0 1px 2px rgba(0,0,0,0.2); }
+    /* Handwritten collage notes: charcoal ink + drawn arrows (same style as the hover notes) */
+    .note {
+      position: absolute; z-index: 7; display: flex; align-items: center; gap: 2px; white-space: nowrap; pointer-events: none;
+      font-family: var(--hand); font-size: clamp(18px, 1.8vw, 24px); line-height: 1.1; letter-spacing: 0.02em; color: #2E2C2A;
+    }
+    .note .arr { width: clamp(40px, 4vw, 56px); height: auto; flex: none; fill: none; stroke: #2E2C2A; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+    .note.to-up { flex-direction: column-reverse; align-items: flex-start; transform: rotate(-3deg); }
+    .note.to-up .arr { transform: rotate(180deg) scaleX(-1); }
+    .note.to-left { transform: rotate(2deg); }
+    .note.to-left .arr { transform: rotate(-15deg); }
+    /* Sits under a print: arrow on top, tip pointing up at the print */
+    .note.point-up { flex-direction: column; align-items: flex-start; transform: rotate(-3deg); }
+    .note.point-up .arr { transform: rotate(70deg); margin: 0 0 2px 6px; }
+    .note.to-down { flex-direction: column; align-items: flex-end; transform: rotate(3deg); }
+    .note.to-down .arr { transform: scaleX(-1); margin-right: 18px; }
+    .layers { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 56px; }
+    .layer { border-top: 1px solid var(--ink); padding-top: 16px; }
+    .layer h3 { margin: 0 0 8px; font-size: 13px; }
+    .layer p { margin: 0; font-size: 15px; color: var(--ink-2); line-height: 1.55; }
+    .layer p + p { margin-top: 0.8em; }
+    .end-note { max-width: 40ch; margin: clamp(48px, 7vw, 80px) 0 0 !important; }
+
+    /* ---------- Insights: blurred photo, centred insight carousel, real messages scattered around it ---------- */
+    section.cs.learn { position: relative; overflow: hidden; border-top: 0; padding: 0; background: #14110F; color: #F5F2EC; }
+    .learn-bg { position: absolute; inset: -24px; background: url("img/Vetir/learn-bg.png") center / cover no-repeat; filter: blur(5px) saturate(0.9); }
+    .learn-bg::after { content: ""; position: absolute; inset: 0; background: radial-gradient(ellipse 46% 60% at 50% 50%, rgba(12, 10, 8, 0.72), rgba(12, 10, 8, 0.38) 70%, rgba(12, 10, 8, 0.55)); }
+    .learn-stage { position: relative; z-index: 1; max-width: 1400px; margin: 0 auto; min-height: clamp(760px, 96vh, 940px); display: grid; place-items: center; padding: 72px var(--gutter); --bw: clamp(170px, 14.5vw, 220px); }
+    .learn-center { position: relative; z-index: 2; width: min(900px, 100%); text-align: center; }
+    .learn-center .cs-num { padding: 0; margin-bottom: 18px; color: rgba(245, 242, 236, 0.6); }
+    .learn-head { position: relative; display: inline-block; }
+    .learn-center h2 { margin: 0; font-size: clamp(42px, 5.4vw, 80px); line-height: 0.92; letter-spacing: -0.05em; font-weight: 700; }
+    .learn-center h2 em { display: block; font-family: var(--serif); font-style: italic; font-weight: 400; letter-spacing: -0.015em; font-size: 0.92em; }
+    /* two source chips, tilted, overlapping the headline */
+    .src-chip { position: absolute; z-index: 4; display: inline-flex; align-items: center; gap: 8px; padding: 7px 12px 7px 7px; border-radius: 10px;
+      background: rgba(245, 242, 236, 0.92); color: var(--ink); font-size: 13px; font-weight: 500; letter-spacing: -0.01em; white-space: nowrap;
+      box-shadow: 0 12px 26px -12px rgba(0, 0, 0, 0.6); transform: rotate(var(--r)); }
+    .src-chip i { width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; font-style: normal; font-size: 11px; color: #fff; background: var(--c); }
+    .c-analytics { left: 3%; top: 44%; --r: -7deg; --c: var(--gold); }
+    .c-audit { right: -3%; bottom: 2%; --r: 5deg; --c: var(--blue); }
+    .learn-desc { position: absolute; left: var(--gutter); bottom: 7%; z-index: 2; margin: 0; max-width: 34ch; font-size: 15px; line-height: 1.5; color: rgba(245, 242, 236, 0.8); text-align: left; }
+    .learn-desc::before { content: "— "; color: #F5F2EC; }
+    /* fixed height (set from the longest insight) so the arrows never move */
+    /* frosted insight card under the headline; height locked to the longest insight */
+    .ins-card { position: relative; width: min(600px, 100%); margin: 40px auto 0; padding: 28px 40px 30px; box-sizing: content-box; border-radius: 16px;
+      background: rgba(245, 242, 236, 0.12); border: 1px solid rgba(245, 242, 236, 0.26);
+      backdrop-filter: blur(20px) saturate(1.3); -webkit-backdrop-filter: blur(20px) saturate(1.3); box-shadow: 0 24px 44px -26px rgba(0, 0, 0, 0.7); }
+    .ins-card > * { transition: opacity 0.25s ease; }
+    .ins-card.swap > * { opacity: 0; }
+    .ins-k { color: var(--gold); }
+    .ins-card h3 { margin: 14px 0 12px; font-size: clamp(24px, 2.5vw, 34px); line-height: 1.15; letter-spacing: -0.025em; }
+    .ins-card p { margin: 0 auto; max-width: 46ch; font-size: 17px; line-height: 1.55; color: rgba(245, 242, 236, 0.72); }
+    .ins-nav { display: flex; flex-direction: column; align-items: center; gap: 14px; margin-top: 30px; color: rgba(245, 242, 236, 0.8); font-size: 15px; letter-spacing: 0.02em; }
+    .ins-steps { display: flex; gap: 8px; }
+    .ins-step { width: 56px; height: 14px; padding: 0; border: 0; background: none; cursor: pointer; position: relative; }
+    .ins-step::after { content: ""; position: absolute; left: 0; right: 0; top: 6px; height: 2px; border-radius: 2px; background: rgba(245, 242, 236, 0.3); transition: background 0.25s; }
+    .ins-step:hover::after { background: rgba(245, 242, 236, 0.6); }
+    .ins-step.on::after { background: #F5F2EC; }
+    .ins-step:focus-visible { outline: 1px solid var(--gold); outline-offset: 2px; }
+    /* bottom right: where the signal came from */
+    .signals { position: absolute; left: var(--gutter); bottom: 6%; z-index: 2; padding-left: 24px; border-left: 1px solid rgba(245, 242, 236, 0.3); text-align: left; }
+    .signals span { display: block; font-size: 14px; color: rgba(245, 242, 236, 0.55); margin-bottom: 6px; }
+    .signals p { margin: 0; font-size: 15px; color: #F5F2EC; }
+    .signals i { font-style: normal; margin: 0 6px; color: rgba(245, 242, 236, 0.5); }
+    /* scattered messages: the current insight's pair is lit, the rest recede */
+    .lq { position: absolute; z-index: 1; width: calc(var(--bw) * var(--k, 1)); padding: 0; border: 0; background: none; cursor: pointer; display: flex; flex-direction: column; align-items: flex-start; opacity: 0.22; filter: saturate(0.5); transform: rotate(var(--r, -1deg)) scale(0.96); transition: opacity 0.4s ease, transform 0.4s ease, filter 0.4s ease; }
+    .lq.r { align-items: flex-end; --r: 1deg; }
+    .lq img { width: 100%; height: auto; filter: drop-shadow(0 8px 14px rgba(0, 0, 0, 0.35)); }
+    .lq span { font-size: 10px; color: rgba(245, 242, 236, 0.75); margin: 4px 14px 0; opacity: 0; transition: opacity 0.3s ease; }
+    .lq:hover { opacity: 0.55; }
+    .lq.on { opacity: 1; filter: none; transform: rotate(0deg) scale(1); z-index: 3; }
+    .lq.on span { opacity: 1; }
+    .lq:focus-visible { outline: 2px solid var(--gold); outline-offset: 4px; border-radius: 12px; }
+
+    /* ---------- Principles + butler ---------- */
+    .principles { background: var(--ink); color: var(--paper); border-top: 0; }
+    .principles .cs-num { color: #8C8883; }
+    .serve-grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(32px, 6vw, 80px); align-items: center; }
+    .serve-card {
+      position: relative; border-radius: var(--r-card); overflow: hidden; aspect-ratio: 3 / 4;
+      background: #E4E0DA;
+    }
+    .serve-card .title { position: absolute; top: 6%; left: 0; right: 0; text-align: center; color: var(--ink); line-height: 0.9; z-index: 3; }
+    .serve-card .title span { display: block; font-family: var(--sans); font-weight: 700; letter-spacing: -0.045em; line-height: 0.95; font-size: clamp(40px, 4.8vw, 66px); }
+    .serve-card .title small { display: block; margin-top: 12px; font-size: 11px; letter-spacing: 0.3em; color: var(--ink); }
+    /* Tray surface lands at ~62% of the card; the model's feet sit on it */
+    .serve-card .hand { position: absolute; left: 14%; top: 35%; width: 72%; height: auto; z-index: 1; filter: drop-shadow(0 24px 30px rgba(40, 30, 10, 0.25)); }
+    .serve-card .look { position: absolute; left: 49.6%; top: 25.2%; height: 38.8%; width: auto; transform: translateX(-50%); z-index: 2; }
+    /* Looks swap on the tray like a GIF: hard cuts, one at a time. JS finds
+       every servinglooksN image and steps through them in number order. They all
+       share the .look box, so the images should be framed alike in their files. */
+    .serve-card .look { opacity: 0; }
+    .serve-card .look.is-shown { opacity: 1; }
+    .principle .mono { color: var(--gold); }
+    .principle h3 { font-size: clamp(32px, 4.2vw, 54px); line-height: 1.02; letter-spacing: -0.04em; margin: 14px 0 16px; }
+    .principle h3 em { font-family: var(--serif); font-style: italic; font-weight: 400; color: var(--gold); letter-spacing: -0.01em; }
+    .principle p { color: #C9C4BB; margin: 0; max-width: 44ch; }
+    .principle + .principle { margin-top: 44px; padding-top: 44px; border-top: 1px solid #2E2C2A; }
+
+    /* ---------- Case steps ---------- */
+    .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 40px; }
+    .step { border-top: 1px solid var(--ink); padding-top: 16px; }
+    .step .mono { color: var(--ink-3); }
+    .step h3 { margin: 8px 0; font-size: 20px; letter-spacing: -0.02em; line-height: 1.25; }
+    .step p { margin: 0; font-size: 15px; color: var(--ink-2); }
+
+    /* ---------- Roadmap receipt ---------- */
+    .receipt-row { display: grid; grid-template-columns: minmax(0, 470px) 1fr; grid-template-rows: auto 1fr; grid-template-areas: "mock head" "mock body"; column-gap: clamp(32px, 6vw, 88px); align-items: start; }
+    /* Headline sits in the text column, beside the receipt */
+    .receipt-h { grid-area: head; margin-bottom: clamp(24px, 3vw, 36px); }
+    .receipt-h .cs-num { padding-top: 0; margin-bottom: 14px; }
+    .receipt-h2 { margin: 0; font-size: clamp(34px, 5.2vw, 64px); line-height: 1; letter-spacing: -0.04em; font-weight: 700; }
+    .receipt-h2 em { font-family: var(--serif); font-style: italic; font-weight: 400; letter-spacing: -0.01em; }
+    .receipt-col { grid-area: mock; }
+    .receipt-body { grid-area: body; }
+    /* Text sits on the blank paper of the receipt mock; sizes scale with the mock's width */
+    .receipt-mock { position: relative; container-type: inline-size; filter: drop-shadow(0 24px 30px rgba(40, 30, 10, 0.22)); }
+    .receipt-mock img:not(.receipt-look) { display: block; width: 100%; height: auto; }
+    /* Prints as you scroll: the paper grows down out of the slot, top line first; the printer body stays on top.
+       The printer is the top ~9.6% of the artwork, laid over the paper. */
+    .r-feed { position: relative; clip-path: inset(5.6% -40px -60px -40px); }
+    .r-paper { position: relative; clip-path: inset(0 -40px calc((1 - var(--print, 1)) * 100%) -40px); }
+    .r-printer { position: absolute; left: 0; top: 0; z-index: 3; clip-path: inset(0 0 90.4% 0); pointer-events: none; }
+    .receipt-text {
+      position: absolute; left: 19.5%; right: 19.5%; top: 11%;
+      font-family: var(--mono); font-size: 2.4cqw; line-height: 1.35; letter-spacing: 0.04em; text-transform: uppercase; color: #222;
+    }
+    /* Receipt heading: first item in the receipt text, so the outfit follows it directly */
+    .receipt-head { text-align: center; color: #1A1A1A; }
+    .receipt-head h3 { margin: 0; font-family: var(--serif); font-weight: 500; line-height: 0.95; letter-spacing: -0.01em; }
+    .receipt-head h3 span { display: block; font-size: 10cqw; text-transform: uppercase; letter-spacing: 0.01em; }
+    .receipt-head h3 small { display: block; margin-top: 1.6cqw; font-family: var(--mono); font-size: 3cqw; font-weight: 400; letter-spacing: 0.35em; text-transform: uppercase; }
+    .receipt-text .receipt-head .dash { margin: 4.5cqw 0 0; }
+    .dash { border-top: 1.5px dashed #9C9890; margin: 0.8em 0; }
+    .receipt-text .receipt-look { display: block; width: 58%; height: auto; margin: 2.6em auto 2.8em; }
+    .receipt-text .line { padding: 0.42em 0; }
+    .receipt-text .dash { margin: 1.2em 0; }
+    .line { display: flex; gap: 0.6em; align-items: baseline; padding: 0.22em 0; }
+    .line .dots { flex: 1; border-bottom: 1.5px dotted #B4B0A8; transform: translateY(-0.25em); }
+    .line.ai .name::after { content: " ✦"; color: var(--gold); }
+    .line.total { font-weight: 500; }
+    .barcode {
+      height: 3.2em; margin-top: 1em;
+      background: repeating-linear-gradient(90deg, #111 0 2px, transparent 2px 4px, #111 4px 5px, transparent 5px 8px, #111 8px 11px, transparent 11px 12px, #111 12px 13px, transparent 13px 17px);
+    }
+    .barcode-n { text-align: center; letter-spacing: 0.4em; margin-top: 0.4em; }
+    .thanks { text-align: center; margin-top: 0.7em; color: #777; font-size: 0.85em; }
+    .stamp-r {
+      position: absolute; left: 61%; top: 43%; transform: rotate(-12deg);
+      border: 2.5px solid var(--blue); color: var(--blue); border-radius: 6px; padding: 0.4em 0.9em;
+      font-family: var(--mono); font-size: 3cqw; letter-spacing: 0.18em; font-weight: 500; opacity: 0.85;
+      mix-blend-mode: multiply;
+    }
+    .callout { margin-top: 32px; border-left: 2px solid var(--gold); padding: 4px 0 4px 20px; max-width: 62ch; }
+    .callout .mono { color: var(--gold); display: block; margin-bottom: 6px; }
+    .callout p { margin: 0; }
+
+    /* ---------- System: magazine spread ---------- */
+    .spread {
+      display: grid; grid-template-columns: 1fr 1fr; margin-top: 8px;
+      box-shadow: 0 40px 70px -40px rgba(40, 30, 10, 0.5);
+      border-radius: 3px; overflow: hidden;
+    }
+    .page { background: #FDFCFA; padding: clamp(22px, 3.4vw, 44px); position: relative; min-height: 560px; }
+    .page.left { background: linear-gradient(90deg, #FDFCFA 86%, #EDEAE4); }
+    .page.right { background: linear-gradient(90deg, #E9E6E0, #FDFCFA 12%); }
+    .page .running { display: flex; justify-content: space-between; color: var(--ink-3); font-size: 10px; margin-bottom: 28px; }
+    .page .folio { position: absolute; bottom: 18px; font-family: var(--mono); font-size: 10px; color: var(--ink-3); }
+    .page.left .folio { left: clamp(22px, 3.4vw, 44px); }
+    .page.right .folio { right: clamp(22px, 3.4vw, 44px); }
+    /* One quiet label per block instead of running heads, pills and headlines */
+    .ds-label { font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 18px; }
+    .page h3 { font-size: clamp(30px, 3.6vw, 46px); line-height: 0.95; letter-spacing: -0.04em; text-transform: uppercase; margin: 0 0 18px; }
+    .aa { font-size: clamp(80px, 10vw, 132px); font-weight: 700; letter-spacing: -0.06em; line-height: 0.9; }
+    .fam { font-size: 14px; color: var(--ink-2); margin: 10px 0 18px; max-width: 42ch; }
+    .scale-row { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; border-top: 1px solid #EEE9E0; padding: 9px 0; }
+    .scale-row .mono { color: var(--ink-3); font-size: 10px; flex: none; }
+    .scale-row span:first-child { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .swatches { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .sw-chip { height: 86px; border-radius: 6px; padding: 8px; display: flex; align-items: flex-end; font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; }
+    .sw-gold { grid-column: span 2; height: 64px; background: linear-gradient(90deg, #B08D57, #D8BE8C); color: #fff; }
+    .status-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 8px; }
+    .status-row div { border-radius: 6px; padding: 8px; font-size: 11px; }
+    .mini-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 22px; border-top: 1px solid var(--ink); padding-top: 14px; }
+    .mini-stats b { display: block; font-size: 30px; letter-spacing: -0.05em; line-height: 1; }
+    .mini-stats span { font-size: 12px; color: var(--ink-2); line-height: 1.35; display: block; margin-top: 6px; }
+    .label-row { display: flex; justify-content: space-between; margin-bottom: 8px; color: var(--ink-3); }
+    /* Signature components: a floating composition (two hero cards, widgets toward the corners, pills around them), straight pieces,
+       faint headline behind. Sizes keep each 1x export at ~1.5x density or better so nothing looks soft. */
+    .ds-collage { position: relative; aspect-ratio: 1100 / 820; overflow: hidden; border-radius: var(--r-card);
+      background: radial-gradient(ellipse 60% 55% at 50% 48%, #FFFEFB, #F4EFE7 70%, #EDE6DA); }
+    .ds-ghost { position: absolute; inset: 0; margin: 0; display: grid; place-content: center; text-align: center; pointer-events: none;
+      font-size: clamp(40px, 8.4vw, 104px); font-weight: 700; letter-spacing: -0.05em; line-height: 0.95; color: rgba(60, 45, 25, 0.06); }
+    .ds-piece { position: absolute; left: var(--x); top: var(--y); width: var(--w); z-index: var(--z); margin: 0; transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1); outline: none; }
+    .ds-piece img { display: block; width: 100%; height: auto; background: #fff; border-radius: 6px; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), 0 22px 38px -24px rgba(40, 30, 10, 0.45); }
+    .ds-piece.pill img { border-radius: 999px; }
+    .ds-piece:hover, .ds-piece:focus { z-index: 10; transform: translateY(-3px) scale(1.03); }
+    .ds-piece figcaption { position: absolute; left: 50%; top: calc(100% + 8px); transform: translate(-50%, -4px); white-space: nowrap; pointer-events: none;
+      background: rgba(17, 17, 17, 0.86); color: #fff; border-radius: 999px; padding: 5px 10px; font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0; transition: opacity 0.2s, transform 0.2s; }
+    .ds-piece:hover figcaption, .ds-piece:focus figcaption { opacity: 1; transform: translate(-50%, 0); }
+    .gold-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--gold); margin-right: 6px; vertical-align: middle; }
+
+    /* ---------- Chapters: folder tabs ---------- */
+    .folders { display: flex; align-items: flex-end; height: 130px; margin: 8px 0 clamp(48px, 7vw, 80px); padding-left: 4px; }
+    .folder {
+      position: relative; flex: 1; height: 100%; margin-left: -2.2%;
+      text-decoration: none; color: var(--ink);
+      transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .folder:first-child { margin-left: 0; }
+    .folder:hover { transform: translateY(-14px); }
+    .folder .body {
+      position: absolute; inset: 26px 0 0 0; border-radius: 0 10px 0 0;
+      background: var(--f, #EDE8DF);
+      box-shadow: -6px 0 14px -8px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.6);
+      background-image: repeating-linear-gradient(0deg, rgba(0,0,0,0.025) 0 1px, transparent 1px 4px);
+    }
+    .folder .tab {
+      position: absolute; top: 0; left: 10%; height: 30px; padding: 0 12px; border-radius: 8px 8px 0 0; white-space: nowrap;
+      background: var(--f, #EDE8DF); display: flex; align-items: center; gap: 6px;
+      font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase;
+    }
+    .folder .tab .t-short { display: none; }
+    .folder .tab .t-num { opacity: 0.55; }
+    .folder.dark { --f: #1A1A1A; color: var(--paper); }
+    .folder.ai .tab::before { content: "✦"; color: var(--gold); }
+    .chapter {
+      display: grid; grid-template-columns: 1fr 1.2fr; gap: clamp(28px, 5vw, 72px); align-items: center;
+      padding: clamp(40px, 6vw, 72px) 0; border-top: 1px solid var(--rule); scroll-margin-top: 70px;
+    }
+    .chapter.flip .ch-text { order: 2; }
+    .ch-text .mono { color: var(--ink-3); }
+    .ch-text h3 { font-size: clamp(28px, 3.4vw, 44px); letter-spacing: -0.035em; line-height: 1.02; margin: 12px 0 16px; }
+    .ch-text h3 em { font-family: var(--serif); font-style: italic; font-weight: 400; letter-spacing: -0.01em; }
+    .ch-text p { margin: 0 0 14px; color: var(--ink-2); max-width: 46ch; }
+    .ch-text .ba { display: grid; grid-template-columns: auto 1fr; gap: 6px 14px; font-size: 15px; margin: 18px 0; }
+    .ch-text .ba .mono { padding-top: 3px; font-size: 10px; }
+    .ch-text .ba .after { color: var(--ink); }
+    .deep { display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--ink); border-radius: 999px; padding: 8px 16px; font-size: 13px; text-decoration: none; margin-top: 8px; }
+    .deep .soon { color: var(--ink-3); }
+    .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .pair.phones { max-width: 460px; margin-left: auto; margin-right: auto; }
+
+    /* Outfit of the day: flat lay on stacked newsprint */
+    .ootd { position: relative; padding: 0 0 14px 14px; }
+    .ootd::before, .ootd::after { content: ""; position: absolute; background: #EFEDE8; box-shadow: 0 2px 6px rgba(0,0,0,0.08); }
+    .ootd::before { inset: 10px 6px 4px 6px; transform: rotate(-1.6deg); }
+    .ootd::after { inset: 6px 10px 8px 2px; transform: rotate(1.1deg); background: #F3F1EC; }
+    .sheet {
+      position: relative; z-index: 1; aspect-ratio: 5 / 6;
+      background-color: #F6F5F1; background-image: url("img/Vetir/paper-bg.jpg"); background-size: cover;
+      box-shadow: 0 30px 50px -30px rgba(40,30,10,0.45);
+    }
+    .sheet .masthead { position: absolute; top: 0; left: 7%; right: 12%; background: #ECEAE5; padding: 14px 18px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 1px 2px rgba(0,0,0,0.08); }
+    .sheet .masthead b { font-family: var(--serif); font-weight: 400; font-size: 22px; }
+    .sheet .meta-s { position: absolute; top: 15%; left: 9%; font-size: 12px; text-transform: uppercase; letter-spacing: 0.02em; line-height: 1.35; }
+    .sheet .foot-s { position: absolute; bottom: 4%; left: 9%; font-size: 12px; text-transform: uppercase; letter-spacing: 0.02em; }
+    .sheet .ootd-look { position: absolute; left: 50%; top: 50%; height: 86%; width: auto; transform: translate(-50%, -50%); opacity: 0; }
+    /* Chapter 01 mocks flip like a GIF (hard cuts), same as the Serving Looks card */
+    .sheet .ootd-look.is-shown { opacity: 1; }
+    .sheet .ai-chip { position: absolute; right: 6%; bottom: 4%; background: #111; color: #fff; border-radius: 999px; padding: 6px 12px; font-size: 11px; display: flex; gap: 6px; align-items: center; }
+    .sheet .ai-chip::before { content: "✦"; color: var(--gold); }
+
+    /* Search masonry */
+    .masonry { position: relative; height: 460px; overflow: hidden; border-radius: 14px; background: #F4F2EE; padding: 10px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .masonry .colm { display: grid; gap: 10px; align-content: start; }
+    .masonry .colm:nth-child(3) { transform: translateY(-50px); }
+    .masonry .colm:nth-child(4) { transform: translateY(-20px); }
+    .tile { background: #E3DFD8; border-radius: 12px; display: flex; align-items: flex-end; justify-content: center; overflow: hidden; }
+    .tile .cut { width: 46%; filter: none; color: #CBC2B4; }
+    .tile img { width: 92%; height: 94%; object-fit: contain; object-position: center bottom; margin-bottom: 3%; }
+    .searchbar {
+      position: absolute; left: 8%; right: 8%; top: 38%; z-index: 3; background: #fff; border: 1px solid #DDD8D0; border-radius: 999px;
+      padding: 12px 18px; display: flex; gap: 10px; align-items: center;
+      font-size: 15px; color: var(--ink); box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 12px 28px -14px rgba(0,0,0,0.22);
+    }
+    .searchbar svg { width: 18px; height: 18px; flex: none; fill: none; stroke: var(--ink-3); stroke-width: 2; stroke-linecap: round; }
+    .searchbar .caret { display: inline-block; width: 2px; height: 14px; background: #111; margin-left: 2px; vertical-align: -2px; }
+    .masonry .after-phone { position: absolute; right: 4%; bottom: -16%; width: 34%; z-index: 4; box-shadow: 0 20px 40px -20px rgba(0,0,0,0.45); background: #F6F1E7; }
+    .masonry-tag { position: absolute; left: 12px; top: 12px; z-index: 4; background: #111; color: #fff; padding: 4px 8px; border-radius: 4px; font-size: 10px; }
+
+    /* Shopping bag */
+    .bag-scene { --prod-bg: #F7F5F1; position: relative; height: 470px; background: linear-gradient(#EFECE6, #E6E2DB); border-radius: 14px; overflow: hidden; }
+    .carousel { position: absolute; top: 18px; left: -6%; right: -6%; display: flex; gap: 14px; justify-content: center; }
+    /* product cards: one panel per product, name and price set on it; a gentle up-and-down stagger */
+    .carousel { align-items: flex-start; }
+    .carousel .card { position: relative; width: 26%; aspect-ratio: 3 / 4; background: var(--prod-bg); border-radius: 12px; display: flex; align-items: flex-end; justify-content: center; overflow: hidden; }
+    .carousel .card:nth-child(2) { margin-top: 16px; }
+    .carousel .card:nth-child(3) { margin-top: 4px; }
+    .carousel .card:nth-child(4) { margin-top: 20px; }
+    .carousel .card .pic { position: absolute; inset: 0; display: flex; align-items: flex-end; justify-content: center; }
+    .carousel .card img { width: 84%; height: 74%; object-fit: contain; object-position: center bottom; margin-bottom: 38px; }
+    .carousel .card .fav { position: absolute; top: 8px; right: 8px; width: 14px; height: 14px; fill: none; stroke: var(--ink-2); stroke-width: 1.8; stroke-linejoin: round; }
+    .carousel .card .pc-meta { position: relative; width: 100%; display: flex; flex-direction: column; gap: 2px; padding: 0 10px 10px; line-height: 1.2; }
+    .carousel .card .nm { font-size: 11px; color: var(--ink-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .carousel .card .pr { font-size: 12px; font-weight: 600; color: var(--ink); }
+    .bag-hint { position: absolute; left: 50%; bottom: 9%; z-index: 3; transform: translateX(-50%); white-space: nowrap; font-size: 8.5px; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(42, 30, 18, 0.6); pointer-events: none; }
+    .carousel .card { cursor: pointer; transition: transform 0.2s ease; }
+    .carousel .card:hover { transform: translateY(-3px); }
+    .carousel .card:active { transform: scale(0.97); }
+    .carousel .card:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+    .bag { position: absolute; left: 50%; bottom: -2px; transform: translateX(-50%); width: 40%; aspect-ratio: 0.8; }
+    .bag .peek { position: absolute; left: 14%; right: 14%; top: -22%; height: 40%; background: var(--prod-bg); border-radius: 10px; display: flex; justify-content: center; align-items: flex-end; overflow: hidden; }
+    .bag .peek .cut { width: 28%; filter: none; color: #C2B8A9; }
+    .bag .peek img { position: absolute; left: 50%; top: 8%; width: 46%; transform: translateX(-50%); }
+    .bag .body {
+      position: absolute; inset: 8% 0 0 0; background: var(--kraft);
+      background-image: repeating-linear-gradient(80deg, rgba(255,255,255,0.05) 0 2px, transparent 2px 5px);
+      box-shadow: inset 0 -30px 40px -30px rgba(0,0,0,0.2);
+      display: grid; place-items: center;
+    }
+    .bag .body span { font-weight: 700; letter-spacing: -0.04em; font-size: clamp(22px, 2.6vw, 34px); color: #2A1E12; opacity: 0.85; }
+    .bag .handle { position: absolute; left: 30%; right: 30%; top: -14%; height: 30%; border: 4px solid #A97F52; border-bottom: 0; border-radius: 60px 60px 0 0; z-index: 2; }
+
+    /* Compare slider */
+    .compare { position: relative; aspect-ratio: 16 / 10; border-radius: 12px; overflow: hidden; user-select: none; }
+    .compare .ph { position: absolute; inset: 0; border-radius: 12px; }
+    .compare .after-ph { background: repeating-linear-gradient(135deg, transparent 0 14px, rgba(176,141,87,0.08) 14px 15px), #F4EDE0; border-color: var(--gold); }
+    .compare .before-ph { clip-path: inset(0 50% 0 0); }
+    .compare .handle { position: absolute; top: 0; bottom: 0; left: 50%; width: 2px; background: var(--ink); pointer-events: none; }
+    .compare .handle::after { content: "⇆"; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 40px; height: 40px; border-radius: 50%; background: var(--ink); color: var(--paper); display: grid; place-items: center; font-size: 16px; }
+    .compare input { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: ew-resize; margin: 0; }
+    .compare .tag { position: absolute; top: 12px; z-index: 2; background: var(--ink); color: var(--paper); padding: 4px 8px; border-radius: 4px; font-size: 10px; pointer-events: none; }
+    .compare .tag.b { left: 12px; }
+    .compare .tag.a { right: 12px; background: var(--gold); }
+
+
+    /* ---------- Homepage covers: auto-scrolling full-length screenshots ---------- */
+    .chapter.stack { grid-template-columns: 1fr; gap: clamp(32px, 5vw, 56px); }
+    .stack-top { display: grid; grid-template-columns: minmax(0, 620px); }
+    /* Chapter 04: centred intro that spans the panel, so the covers sit higher */
+    #ch-home .stack-top { grid-template-columns: minmax(0, 900px); justify-content: center; text-align: center; }
+    #ch-home .ch-text h3 { margin-top: 8px; }
+    #ch-home .ch-text p { max-width: 78ch; margin-inline: auto; }
+    .shot-btn { display: block; border: 0; font: inherit; color: inherit; cursor: zoom-in; text-align: left; }
+    .shot { display: block; position: relative; overflow: hidden; background: #fff; }
+    /* Full-length screenshot: scrolls while hovered, freezes on leave, returns to the top only after reaching the bottom (JS) */
+    .shot img { position: absolute; left: 0; top: 0; width: 100%; height: auto; filter: saturate(0.85); will-change: transform; }
+    .shot.desktop { aspect-ratio: 16 / 10; border: 5px solid #111; border-radius: var(--r-inner); }
+    .shot.phone { aspect-ratio: 393 / 852; border-radius: 18px; border: 5px solid #111; }
+    /* Hover annotations on the old web homepage print: handwritten notes + drawn arrows */
+    .hover-note {
+      position: absolute; z-index: 5; display: flex; pointer-events: none;
+      font-family: var(--hand); font-size: clamp(18px, 1.8vw, 24px); line-height: 1.15; letter-spacing: 0.02em;
+      color: #2E2C2A; white-space: nowrap;
+      opacity: 0; transform: translateY(6px) rotate(var(--r, 0deg));
+      transition: opacity 0.35s ease, transform 0.35s ease;
+    }
+    .hover-note .arr { width: clamp(46px, 4.6vw, 64px); height: auto; flex: none; fill: none; stroke: #2E2C2A; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+    /* above the print, arrow curling down onto it */
+    .hover-note.n1 { bottom: calc(100% + 4px); left: 34%; flex-direction: column; align-items: flex-start; --r: -4deg; }
+    .hover-note.n1 .arr { margin: 2px 0 0 -6px; }
+    /* below the print, arrow curling up into it */
+    .hover-note.n2 { top: calc(100% + 2px); left: 6%; flex-direction: column; align-items: flex-start; --r: 3deg; transition-delay: 0.1s; }
+    .hover-note.n2 .arr { transform: rotate(180deg) scaleX(-1); margin-left: 4px; }
+    /* right of the print, arrow pointing back at it */
+    .hover-note.n3 { top: 30%; left: calc(100% + 6px); align-items: center; gap: 2px; --r: -2deg; transition-delay: 0.2s; }
+    .hover-note.n3 .arr { transform: rotate(-20deg); }
+    /* iOS homepage print notes */
+    .hover-note.b1 { bottom: calc(100% + 4px); left: 14%; flex-direction: column; align-items: flex-start; --r: -4deg; }
+    .hover-note.b1 .arr { margin: 2px 0 0 -6px; }
+    .hover-note.b2 { top: 30%; left: calc(100% + 6px); align-items: center; gap: 2px; --r: -2deg; transition-delay: 0.1s; }
+    .hover-note.b2 .arr { transform: rotate(-20deg); }
+    .hover-note.b3 { top: calc(100% + 2px); left: 4%; flex-direction: column; align-items: flex-start; --r: 3deg; transition-delay: 0.2s; }
+    .hover-note.b3 .arr { transform: rotate(180deg) scaleX(-1); margin-left: 4px; }
+    /* Stylist analytics print notes (rightmost print, so the side note sits on its left) */
+    .hover-note.c1 { bottom: calc(100% + 4px); right: 10%; flex-direction: column; align-items: flex-end; --r: 4deg; }
+    .hover-note.c1 .arr { transform: scaleX(-1); margin: 2px -6px 0 0; }
+    .hover-note.c2 { top: 30%; right: calc(100% + 6px); align-items: center; gap: 2px; --r: 2deg; transition-delay: 0.1s; }
+    .hover-note.c2 .arr { transform: scaleX(-1) rotate(-20deg); }
+    .hover-note.c3 { top: calc(100% + 2px); right: 6%; flex-direction: column; align-items: flex-end; --r: -3deg; transition-delay: 0.2s; }
+    .hover-note.c3 .arr { transform: rotate(180deg); margin-right: 4px; }
+    /* the three text columns below step back too, so notes that drop below a print stay readable */
+    .layers { transition: opacity 0.35s ease; }
+    .prints:has(.print:hover) ~ .layers, .prints:has(.print:focus-visible) ~ .layers { opacity: 0.12; }
+    #before .cs-body { transition: opacity 0.35s ease; }
+    #before:has(.print:hover) .cs-body, #before:has(.print:focus-visible) .cs-body { opacity: 0.12; }
+    /* Closet print notes */
+    .hover-note.d1 { bottom: calc(100% + 4px); left: 10%; flex-direction: column; align-items: flex-start; --r: -4deg; }
+    .hover-note.d1 .arr { margin: 2px 0 0 -6px; }
+    .hover-note.d2 { top: 30%; left: calc(100% + 6px); align-items: center; gap: 2px; --r: -2deg; transition-delay: 0.1s; }
+    .hover-note.d2 .arr { transform: rotate(-20deg); }
+    .hover-note.d3 { top: calc(100% + 2px); left: 4%; flex-direction: column; align-items: flex-start; --r: 3deg; transition-delay: 0.2s; }
+    .hover-note.d3 .arr { transform: rotate(180deg) scaleX(-1); margin-left: 4px; }
+    /* AI Stylist print notes */
+    .hover-note.a1 { bottom: calc(100% + 4px); left: 10%; flex-direction: column; align-items: flex-start; --r: -4deg; }
+    .hover-note.a1 .arr { margin: 2px 0 0 -6px; }
+    .hover-note.a2 { top: 28%; left: calc(100% + 6px); align-items: center; gap: 2px; --r: -2deg; transition-delay: 0.1s; }
+    .hover-note.a2 .arr { transform: rotate(-20deg); }
+    .hover-note.a3 { top: calc(100% + 2px); left: 4%; flex-direction: column; align-items: flex-start; --r: 3deg; transition-delay: 0.2s; }
+    .hover-note.a3 .arr { transform: rotate(180deg) scaleX(-1); margin-left: 4px; }
+    /* Any print: lifts to the top on hover and shows its hover notes (if it has any) */
+    .print:hover, .print:focus-visible { z-index: 8; }
+    .print:hover .hover-note, .print:focus-visible .hover-note { opacity: 1; transform: translateY(0) rotate(var(--r, 0deg)); }
+    /* while reading the notes, the other prints step back */
+    .print, .note { transition: opacity 0.35s ease; }
+    /* ...and everything else on the desk fades back */
+    .prints:has(.print:hover) :is(.print:not(:hover), .note),
+    .prints:has(.print:focus-visible) :is(.print:not(:focus-visible), .note) { opacity: 0.18; }
+    @media (hover: none) { .hover-note { opacity: 1; transform: rotate(var(--r, 0deg)); } }
+    .lightbox.lb-wide .lb-bar, .lightbox.lb-wide .lb-scroll { width: min(100%, 1100px); }
+    .lightbox.lb-wide .lb-bar, .lightbox.lb-wide .lb-scroll { width: min(100%, 1100px); }
+    .covers { display: grid; grid-template-columns: repeat(3, minmax(0, 270px)); justify-content: center; gap: clamp(16px, 3vw, 40px); }
+    .cover { margin: 0; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+    .cover-title { text-align: center; line-height: 1.1; }
+    .cover-title .mono { display: block; font-size: 10px; color: var(--ink-3); margin-bottom: 4px; }
+    .cover-title em { font-family: var(--serif); font-size: clamp(22px, 2.2vw, 30px); }
+    .cover-cap { font-size: 10px; color: var(--ink-3); }
+    .scroll-frame {
+      position: relative; display: block; width: 100%; aspect-ratio: 393 / 852; padding: 0; cursor: zoom-in;
+      border: 6px solid #111; border-radius: 38px; overflow: hidden; background: #F6F1E7;
+      box-shadow: 0 30px 50px -30px rgba(40, 30, 10, 0.45);
+      outline-offset: 4px;
+    }
+    .scroll-frame:focus-visible { outline: 2px solid var(--gold); }
+    .sf-img { position: absolute; left: 0; top: 0; width: 100%; height: auto; will-change: transform; }
+    .sf-img[hidden] { display: none; }
+    .scroll-frame.run .sf-img { animation: sf-scroll var(--dur, 14s) ease-in-out infinite; }
+    .scroll-frame.run:hover .sf-img, .scroll-frame.run:focus-visible .sf-img { animation-play-state: paused; }
+    @keyframes sf-scroll {
+      0%, 8% { transform: translateY(0); }
+      46%, 54% { transform: translateY(calc(var(--dist, 0px) * -1)); }
+      92%, 100% { transform: translateY(0); }
+    }
+    .sf-ph {
+      position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
+      padding: 18px; text-align: center; color: var(--ink-3);
+      background: repeating-linear-gradient(135deg, transparent 0 14px, rgba(176,141,87,0.08) 14px 15px), #F4EDE0;
+    }
+    .sf-ph .ph-tag { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-2); }
+    .sf-ph .ph-desc { font-size: 12px; line-height: 1.45; }
+    .sf-ph .ph-spec { font-family: var(--mono); font-size: 10px; opacity: 0.8; }
+    .scroll-frame.loaded .sf-ph { display: none; }
+    .sf-chip {
+      position: absolute; left: 50%; bottom: 14px; transform: translateX(-50%); z-index: 2;
+      background: rgba(17,17,17,0.82); color: #fff; border-radius: 999px; padding: 6px 12px; font-size: 9px; white-space: nowrap;
+      opacity: 0; transition: opacity 0.2s;
+    }
+    .scroll-frame:hover .sf-chip, .scroll-frame:focus-visible .sf-chip { opacity: 1; }
+    @media (hover: none) { .sf-chip { opacity: 1; } }
+
+    /* Full-page lightbox */
+    .lightbox { border: 0; padding: 0; background: transparent; max-width: none; max-height: none; width: 100%; height: 100%; }
+    .lightbox::backdrop { background: rgba(17, 17, 17, 0.82); }
+    .lb-inner { height: 100%; display: flex; flex-direction: column; align-items: center; padding: 20px 16px; gap: 12px; }
+    .lb-bar { width: min(100%, 460px); display: flex; justify-content: space-between; align-items: center; color: var(--paper); }
+    .lb-bar em { font-family: var(--serif); font-size: 22px; }
+    .lb-close { background: var(--paper); color: var(--ink); border: 0; border-radius: 999px; padding: 8px 14px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; }
+    .lb-scroll { flex: 1; width: min(100%, 460px); overflow-y: auto; border-radius: 16px; background: #fff; overscroll-behavior: contain; }
+    .lb-scroll img { width: 100%; height: auto; display: block; }
+    @media (prefers-reduced-motion: reduce) { .scroll-frame.run .sf-img { animation: none; } }
+
+    /* ---------- Chapters: file tabs on one panel; text left, card stack right ---------- */
+    .ch-tabs { display: flex; gap: 4px; padding-left: 14px; position: relative; z-index: 2; overflow-x: auto; scrollbar-width: none; }
+    .ch-tabs::-webkit-scrollbar { display: none; }
+    .ch-tab { flex: none; display: inline-flex; align-items: center; gap: 8px; padding: 11px 18px 10px; border: 0; border-radius: 10px 10px 0 0; cursor: pointer;
+      background: #E8E3DA; color: var(--ink-3); font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; transition: background 0.2s, color 0.2s; }
+    .ch-tab .n { opacity: 0.6; }
+    .ch-tab[data-ai]::after { content: "✦"; color: var(--gold); }
+    .ch-tab:hover { color: var(--ink); background: #EFEBE4; }
+    .ch-tab.on { background: #FBFAF7; color: var(--ink); font-weight: 500; }
+    .ch-tab:focus-visible { outline: 2px solid var(--gold); outline-offset: -2px; }
+    .ch-panel { position: relative; background: #FBFAF7; border-radius: var(--r-card); padding: clamp(28px, 4vw, 56px); box-shadow: 0 1px 0 var(--rule), 0 40px 70px -50px rgba(40, 30, 10, 0.45); }
+    .ch-panel .chapter { border-top: 0; padding: 0; }
+    .ch-pane[hidden] { display: none !important; }
+    .ch-pane.on { animation: chIn 0.4s ease both; }
+    @keyframes chIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+    .ch-wide { grid-column: 1 / -1; }
+    .pair.phones.single { grid-template-columns: minmax(0, 340px); justify-content: center; }
+    .ph.closet-card { aspect-ratio: 1150 / 1646; padding: 0; border: 0; border-radius: var(--r-card); background: #111; box-shadow: 0 30px 50px -28px rgba(40, 30, 10, 0.45); }
+    .ph.closet-card .ph-fill { background: #111; object-fit: cover; }
+    .dash-wrap { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+    .dash-btn { width: min(280px, 72%); background: none; padding: 0; }
+    .ph .ph-fill { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top; background: #fff; }
+    .compare .before-ph { z-index: 1; }
+    /* Chapters: real mocks sit directly on the panel, no frames or backgrounds behind them */
+    #ch-panel .ootd { padding: 0; }
+    #ch-panel .ootd::before, #ch-panel .ootd::after { display: none; }
+    #ch-panel .sheet { background: none; box-shadow: none; }
+    #ch-panel .ph.closet-card { background: none; box-shadow: none; }
+    #ch-panel .ph.closet-card .ph-fill { background: none; object-fit: contain; }
+    #ch-panel .masonry .after-phone { border: 0; border-radius: 0; background: none; box-shadow: none; padding: 0; width: 48%; aspect-ratio: 485 / 861; bottom: 3%; right: 3%; }
+    #ch-panel .masonry .after-phone .ph-fill { background: none; object-fit: contain; }
+    #ch-panel .dash-btn .shot { border: 0; border-radius: 0; background: none; box-shadow: none; }
+    /* dashboard sits inside the real phone outline; .shot is the screen opening (frame is 564 × 1139, screen 42–529 × 39–1099) */
+    .pframe { position: relative; display: block; aspect-ratio: 564 / 1139; }
+    .pframe::after { content: ""; position: absolute; inset: 0; z-index: 2; pointer-events: none; background: url("img/Vetir/Cutouts/Phone%20mock.png") center / 100% 100% no-repeat; }
+    #ch-panel .dash-btn .pframe .shot, .pframe > .scroll-frame { position: absolute; top: 3.42%; bottom: 3.42%; left: 7.45%; right: 6.03%; aspect-ratio: auto; border-radius: 14% / 6.6%; background: #fff; }
+    /* Chapter 04 homepages: same outline; the scroll-frame button becomes the screen */
+    .cover .pframe { width: 100%; filter: drop-shadow(0 26px 22px rgba(40, 30, 10, 0.22)); }
+    .pframe > .scroll-frame { width: auto; border: 0; box-shadow: none; }
+    /* Chapter 04: desktop walkthrough below the phones */
+    .home-web { margin: clamp(16px, 3vw, 32px) auto 0; width: 100%; max-width: 1080px; }
+    .hw-frame { border-radius: 14px; overflow: hidden; background: #fff; border: 1px solid var(--rule); box-shadow: 0 30px 50px -28px rgba(40, 30, 10, 0.45); }
+    .hw-frame video { display: block; width: 100%; height: auto; aspect-ratio: 1920 / 1186; }
+    /* a tall phone screen shown as a centred column inside a wide frame */
+    .ph .ph-fill.ph-col { inset: auto; left: 50%; top: 18px; width: 30%; height: auto; transform: translateX(-50%); border-radius: 14px; box-shadow: 0 20px 40px -20px rgba(0,0,0,0.4); }
+    .ph.desktop .ph-fill { top: 24px; height: calc(100% - 24px); }
+    .ch-stack { position: relative; width: 100%; max-width: 340px; justify-self: center; aspect-ratio: 4 / 5; margin-bottom: 30px; }
+    .ch-card, .ch-ghost { position: absolute; inset: 0; border-radius: var(--r-card); overflow: hidden; }
+    .ch-ghost { background: #EEE9E1; border: 1px solid #E2DCD1; }
+    .ch-ghost:nth-of-type(1) { transform: rotate(-6deg) translate(-14px, 6px); }
+    .ch-ghost:nth-of-type(2) { transform: rotate(4deg) translate(12px, 4px); }
+    .ch-card { padding: 0; border: 0; background: #fff; cursor: zoom-in; box-shadow: 0 30px 50px -28px rgba(40, 30, 10, 0.45); transition: transform 0.45s cubic-bezier(0.34, 1.3, 0.64, 1); }
+    .ch-card:not(.front) { transform: rotate(5deg) translate(26px, 10px) scale(0.96); cursor: pointer; z-index: 0; }
+    .ch-card:not(.front):hover { transform: rotate(7deg) translate(40px, 6px) scale(0.96); }
+    .ch-card.front { z-index: 2; }
+    .ch-shot { position: absolute; inset: 0; display: block; overflow: hidden; background: #fff; }
+    .ch-shot img { filter: none; }
+    .ch-hint { position: absolute; left: 50%; bottom: -30px; transform: translateX(-50%); font-size: 10px; color: var(--ink-3); white-space: nowrap; }
+    .ch-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; text-align: center; padding: 20px; cursor: default; color: var(--ink-3); font-size: 13px;
+      background: repeating-linear-gradient(135deg, transparent 0 14px, rgba(17,17,17,0.035) 14px 15px), var(--paper-2); border: 1px dashed #BDB5A8; box-shadow: none; }
+
+    /* ---------- Engineering ---------- */
+    .eng { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 36px; }
+    .eng div { border-top: 1px solid var(--ink); padding-top: 14px; font-size: 15px; }
+    .eng .mono { color: var(--gold); display: block; margin-bottom: 8px; }
+
+    /* ---------- Go-to-market: stylist deck, grouped and scrolling sideways ---------- */
+    .deck-strip { display: flex; gap: clamp(20px, 3vw, 36px); overflow-x: auto; scroll-snap-type: x proximity; padding: 8px 2px 24px; margin-top: clamp(28px, 4vw, 44px);
+      scrollbar-width: thin; -webkit-mask-image: linear-gradient(90deg, #000 92%, transparent); mask-image: linear-gradient(90deg, #000 92%, transparent); }
+    .deck-group { flex: none; display: flex; flex-direction: column; gap: 12px; }
+    .deck-label { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-3); padding-bottom: 8px; border-bottom: 1px solid var(--rule); }
+    .deck-row { display: flex; gap: 12px; }
+    .deck-slide { flex: none; width: clamp(150px, 15vw, 200px); padding: 0; border: 0; background: none; cursor: zoom-in; scroll-snap-align: start; border-radius: 12px; transition: transform 0.25s ease; }
+    .deck-slide img { display: block; width: 100%; height: auto; border-radius: 12px; box-shadow: 0 18px 30px -20px rgba(20, 15, 5, 0.55); }
+    .deck-slide:hover { transform: translateY(-4px); }
+    .deck-slide:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+    .deck-hint { margin-top: 4px; }
+
+    /* ---------- Outcomes ---------- */
+    .outcomes { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--rule); border: 1px solid var(--rule); }
+    #outcomes { position: relative; overflow: hidden; isolation: isolate; }
+    #outcomes > .wrap { position: relative; z-index: 1; }
+    .oc-bg { position: absolute; inset: 0; z-index: -1; pointer-events: none; }
+    .oc-bg video { width: 100%; height: 100%; object-fit: cover; display: block; }
+    /* paper veil keeps the type legible over the footage */
+    .oc-bg::after { content: ""; position: absolute; inset: 0; background: color-mix(in srgb, var(--paper) 18%, transparent); }
+    /* frosted stat cards over the footage, same glass as the insight card */
+    .outcomes { gap: 16px; background: none; border: 0; }
+    .oc { padding: clamp(20px, 2.4vw, 28px); border-radius: 16px;
+      background: rgba(245, 242, 236, 0.38); border: 1px solid rgba(255, 255, 255, 0.55);
+      backdrop-filter: blur(20px) saturate(1.3); -webkit-backdrop-filter: blur(20px) saturate(1.3); box-shadow: 0 24px 44px -26px rgba(0, 0, 0, 0.45); }
+    .oc .n { font-size: clamp(38px, 5vw, 64px); font-weight: 700; letter-spacing: -0.06em; line-height: 0.9; }
+    .oc .n small { font-size: 0.35em; letter-spacing: -0.02em; font-weight: 500; }
+    .oc p { margin: 10px 0 0; font-size: 15px; color: var(--ink-2); max-width: 38ch; }
+    .oc.pending .n { color: var(--ink-3); }
+    .fav-spread[hidden] { display: none; }
+    .fav-spread { margin-top: clamp(48px, 7vw, 88px); }
+    .fav-spread .page { min-height: 0; padding-bottom: 52px; }
+    .fav-spread .left { display: flex; flex-direction: column; }
+    .fav-spread .left h3 { font-size: clamp(40px, 5.4vw, 72px); font-weight: 500; }
+    .fav-spread .left .row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: auto; }
+    .fav-spread .left .row .ph { aspect-ratio: 3/4; border-radius: 2px; }
+    .fav-photo { aspect-ratio: 1.01 / 1; background-image: url("img/vetr-postcard.png"); background-size: 215% auto; background-position: 9.7% 54%; background-repeat: no-repeat; }
+    .fav-spread .right blockquote { margin: 22px 0 0; font-size: clamp(18px, 2vw, 24px); line-height: 1.15; text-transform: uppercase; letter-spacing: -0.01em; }
+    .fav-spread .right .small-q { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 18px; font-size: 13px; color: var(--ink-2); }
+
+    /* ---------- Footer ---------- */
+    .next { background: var(--ink); color: var(--paper); padding: clamp(64px, 10vw, 120px) 0; }
+    .next h2 { font-size: clamp(36px, 6vw, 80px); letter-spacing: -0.045em; line-height: 0.95; margin: 16px 0 24px; max-width: 16ch; }
+    .next h2 em { font-family: var(--serif); font-style: italic; font-weight: 400; color: var(--gold); letter-spacing: -0.01em; }
+    .next p { color: #C9C4BB; max-width: 56ch; }
+    .next-links { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-top: 48px; }
+    .next-links a { display: block; text-decoration: none; border: 1px solid #3A3835; border-radius: 12px; padding: 22px; transition: border-color 0.2s, background 0.2s; }
+    .next-links a:hover { border-color: var(--gold); background: #1A1918; }
+    .next-links .mono { color: #8C8883; }
+    .next-links b { display: block; font-size: 20px; letter-spacing: -0.02em; margin-top: 10px; font-weight: 600; }
+    .foot { padding: 28px 0; border-top: 1px solid #2A2826; background: var(--ink); color: #8C8883; }
+    .foot .wrap { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+
+    /* ---------- Reveal ---------- */
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1); }
+    .reveal.in { opacity: 1; transform: none; }
+    @media (prefers-reduced-motion: reduce) {
+      .reveal { opacity: 1; transform: none; transition: none; }
+      html { scroll-behavior: auto; }
+      .folder, .pin-stamp { transition: none; }
+    }
+
+    /* ---------- Responsive ---------- */
+    @media (max-width: 960px) {
+      .cs-head, .cs-body { grid-template-columns: 1fr; gap: 12px; }
+      .cs-body > .col { grid-column: 1; }
+      .cs-num { padding-top: 0; }
+      .meta { grid-template-columns: 1fr 1fr; }
+      .stats { grid-template-columns: repeat(2, 1fr); }
+      .stat, .stat + .stat { padding: 18px 12px 18px 0; border-right: 0; border-bottom: 1px solid var(--rule); }
+      .stat:nth-child(odd) { border-right: 1px solid var(--rule); }
+      .stat:nth-child(even) { padding-left: 16px; }
+      .stat:last-child { grid-column: span 2; border-bottom: 0; border-right: 0; }
+      .stats.glance { grid-template-columns: repeat(2, 1fr); }
+      .stats.glance .stat, .stats.glance .stat:nth-child(n) { padding: 18px 12px 18px 0; border-right: 0; }
+      .stats.glance .stat:nth-child(odd) { border-right: 1px solid var(--rule); }
+      .stats.glance .stat:nth-child(even) { padding-left: 16px; }
+      .stats.glance .stat:last-child { grid-column: auto; border-bottom: 1px solid var(--rule); }
+      .layers, .steps, .next-links { grid-template-columns: 1fr; }
+      .serve-grid, .receipt-row, .chapter { grid-template-columns: 1fr; }
+      .receipt-row { grid-template-rows: none; grid-template-areas: "head" "mock" "body"; row-gap: 32px; }
+      .learn-stage { display: flex; flex-direction: column; align-items: center; gap: 10px; min-height: 0; padding: 64px var(--gutter); --bw: min(84vw, 340px); }
+      .lq { position: static; display: none; transform: none; }
+      .lq.on { display: flex; transform: none; }
+      .lq.r { align-self: flex-end; }
+      .lq.l { align-self: flex-start; }
+      .learn-center { order: -1; margin-bottom: 10px; }
+      .learn-head { display: block; }
+      .src-chip { position: static; margin: 16px 4px 0; }
+      .signals { position: static; order: 0; margin: 10px 0 0; align-self: flex-start; text-align: left; }
+      .ins-card { width: auto; }
+      .chapter.flip .ch-text { order: 0; }
+      .stack-top { grid-template-columns: 1fr; }
+      .covers { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+      .scroll-frame { border-width: 4px; border-radius: 24px; }
+      .spread { grid-template-columns: 1fr; }
+      .page.left, .page.right { background: #FDFCFA; }
+      .page { min-height: 0; padding-bottom: 48px; }
+      .eng { grid-template-columns: 1fr 1fr; }
+      .pin-stamp { top: -10px; }
+      .folders { height: 100px; }
+      .folder .tab { left: 4%; padding: 0 6px; font-size: 9px; letter-spacing: 0.02em; }
+      .folder .tab .t-num, .folder .tab .t-name { display: none; }
+      .folder .tab .t-short { display: inline; }
+    }
+    @media (max-width: 640px) {
+      body { font-size: 16px; }
+      .outcomes { grid-template-columns: 1fr; }
+      .prints { height: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+      .print { position: static; width: auto !important; left: auto !important; right: auto !important; top: auto !important; bottom: auto !important; transform: none !important; }
+      .p1 { grid-column: span 2; }
+      .note, .ring { display: none; }
+      .p1 { position: relative; }
+      .hover-note { position: static; display: block; white-space: normal; font-size: 18px; margin-top: 6px; transform: none !important; }
+      .hover-note .arr { display: none; }
+      .hover-note .t br { display: none; }
+      .eng { grid-template-columns: 1fr; }
+      .ds-collage { aspect-ratio: auto; display: grid; grid-template-columns: 1fr 1fr; grid-auto-flow: dense; align-items: center; gap: 16px 14px; padding: 24px 18px 36px; }
+      .ds-ghost { display: none; }
+      .ds-piece { position: relative; left: auto; top: auto; width: min(100%, 150px, var(--mw)); justify-self: center; }
+      .ds-piece:has(img[height="36"], img[height="40"], img[height="52"], img[height="200"], img[height="138"], img[height="120"], img[height="130"]) { grid-column: 1 / -1; width: min(100%, var(--mw)); }
+      .covers { grid-template-columns: minmax(0, 300px); }
+      .status-row { grid-template-columns: repeat(2, 1fr); }
+      .topbar .brand span { display: none; }
+      .stage { height: 260px; }
+      .stage .m2, .stage .m3 { display: none; }
+      .stage .m1 { left: 14%; }
+      .stage .m4 { left: 86%; z-index: 1; }
+        .fav-spread .right .small-q { grid-template-columns: 1fr; }
+      .masonry { height: 400px; }
+      .carousel .card { width: 32%; }
+      .bag { width: 70%; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Placeholder icons + cutout silhouettes (stand-ins for transparent PNGs) -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="i-img" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="m21 17-5-5-9 8"/></symbol>
+    <symbol id="i-vid" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m10 9 5 3-5 3z" fill="currentColor"/></symbol>
+    <!-- full-length model, coat -->
+    <symbol id="c-model" viewBox="0 0 100 300">
+      <circle cx="50" cy="20" r="11" fill="currentColor"/>
+      <path fill="currentColor" d="M45 30h10l1 8H44z"/>
+      <path fill="currentColor" d="M36 38q14-6 28 0l9 6 4 76-6 2-4-52-1 104H34l-1-104-4 52-6-2 4-76z"/>
+      <path fill="currentColor" d="M38 170h9l-1 108h-7zM53 170h9l-2 108h-7z"/>
+      <path fill="currentColor" d="M36 278h12v6H33zM52 278h12l3 6H52z"/>
+    </symbol>
+    <symbol id="c-bag" viewBox="0 0 100 90"><path d="M32 38q0-30 18-30t18 30" fill="none" stroke="currentColor" stroke-width="6"/><rect x="14" y="36" width="72" height="50" rx="8" fill="currentColor"/></symbol>
+    <symbol id="c-shoe" viewBox="0 0 100 40"><path fill="currentColor" d="M6 26q2-16 34-14 34 2 54 12 2 10-10 12H14q-8-2-8-10z"/></symbol>
+    <symbol id="c-glasses" viewBox="0 0 100 40"><ellipse cx="25" cy="20" rx="20" ry="14" fill="none" stroke="currentColor" stroke-width="7"/><ellipse cx="75" cy="20" rx="20" ry="14" fill="none" stroke="currentColor" stroke-width="7"/><path d="M44 18q6-5 12 0" stroke="currentColor" stroke-width="5" fill="none"/></symbol>
+    <symbol id="c-top" viewBox="0 0 100 100"><path fill="currentColor" d="M30 6h9q11 18 22 0h9l3 26q6 30 1 64H26q-5-34 1-64z"/></symbol>
+    <symbol id="c-pants" viewBox="0 0 100 140"><path fill="currentColor" d="M24 4h52l10 132H58L50 40l-8 96H14z"/></symbol>
+    <symbol id="c-dress" viewBox="0 0 100 160"><path fill="currentColor" d="M34 4h32l-2 40q20 50 28 112H8q8-62 28-112z"/></symbol>
+    <symbol id="c-earring" viewBox="0 0 40 70"><circle cx="20" cy="16" r="11" fill="none" stroke="currentColor" stroke-width="5"/><ellipse cx="20" cy="48" rx="11" ry="15" fill="currentColor"/></symbol>
+    <symbol id="c-watch" viewBox="0 0 40 100"><rect x="10" y="0" width="20" height="100" rx="6" fill="currentColor"/><ellipse cx="20" cy="50" rx="16" ry="20" fill="currentColor"/></symbol>
+    <symbol id="c-bottle" viewBox="0 0 40 70"><rect x="12" y="0" width="16" height="14" rx="2" fill="currentColor"/><rect x="4" y="14" width="32" height="54" rx="6" fill="currentColor"/></symbol>
+  </svg>
+
+  <header class="topbar">
+    <div class="wrap">
+      <a class="back mono" href="index.html">← Homepage</a>
+      <div class="brand"><span>case studies /</span> vêtir</div>
+    </div>
+    <div class="progress" id="progress"></div>
+  </header>
+
+  <!-- Floating section guide: four acts, one hairline per section. Quiet until hovered. -->
+  <nav class="guide" id="guide" aria-label="Sections">
+    <div class="g-act"><span class="g-act-name">The problem</span>
+      <a href="#in-short"><i></i><span>Overview</span></a>
+      <a href="#before"><i></i><span>Before</span></a>
+      <a href="#learned"><i></i><span>Insights</span></a>
+    </div>
+    <div class="g-act"><span class="g-act-name">The approach</span>
+      <a href="#principles"><i></i><span>Principles</span></a>
+      <a href="#case"><i></i><span>Buy-in</span></a>
+      <a href="#roadmap"><i></i><span>Roadmap</span></a>
+    </div>
+    <div class="g-act"><span class="g-act-name">The work</span>
+      <a href="#system"><i></i><span>System</span></a>
+      <a href="#chapters"><i></i><span>Chapters</span></a>
+      <a href="#engineering"><i></i><span>Engineering</span></a>
+    </div>
+    <div class="g-act"><span class="g-act-name">The result</span>
+      <a href="#deck"><i></i><span>For stylists</span></a>
+      <a href="#outcomes"><i></i><span>Outcomes</span></a>
+    </div>
+  </nav>
+
+  <main>
+
+    <!-- ============ HERO: wordmark + model cutouts (paper) ============ -->
+    <section class="hero paper-bg">
+      <div class="wrap">
+        <div class="kicker mono"><span>Case study</span><span>·</span><span>Luxury fashion</span><span>·</span><span>AI styling</span></div>
+        <p class="pre" hidden>Rebuilding</p>
+
+        <div class="stage" aria-label="Vêtir wordmark with model cutouts">
+          <h1 class="word">Vêtir</h1>
+          <img class="model back m1" src="img/Vetir/Cutouts/Avatars/Avatar1.png" alt="Avatar in a camel coat with fur collar and brown flares">
+          <img class="model front m2" src="img/Vetir/Cutouts/Avatars/Avatar2.webp" alt="Avatar in a cardigan and olive mini skirt">
+          <img class="model back m3" src="img/Vetir/Cutouts/Avatars/Avatar3.webp" alt="Vêtir avatar">
+          <img class="model front m4" src="img/Vetir/Cutouts/Avatars/Avatar4.webp" alt="Vêtir avatar">
+        </div>
+
+        <p class="sub">From a scattered MVP to an integrated<br class="br-wide"> shopping &amp; styling ecosystem, powered by AI.</p>
+
+        <dl class="meta">
+          <div><dt class="mono">Role</dt><dd>Lead Product Designer<br>(sole designer)</dd></div>
+          <div><dt class="mono">Team</dt><dd>2 frontend · 2 backend<br>1 QA · Founder</dd></div>
+          <div><dt class="mono">Platforms</dt><dd>iOS app · Web (desktop + mobile)<br>Internal CRM</dd></div>
+          <div><dt class="mono">Timeline</dt><dd>May ’25 – Sept ’26</dd></div>
+        </dl>
+
+      </div>
+    </section>
+
+    <!-- ============ 01 IN SHORT ============ -->
+    <section class="cs" id="in-short">
+      <div class="wrap">
+        <div class="cs-head reveal">
+          <div class="cs-num mono">The problem</div>
+          <h2 class="h2-two">The features were there.<br><em>The product wasn't.</em></h2>
+        </div>
+        <div class="cs-body reveal">
+          <div class="col prose wide-prose">
+            <p>Vêtir launched with a big vision: shopping, professional styling, personalization, and AI. The ingredients were there, but the experience had grown feature by feature, without a clear product language connecting everything together.</p>
+            <p>Shopping wasn't as effortless as it could be. Styling was difficult to recognize as a core part of the experience. And the early AI Stylist felt more like search than an intelligent styling partner.</p>
+            <p><em>Across the product, inconsistent visual patterns, weak hierarchy, fragmented navigation, and disconnected experiences made Vêtir feel more like a collection of features than one product.</em></p>
+            <p>As the sole designer, I set out to change that.</p>
+            <p>The goal wasn't simply to make Vêtir look more luxurious. It was to make the product easier to understand, easier to use, and much clearer about the value of styling and personalization at its core.</p>
+            <p>I rebuilt it module by module, inside the existing roadmap. As the product evolved, so did the experience—from a rudimentary AI layer and fragmented shopping flows toward richer styling experiences, including AI-assisted outfit creation and avatar try-ons.</p>
+          </div>
+          <div class="col">
+            <div class="glance-label mono">At a glance</div>
+            <div class="stats glance">
+              <div class="stat"><div class="n">190</div><div class="l">stylists on the platform, up from ~14 when I joined</div></div>
+              <div class="stat"><div class="n">6</div><div class="l">core modules redesigned</div></div>
+              <div class="stat"><div class="n">200<small>+</small></div><div class="l">components brought into one shared system</div></div>
+              <div class="stat"><div class="n">3</div><div class="l">platforms: iOS, web, and CRM</div></div>
+              <div class="stat"><div class="n">↑</div><div class="l">organic search traffic and orders after the design overhaul</div></div>
+              <div class="stat pending"><div class="n">↓</div><div class="l">drop-off <span class="tbd">validated metric</span></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 02 BEFORE: scattered prints (paper) ============ -->
+    <section class="cs paper-bg" id="before">
+      <div class="wrap">
+        <div class="cs-head reveal">
+          <div class="cs-num mono">Before</div>
+          <h2>The <em>scattered</em> MVP.</h2>
+        </div>
+
+        <div class="cs-body reveal" style="margin-bottom:8px">
+          <div class="col prose wide-prose">
+            <p>Vêtir had strong individual features, but no shared language connecting them.</p>
+            <p>The product had grown quickly, and every new feature added another pattern. The result was an experience that felt inconsistent visually, structurally, and functionally.</p>
+          </div>
+        </div>
+
+        <div class="prints reveal" aria-label="Old screens as scattered prints">
+          <button class="print p1 shot-btn" type="button" data-full="img/Vetir/designs_ss/homepage_desktop_before.webp" data-title="Before · Web homepage" aria-label="View the full old web homepage"><span class="shot desktop"><img src="img/Vetir/designs_ss/homepage_desktop_before.webp" alt="Old Vêtir web homepage"></span><span class="label">web / home</span><span class="hover-note n1"><span class="t">no personalization,<br>one page for everyone</span><svg class="arr" viewBox="0 0 90 56" aria-hidden="true"><path d="M84 4 C 70 30, 42 46, 10 46"/><path d="M19 38 L9 46 L20 53"/></svg></span><span class="hover-note n2"><svg class="arr" viewBox="0 0 90 56" aria-hidden="true"><path d="M84 4 C 70 30, 42 46, 10 46"/><path d="M19 38 L9 46 L20 53"/></svg><span class="t">outdated visuals</span></span><span class="hover-note n3"><svg class="arr" viewBox="0 0 90 56" aria-hidden="true"><path d="M84 4 C 70 30, 42 46, 10 46"/><path d="M19 38 L9 46 L20 53"/></svg><span class="t">3 fonts,<br>no hierarchy</span></span></button>
+          <button class="print p2 shot-btn" type="button" data-full="img/Vetir/designs_ss/homepage_mobile_before.webp" data-title="Before · App homepage" aria-label="View the full old app homepage"><span class="shot phone"><img src="img/Vetir/designs_ss/homepage_mobile_before.webp" alt="Old Vêtir app homepage"></span><span class="label">ios / home</span><span class="hover-note b1"><span class="t">AI lives… here?</span><svg class="arr" viewBox="0 0 90 56" aria-hidden="true"><path d="M84 4 C 70 30, 42 46, 10 46"/><path d="M19 38 L9 46 L20 53"/></svg></span><span class="hover-note b2"><svg class="arr" viewBox="0 0 90 56" aria-hidden="true"><path d="M84 4 C 70 30, 42 46, 10 46"/><path d="M19 38 L9 46 L20 53"/></svg><span class="t">where do I shop?</span></span><span class="hover-note b3"><svg class="arr" viewBox="0 0 90 56" aria-hidden="true"><path d="M84 4 C 70 30, 42 46, 10 46"/><path d="M19 38 L9 46 L20 53"/></svg><span class="t">I can't find my<br>styled looks</span></span></button>
+          <div class="print p3"><span class="shot phone static"><img src="img/Vetir/designs_ss/Closet_old.png" alt="Old Vêtir closet screen"></span><span class="label">ios / closet</span><span class="hover-note d1"><span class="t">everything in<br>one list</span><svg class="arr" viewBox="0 0 90 56" aria-hidden="true"><path d="M84 4 C 70 30, 42 46, 10 46"/><path d="M19 38 L9 46 L20 53"/></svg></span><span class="hover-note d2"><svg class="arr" viewBox="0 0 90 56" aria-hidden="true"><path d="M84 4 C 70 30, 42 46, 10 46"/><path d="M19 38 L9 46 L20 53"/></svg><span class="t">owned or<br>wishlist?</span></span><span class="hover-note d3"><svg class="arr" viewBox="0 0 90 56" aria-hidden="true"><path d="M84 4 C 70 30, 42 46, 10 46"/><path d="M19 38 L9 46 L20 53"/></svg><span class="t">stylist picks<br>get lost</span></span></div>
+          <div class="print p4"><span class="shot phone static"><img src="img/Vetir/designs_ss/AIStylist_old.jpeg" alt="Old Vêtir AI Stylist screen"></span><span class="label">ios / ai</span><span class="hover-note a1"><span class="t">AI help lived in<br>a separate chat</span><svg class="arr" viewBox="0 0 90 56" aria-hidden="true"><path d="M84 4 C 70 30, 42 46, 10 46"/><path d="M19 38 L9 46 L20 53"/></svg></span><span class="hover-note a2"><svg class="arr" viewBox="0 0 90 56" aria-hidden="true"><path d="M84 4 C 70 30, 42 46, 10 46"/><path d="M19 38 L9 46 L20 53"/></svg><span class="t">results felt like<br>search, not styling</span></span><span class="hover-note a3"><svg class="arr" viewBox="0 0 90 56" aria-hidden="true"><path d="M84 4 C 70 30, 42 46, 10 46"/><path d="M19 38 L9 46 L20 53"/></svg><span class="t">products, not<br>styled looks</span></span></div>
+          <button class="print p5 shot-btn" type="button" data-full="img/Vetir/designs_ss/Analytics_old.png" data-title="Before · Stylist analytics" aria-label="View the full old stylist analytics screen"><span class="shot phone"><img src="img/Vetir/designs_ss/Analytics_old.png" alt="Old Vêtir stylist analytics screen"></span><span class="label">ios / stylist</span><span class="hover-note c1"><span class="t">graphs without<br>context</span><svg class="arr" viewBox="0 0 90 56" aria-hidden="true"><path d="M84 4 C 70 30, 42 46, 10 46"/><path d="M19 38 L9 46 L20 53"/></svg></span><span class="hover-note c2"><span class="t">no client data</span><svg class="arr" viewBox="0 0 90 56" aria-hidden="true"><path d="M84 4 C 70 30, 42 46, 10 46"/><path d="M19 38 L9 46 L20 53"/></svg></span><span class="hover-note c3"><svg class="arr" viewBox="0 0 90 56" aria-hidden="true"><path d="M84 4 C 70 30, 42 46, 10 46"/><path d="M19 38 L9 46 L20 53"/></svg><span class="t">nothing to<br>act on</span></span></button>
+        </div>
+
+        <div class="layers reveal">
+          <div class="layer"><h3 class="mono">Visually</h3><p>No shared language. The app used Helvetica, the web mixed Libre with assorted fonts, and there was no type hierarchy, which also hurt SEO. For a luxury fashion platform, the result felt more mass-market than it should have.</p></div>
+          <div class="layer"><h3 class="mono">Structurally</h3><p>Engineering had developed its own component set independently of design. Every new feature introduced another pattern, making the experience harder to keep coherent.</p></div>
+          <div class="layer"><h3 class="mono">Functionally</h3><p>Strong features in silos. Shopping and styling both existed, but neither felt as seamless as it could be. Navigation hid parts of the product. Important functionality was difficult to discover. And the styling proposition wasn't immediately obvious.</p></div>
+        </div>
+        <p class="kicker-line end-note reveal">Each feature worked on its own. <em>Together, they didn't add up to one product.</em></p>
+      </div>
+    </section>
+
+    <!-- ============ 03 LEARNED: iMessage (paper) ============ -->
+    <section class="cs learn" id="learned">
+      <div class="learn-bg" aria-hidden="true"></div>
+      <div class="learn-stage">
+          <button class="lq l" type="button" data-ins="1" style="left:4%; top:9%" aria-label="Show insight 1: I'm not sure what I should actually do next when I open the app.">
+            <img src="img/Vetir/Cutouts/Chat%20bubble%201.png" alt=""><span class="mono">— Shopper</span>
+          </button>
+          <button class="lq r" type="button" data-ins="1" style="right:5%; top:13%" aria-label="Show insight 1: I can't find any personalized suggestions from my closet.">
+            <img src="img/Vetir/Cutouts/Chat%20bubble%207.png" alt=""><span class="mono">— Client</span>
+          </button>
+          <button class="lq l" type="button" data-ins="2" style="left:3%; top:33%" aria-label="Show insight 2: The recommendations don't always feel like they understand my personal style.">
+            <img src="img/Vetir/Cutouts/Chat%20bubble%202.png" alt=""><span class="mono">— Shopper</span>
+          </button>
+          <button class="lq r" type="button" data-ins="2" style="right:2%; top:35%" aria-label="Show insight 2: I want recommendations based on the occasion, weather, and where I'm going, not just what's in my closet.">
+            <img src="img/Vetir/Cutouts/Chat%20bubble%205.png" alt=""><span class="mono">— Client</span>
+          </button>
+          <button class="lq l" type="button" data-ins="3" style="left:2%; top:55%" aria-label="Show insight 3: Can it tell me which items in my closet aren't getting enough use?">
+            <img src="img/Vetir/Cutouts/Chat%20bubble%204.png" alt=""><span class="mono">— Shopper</span>
+          </button>
+          <button class="lq r" type="button" data-ins="3" style="right:7%; top:59%" aria-label="Show insight 3: It takes too much effort to keep my wardrobe updated.">
+            <img src="img/Vetir/Cutouts/Chat%20bubble%203.png" alt=""><span class="mono">— Client</span>
+          </button>
+          <button class="lq l" type="button" data-ins="4" style="left:26%; top:5%" aria-label="Show insight 4: There's no relevant client data to help me manage or improve engagement.">
+            <img src="img/Vetir/Cutouts/Chat%20bubble%208.png" alt=""><span class="mono">— Stylist</span>
+          </button>
+          <button class="lq r" type="button" data-ins="4" style="right:25%; top:7%" aria-label="Show insight 4: Won't I rather just use Excel, ChatGPT, and WhatsApp instead?">
+            <img src="img/Vetir/Cutouts/Chat%20bubble%206.png" alt=""><span class="mono">— Stylist</span>
+          </button>
+        <div class="learn-center">
+          <div class="cs-num mono">Insights</div>
+          <div class="learn-head">
+            <h2>No research budget. <em>Plenty of signal.</em></h2>
+          </div>
+          <div class="ins-card" aria-live="polite">
+            <span class="mono ins-k" id="ins-k">Insight 01</span>
+            <h3 id="ins-t">People couldn't find what already existed.</h3>
+            <p id="ins-d">Navigation hid the product's range, so existing features went unused.</p>
+          </div>
+          <div class="ins-nav">
+            <div class="ins-steps" role="tablist" aria-label="Insights">
+              <button type="button" class="ins-step on" data-i="0" aria-label="Insight 1"></button>
+              <button type="button" class="ins-step" data-i="1" aria-label="Insight 2"></button>
+              <button type="button" class="ins-step" data-i="2" aria-label="Insight 3"></button>
+              <button type="button" class="ins-step" data-i="3" aria-label="Insight 4"></button>
+            </div>
+            <span id="ins-count">01 / 04</span>
+          </div>
+        </div>
+        <div class="signals"><span>Signals from</span><p>Google Analytics <i>·</i> UX audit <i>·</i> Product feedback <i>·</i> Competitor analysis</p></div>
+      </div>
+    </section>
+
+    <!-- ============ 04 PRINCIPLES: we're serving ============ -->
+    <section class="cs principles" id="principles">
+      <div class="wrap">
+        <div class="cs-head reveal">
+          <div class="cs-num mono">Principles</div>
+          <div></div>
+        </div>
+        <div class="serve-grid reveal">
+          <div class="serve-card" aria-label="A hand serving a styled outfit on a silver tray">
+            <div class="title"><span>Serving Looks</span><small class="mono">since 2024</small></div>
+            <img class="hand" src="img/Vetir/Cutouts/Hand%20Serve.png" alt="">
+            <!-- Further looks (servinglooks2, 3, ...) are added by the script below -->
+            <img class="look is-shown" src="img/Vetir/Cutouts/servinglooks1.png" alt="Model in a styled outfit, standing on the serving tray">
+          </div>
+          <div>
+            <div class="principle">
+              <span class="mono">Principle 01</span>
+              <h3>AI as a <em>stylist,</em> not a search engine.</h3>
+              <p>A stylist serves you a look. Search hands you a list. Every AI feature was tested against this, and wherever something returned a static list when it could collaborate with the user instead, that became the problem to solve.</p>
+            </div>
+            <div class="principle">
+              <span class="mono">Principle 02</span>
+              <h3>One system, one <em>luxury</em> identity.</h3>
+              <p>Minimal and editorial: imagery does the emotional work, restraint does the credibility work. Every new feature is built inside the system, not bolted on as an exception.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 05 CASE ============ -->
+    <section class="cs" id="case">
+      <div class="wrap">
+        <div class="cs-head reveal">
+          <div class="cs-num mono">Buy-in</div>
+          <h2>It was live. <em>It wasn't clicking yet.</em></h2>
+        </div>
+        <div class="cs-body reveal">
+          <div class="col prose"><p class="lede">Traction and revenue were low, and people were confused about what Vêtir actually offered: a store, a styling app or a stylist marketplace?</p><p>Adding more features felt like the obvious fix. I needed to show that the real problem was the experience holding those features together, and make that case on business terms, not aesthetics.</p></div>
+        </div>
+        <div class="steps reveal">
+          <div class="step"><span class="mono">Step 01 · Audit</span><h3>A series of audit presentations</h3><p>Covering the website and app: where the experience broke down, and where it looked mass market next to the luxury brands it sold. <span class="tbd">+ one concrete cost</span></p></div>
+          <div class="step"><span class="mono">Step 02 · Trial</span><h3>The Outfit Module as the trial</h3><p>The founder agreed to redesign one module first to test the approach.</p></div>
+          <div class="step"><span class="mono">Step 03 · Proof</span><h3>The trial became the plan</h3><p>The ops team, who onboard clients and stylists every day, started relaying positive feedback. The redesign continued module by module.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 06 ROADMAP: receipt (paper) ============ -->
+    <section class="cs paper-bg" id="roadmap">
+      <div class="wrap">
+        <div class="receipt-row reveal">
+          <div class="receipt-h">
+            <div class="cs-num mono">Roadmap</div>
+            <h2 class="receipt-h2">Redesigning <em>through</em> the roadmap.</h2>
+          </div>
+          <div class="receipt-col">
+            <div class="receipt-mock">
+              <div class="r-feed"><div class="r-paper">
+              <img src="img/Vetir/Cutouts/Redesign%20Receipt.webp?v=2" alt="">
+              <div class="receipt-text" aria-label="Redesign timeline as a receipt">
+                <div class="receipt-head">
+                  <h3><span>Redesign</span><small>Roadmap</small></h3>
+                  <div class="dash"></div>
+                </div>
+                <img class="receipt-look" src="img/Vetir/Cutouts/Outfit-1.png" alt="A styled outfit: denim jacket and skirt, black bag, sunglasses, gold earrings and black heels">
+                <div class="dash"></div>
+              <div class="line"><span class="name">· Research</span><span class="dots"></span><span>May</span></div>
+              <div class="line"><span class="name">· Outfit</span><span class="dots"></span><span>Jun</span></div>
+              <div class="line"><span class="name">· Closet</span><span class="dots"></span><span>Jul</span></div>
+              <div class="line"><span class="name">· Checkout</span><span class="dots"></span><span>Aug</span></div>
+              <div class="line"><span class="name">· Consignment</span><span class="dots"></span><span>Sep</span></div>
+              <div class="line ai"><span class="name">· AI Stylist</span><span class="dots"></span><span>Oct</span></div>
+              <div class="line ai"><span class="name">· Avatar + try-on</span><span class="dots"></span><span>Nov</span></div>
+              <div class="line"><span class="name">· Homepages ×3</span><span class="dots"></span><span>Jan</span></div>
+              <div class="line"><span class="name">· Stylist dashboard</span><span class="dots"></span><span>May</span></div>
+              <div class="dash"></div>
+              <div class="line total"><span class="name">Total</span><span class="dots"></span><span>8 modules · 1 designer</span></div>
+              <div class="barcode"></div>
+              <div class="barcode-n">0525 0926 2026</div>
+            </div>
+            <div class="stamp-r">Shipped</div>
+              </div></div>
+              <img class="r-printer" src="img/Vetir/Cutouts/Redesign%20Receipt.webp?v=2" alt="">
+            </div>
+          </div>
+          <div class="prose receipt-body">
+            <p class="lede">A big-bang redesign wasn't realistic for a five-person engineering team at our funding stage.</p>
+            <p>Instead, <strong>every incoming feature request became the entry point to redesign its whole module</strong> in the new system. The redesign absorbed the roadmap rather than competing with it. Many smaller flows shipped between these milestones.</p>
+            <p class="cap">✦ = AI-led module.</p>
+            <div class="callout">
+              <span class="mono">The tradeoff</span>
+              <p>For months, two design systems ran side by side. Keeping the product feeling coherent across converted and unconverted pages took constant judgment calls. High-value surfaces went first, internal tools last, and the AI Stylist's agentic flows were scoped into phase two. The old system is now fully retired.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 07 SYSTEM: magazine spread ============ -->
+    <section class="cs" id="system">
+      <div class="wrap">
+        <div class="cs-head reveal">
+          <div class="cs-num mono">System</div>
+          <h2>Quiet by design. <em>Built to scale.</em></h2>
+        </div>
+
+        <div class="spread reveal">
+          <div class="page left">
+            <div class="ds-label mono">Type</div>
+            <div class="aa">Aa</div>
+            <div class="fam"><b>Helvetica Neue</b> replaces Helvetica (app) + Libre and assorted fonts (web). Vêtir is full of functional flows, so one legible family beat an editorial pairing. A proper hierarchy also fixed SEO.</div>
+            <div class="scale-row"><span style="font-size:36px;font-weight:700;letter-spacing:-0.04em;line-height:1">Display</span><span class="mono">40 / Bold</span></div>
+            <div class="scale-row"><span style="font-size:26px;font-weight:600;letter-spacing:-0.03em;line-height:1.1">Heading</span><span class="mono">28 / Medium</span></div>
+            <div class="scale-row"><span style="font-size:16px">Body copy for styling advice</span><span class="mono">17 / Regular</span></div>
+            <div class="scale-row"><span style="font-size:11px;letter-spacing:0.08em;text-transform:uppercase">Label · Caption</span><span class="mono">12 / Regular</span></div>
+            <p class="cap"><span class="tbd">placeholder scale, swap in real sizes</span></p>
+          </div>
+          <div class="page right">
+            <div class="ds-label mono">Colour</div>
+            <div class="swatches">
+              <div class="sw-chip" style="background:#0E0E0E;color:#fff">Ink</div>
+              <div class="sw-chip" style="background:#fff;border:1px solid #EEE9E0">Paper</div>
+              <div class="sw-chip sw-gold">Gold = AI only · #B08D57 <span class="tbd" style="margin-left:6px">swap hex</span></div>
+            </div>
+            <div class="status-row">
+              <div style="background:#D8E6D6">Success</div>
+              <div style="background:#F2E6C9">Warning</div>
+              <div style="background:#F0D4CF">Error</div>
+              <div style="background:#D6DEEA">Info</div>
+            </div>
+            <p class="cap">Black and white carry the product. Gold is reserved for AI, so users recognize "the stylist is here" at a glance. Muted pastel status colours keep the editorial mood.</p>
+            <div class="mini-stats">
+              <div><b>4pt</b><span>spacing; separate grids for iOS and web</span></div>
+              <div><b>200+</b><span>components on Figma variables that map to code</span></div>
+              <div><b>All</b><span>shared ownership, internal visual check before push</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="reveal" style="margin-top:28px">
+          <div class="ds-label mono">Signature components</div>
+          <div class="ds-collage">
+            <p class="ds-ghost" aria-hidden="true">Quiet by design.<br>Built to scale.</p>
+            <figure class="ds-piece" tabindex="0" style="--x:7.73%; --y:7.56%; --w:12.73%; --mw:159px; --z:2"><img src="img/Vetir/New%20Work/DesignSys/ProductCard3.png" alt="Product card: gold watch with add-to-bag and wishlist actions, brand and price" width="227" height="328"><figcaption class="mono">Product card</figcaption></figure>
+            <figure class="ds-piece pill" tabindex="0" style="--x:6.82%; --y:35.61%; --w:17.27%; --mw:192px; --z:5"><img src="img/Vetir/New%20Work/DesignSys/Molecule-ai-prompt.png" alt="AI Stylist prompt: Hi, what do you want to wear today?" width="275" height="52" loading="lazy"><figcaption class="mono">AI prompt</figcaption></figure>
+            <figure class="ds-piece" tabindex="0" style="--x:5.91%; --y:44.15%; --w:17.27%; --mw:240px; --z:2"><img src="img/Vetir/New%20Work/DesignSys/Component-Premium.png" alt="Premium upsell modal: unlock personalized styling, premium tools, packing lists and virtual try-on" width="343" height="386" loading="lazy"><figcaption class="mono">Premium upsell</figcaption></figure>
+            <figure class="ds-piece" tabindex="0" style="--x:5.00%; --y:74.64%; --w:20.00%; --mw:240px; --z:2"><img src="img/Vetir/New%20Work/DesignSys/ProductCard1.png" alt="Cart item: brown leather jacket with size, return policy, sale price and quantity stepper" width="343" height="130" loading="lazy"><figcaption class="mono">Cart item · sale</figcaption></figure>
+            <figure class="ds-piece" tabindex="0" style="--x:27.73%; --y:17.32%; --w:20.91%; --mw:262px; --z:3"><img src="img/Vetir/New%20Work/DesignSys/Component-WeddingLooks.png" alt="Editorial look card: Wedding Guest Looks, styled for an upcoming event" width="375" height="501" loading="lazy"><figcaption class="mono">Editorial look card</figcaption></figure>
+            <figure class="ds-piece" tabindex="0" style="--x:49.55%; --y:12.44%; --w:19.09%; --mw:262px; --z:4"><img src="img/Vetir/New%20Work/DesignSys/Molecule-events.png" alt="Nudge: You have 2 events coming up! Create outfits" width="375" height="36" loading="lazy"><figcaption class="mono">Events nudge</figcaption></figure>
+            <figure class="ds-piece" tabindex="0" style="--x:51.37%; --y:20.98%; --w:20.00%; --mw:265px; --z:3"><img src="img/Vetir/New%20Work/DesignSys/Component-ShopThisLook.png" alt="Shop This Look sheet: every piece in the look with sizes, added to cart in one tap" width="379" height="454" loading="lazy"><figcaption class="mono">Shop this look</figcaption></figure>
+            <figure class="ds-piece" tabindex="0" style="--x:35.00%; --y:58.78%; --w:23.64%; --mw:262px; --z:5"><img src="img/Vetir/New%20Work/DesignSys/Molecule-listening.png" alt="Voice search bar, listening" width="375" height="40" loading="lazy"><figcaption class="mono">Voice search</figcaption></figure>
+            <figure class="ds-piece" tabindex="0" style="--x:28.64%; --y:67.32%; --w:12.73%; --mw:265px; --z:2"><img src="img/Vetir/New%20Work/DesignSys/Component-SkinTone.png" alt="Skin tone selector for the try-on avatar, from Porcelain to Espresso" width="379" height="560" loading="lazy"><figcaption class="mono">Skin tone · try-on</figcaption></figure>
+            <figure class="ds-piece" tabindex="0" style="--x:45.00%; --y:67.32%; --w:12.73%; --mw:159px; --z:2"><img src="img/Vetir/New%20Work/DesignSys/ProductCard4.png" alt="Outfit card: Classy Evening Look flat lay with try-on, add-to-bag and AI actions" width="227" height="326" loading="lazy"><figcaption class="mono">Outfit card</figcaption></figure>
+            <figure class="ds-piece" tabindex="0" style="--x:59.09%; --y:60.00%; --w:13.64%; --mw:271px; --z:2"><img src="img/Vetir/New%20Work/DesignSys/Component-EmptyState.png" alt="Empty state: Create your next look, with Create Outfit and Ask AI Stylist actions" width="387" height="450" loading="lazy"><figcaption class="mono">Empty state · AI entry</figcaption></figure>
+            <figure class="ds-piece" tabindex="0" style="--x:71.37%; --y:7.56%; --w:20.91%; --mw:262px; --z:2"><img src="img/Vetir/New%20Work/DesignSys/Molecule-friday.png" alt="AI prompt card: Get your Friday fit in an instant" width="375" height="200" loading="lazy"><figcaption class="mono">AI prompt card</figcaption></figure>
+            <figure class="ds-piece pill" tabindex="0" style="--x:74.09%; --y:26.46%; --w:10.00%; --mw:102px; --z:5"><img src="img/Vetir/New%20Work/DesignSys/Molecule-ask-ai.png" alt="Ask AI Stylist pill with the gold AI sparkle" width="146" height="52" loading="lazy"><figcaption class="mono">AI entry</figcaption></figure>
+            <figure class="ds-piece" tabindex="0" style="--x:74.09%; --y:34.39%; --w:18.18%; --mw:262px; --z:2"><img src="img/Vetir/New%20Work/DesignSys/Molecule-earning.png" alt="Earning potential: $356 a stylist could earn from this look" width="375" height="138" loading="lazy"><figcaption class="mono">Stylist earnings</figcaption></figure>
+            <figure class="ds-piece" tabindex="0" style="--x:74.09%; --y:47.81%; --w:18.18%; --mw:241px; --z:2"><img src="img/Vetir/New%20Work/DesignSys/ProductCard5.png" alt="Collection banner: Paris Vacation '26 with a flat lay of the looks" width="344" height="120"><figcaption class="mono">Collection banner</figcaption></figure>
+            <figure class="ds-piece" tabindex="0" style="--x:76.36%; --y:69.27%; --w:20.00%; --mw:240px; --z:2"><img src="img/Vetir/New%20Work/DesignSys/ProductCard2.png" alt="Cart item: pink satin pumps with size, size chart, price and quantity stepper" width="343" height="130" loading="lazy"><figcaption class="mono">Cart item · full price</figcaption></figure>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 08 CHAPTERS: folder tabs ============ -->
+    <section class="cs" id="chapters">
+      <div class="wrap">
+        <div class="cs-head reveal">
+          <div class="cs-num mono">Chapters</div>
+          <h2>Six modules. <em>One product.</em></h2>
+        </div>
+
+        <div class="ch-tabs reveal" role="tablist" aria-label="Chapters">
+          <button class="ch-tab on" type="button" role="tab" id="tab-ch-outfit" aria-controls="ch-outfit" aria-selected="true" data-ai><span class="n">01</span>Outfits and Styling</button>
+          <button class="ch-tab" type="button" role="tab" id="tab-ch-closet" aria-controls="ch-closet" aria-selected="false"><span class="n">02</span>Closet</button>
+          <button class="ch-tab" type="button" role="tab" id="tab-ch-ai" aria-controls="ch-ai" aria-selected="false" data-ai><span class="n">03</span>AI Stylist</button>
+          <button class="ch-tab" type="button" role="tab" id="tab-ch-home" aria-controls="ch-home" aria-selected="false"><span class="n">04</span>Homepages</button>
+          <button class="ch-tab" type="button" role="tab" id="tab-ch-dash" aria-controls="ch-dash" aria-selected="false"><span class="n">05</span>Stylist dashboard</button>
+          <button class="ch-tab" type="button" role="tab" id="tab-ch-checkout" aria-controls="ch-checkout" aria-selected="false"><span class="n">06</span>Checkout</button>
+        </div>
+        <div class="ch-panel" id="ch-panel">
+          <article class="ch-pane on chapter" id="ch-outfit" role="tabpanel" aria-labelledby="tab-ch-outfit">
+          <div class="ch-text">
+            <span class="mono">Chapter 01 · <span style="color:var(--gold)">✦ AI</span></span>
+            <h3>Curated Looks <em>+ AI Styling</em></h3>
+            <div class="ba">
+              <span class="mono">Before</span><span>A static canvas, one undifferentiated product list, and AI help in a separate chat.</span>
+              <span class="mono">After</span><span class="after">The AI Stylist lives inside the canvas. Ask for ideas while you build.</span>
+            </div>
+            <p>Auto-arranged compositions, auto-filled outfit details, image-based search, looks built from a reference photo, and a calendar to plan ahead. The canvas <em class="serif-i">is</em> a flat lay, so that's how it's shown here.</p>
+            <a class="deep" href="#" aria-disabled="true">Deep dive <span class="soon">· coming soon</span></a>
+          </div>
+          <div class="ootd">
+            <div class="sheet">
+              <img class="ootd-look is-shown" src="img/Vetir/New%20Work/Chapter1.png" alt="New outfit canvas with the AI Stylist suggesting flats inside the canvas">
+              <img class="ootd-look" src="img/Vetir/New%20Work/Chapter1a.png" alt="My Outfits screen with a styled Black-tie Gala look">
+              <img class="ootd-look" src="img/Vetir/New%20Work/Chapter1b.png" alt="All Outfits grid of saved looks, filterable by stylist picks, my looks and trending">
+            </div>
+          </div>
+        <!-- HIDDEN (Oct 2026): before/after compare slider for the outfit canvas. Waiting on real old/new canvas screens + AI Stylist recording. Remove `hidden` to show it again. -->
+        <div class="ch-wide" hidden>
+          <div class="compare" data-compare style="aspect-ratio: 16/7">
+            <figure class="ph after-ph"><svg><use href="#i-img"/></svg><div class="ph-tag">After · new canvas</div><div class="ph-desc">Embedded AI Stylist, closet/wishlist tags, auto-composition</div></figure>
+            <figure class="ph before-ph"><svg><use href="#i-img"/></svg><div class="ph-tag">Before · old canvas</div><div class="ph-desc">Bottom-sheet product list</div></figure>
+            <span class="tag b mono">Before</span><span class="tag a mono">After</span>
+            <div class="handle"></div>
+            <input type="range" min="0" max="100" value="50" aria-label="Compare before and after">
+          </div>
+          <p class="cap"><b>Drag to compare</b> the real screens. Plus an 8–10s recording of the AI Stylist inside the canvas.</p>
+        </div>
+        </article>
+          <article class="ch-pane chapter flip" id="ch-closet" role="tabpanel" aria-labelledby="tab-ch-closet" hidden>
+          <div class="ch-text">
+            <span class="mono">Chapter 02</span>
+            <h3>Closets <em>and wardrobe management</em></h3>
+            <div class="ba">
+              <span class="mono">Before</span><span>Everything in one list.</span>
+              <span class="mono">After</span><span class="after">Closet, wishlist and stylist-recommended pieces, each with its own clear treatment.</span>
+            </div>
+          </div>
+          <div class="pair phones single">
+            <figure class="ph closet-card"><img class="ph-fill" src="img/Vetir/New%20Work/Chapter2.png" alt="New closet with closets, cities and categories"></figure>
+          </div>
+        </article>
+          <article class="ch-pane chapter" id="ch-ai" role="tabpanel" aria-labelledby="tab-ch-ai" hidden>
+          <div class="ch-text">
+            <span class="mono">Chapter 03 · <span style="color:var(--gold)">✦ AI</span></span>
+            <h3>AI Stylist <em>+ try-on</em></h3>
+            <div class="ba">
+              <span class="mono">Before</span><span>Type a query, get a wall of products. It felt like search.</span>
+              <span class="mono">After</span><span class="after">Styled outfits in the chat, and try-ons at the moment of purchase: see it on you, see what pairs with it.</span>
+            </div>
+            <p class="cap"><span class="tbd">later: query types itself, grid scrolls, then resolves into one styled look</span></p>
+          </div>
+          <div class="masonry" aria-label="Search grid with a stylist reply on top">
+            <span class="masonry-tag mono">Before: a wall of results</span>
+            <div class="colm">
+              <div class="tile" style="height:190px"><img src="img/Vetir/New%20Work/Chapter3bg/aistylistsearch1.png" alt="" loading="lazy"></div>
+              <div class="tile" style="height:250px"><img src="img/Vetir/New%20Work/Chapter3bg/aistylistsearch6.png" alt="" loading="lazy"></div>
+            </div>
+            <div class="colm">
+              <div class="tile" style="height:240px"><img src="img/Vetir/New%20Work/Chapter3bg/aistylistsearch7.png" alt="" loading="lazy"></div>
+              <div class="tile" style="height:210px"><img src="img/Vetir/New%20Work/Chapter3bg/aistylistsearch3.png" alt="" loading="lazy"></div>
+              <div class="tile" style="height:200px"><img src="img/Vetir/New%20Work/Chapter3bg/aistylistsearch8.png" alt="" loading="lazy"></div>
+            </div>
+            <div class="colm">
+              <div class="tile" style="height:200px"><img src="img/Vetir/New%20Work/Chapter3bg/aistylistsearch2.png" alt="" loading="lazy"></div>
+              <div class="tile" style="height:170px"><img src="img/Vetir/New%20Work/Chapter3bg/aistylistsearch5.png" alt="" loading="lazy"></div>
+              <div class="tile" style="height:220px"><img src="img/Vetir/New%20Work/Chapter3bg/aistylistsearch4.png" alt="" loading="lazy"></div>
+            </div>
+            <div class="searchbar"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><span>Something chic for dinner<span class="caret"></span></span></div>
+            <figure class="ph phone after after-phone"><img class="ph-fill" src="img/Vetir/New%20Work/Chapter3.png" alt="AI Stylist suggesting summer soiree looks on a try-on avatar"></figure>
+          </div>
+        </article>
+          <article class="ch-pane chapter stack" id="ch-home" role="tabpanel" aria-labelledby="tab-ch-home" hidden>
+          <div class="stack-top">
+            <div class="ch-text">
+              <span class="mono">Chapter 04</span>
+              <h3>Personalized <em>homepages</em></h3>
+              <p>Three audiences, three homepages. Shoppers and clients open on weekly try-ons across diverse avatars, followed by stylist picks, new arrivals, edits and a direct way into the AI Stylist. Guests get a lighter introduction to the product.</p>
+              <a class="deep" href="#" aria-disabled="true">Deep dive <span class="soon">· coming soon</span></a>
+            </div>
+          </div>
+          <div class="covers">
+              <figure class="cover">
+                <figcaption class="cover-title"><span class="mono">Homepage · The Shopper</span></figcaption>
+                <span class="pframe">
+                <button class="scroll-frame" type="button" data-base="img/Vetir/New%20Work/Chapter4ClientHP_App" data-title="Homepage · The Shopper" aria-label="View the full shopper homepage">
+                  <span class="sf-ph"><span class="ph-tag">Full-length screenshot</span><span class="ph-desc">Drop <b>homepage-shopper.webp</b> into img/Vetir/designs_ss</span><span class="ph-spec">786 px wide · any height</span></span>
+                  <img class="sf-img" alt="Full shopper homepage" hidden>
+                  <span class="sf-chip mono">View full page ↗</span>
+                </button>
+                </span>
+                <span class="cover-cap mono">Styled looks first</span>
+              </figure>
+              <figure class="cover">
+                <figcaption class="cover-title"><span class="mono">Homepage · The Stylist</span></figcaption>
+                <span class="pframe">
+                <button class="scroll-frame" type="button" data-base="img/Vetir/New%20Work/Chapter4StylistHP_App" data-title="Homepage · The Stylist" aria-label="View the full stylist homepage">
+                  <span class="sf-ph"><span class="ph-tag">Full-length screenshot</span><span class="ph-desc">Drop <b>homepage-client.webp</b> into img/Vetir/designs_ss</span><span class="ph-spec">786 px wide · any height</span></span>
+                  <img class="sf-img" alt="Full stylist homepage" hidden>
+                  <span class="sf-chip mono">View full page ↗</span>
+                </button>
+                </span>
+                <span class="cover-cap mono">AI assistant + earnings first</span>
+              </figure>
+              <figure class="cover">
+                <figcaption class="cover-title"><span class="mono">Homepage · The Guest</span></figcaption>
+                <span class="pframe">
+                <button class="scroll-frame" type="button" data-base="img/Vetir/New%20Work/Chapter4NewUserHP_App" data-title="Homepage · The Guest" aria-label="View the full guest homepage">
+                  <span class="sf-ph"><span class="ph-tag">Full-length screenshot</span><span class="ph-desc">Drop <b>homepage-guest.webp</b> into img/Vetir/designs_ss</span><span class="ph-spec">786 px wide · any height</span></span>
+                  <img class="sf-img" alt="Full guest homepage" hidden>
+                  <span class="sf-chip mono">View full page ↗</span>
+                </button>
+                </span>
+                <span class="cover-cap mono">A lighter introduction</span>
+              </figure>
+          </div>
+          <p class="cap" style="text-align:center">Every screen scrolls on its own. Hover to pause, click for the full page.</p>
+          <figure class="home-web">
+            <figcaption class="cover-title"><span class="mono">Homepage · The Guest on web</span></figcaption>
+            <div class="hw-frame">
+              <video autoplay muted loop playsinline preload="metadata" aria-label="Walkthrough of the guest homepage on desktop web">
+                <source src="img/Vetir/New%20Work/Chapter5_Guest_Homepage_clean.webm" type="video/webm">
+                <source src="img/Vetir/New%20Work/Chapter5_Guest_Homepage_clean.mp4" type="video/mp4">
+              </video>
+            </div>
+          </figure>
+        </article>
+          <article class="ch-pane chapter" id="ch-dash" role="tabpanel" aria-labelledby="tab-ch-dash" hidden>
+          <div class="ch-text">
+            <span class="mono">Chapter 05</span>
+            <h3>Stylist <em>dashboard</em></h3>
+            <p>Built around a stylist's actual job: performance and client roster first, turning data into next steps. This is the answer to "Won't I rather just use Excel?"</p>
+          </div>
+          <div class="dash-wrap">
+              <button class="shot-btn dash-btn" type="button" data-full="img/Vetir/New%20Work/Chapter5.webp" data-title="Stylist dashboard" aria-label="Open the full stylist dashboard"><span class="pframe"><span class="shot phone"><img src="img/Vetir/New%20Work/Chapter5.webp" alt="New stylist analytics with earnings, performance and today's focus"></span></span></button>
+              <span class="cap mono">Hover to scroll · click for the full screen</span>
+            </div>
+        </article>
+          <article class="ch-pane chapter flip" id="ch-checkout" role="tabpanel" aria-labelledby="tab-ch-checkout" hidden>
+          <div class="ch-text">
+            <span class="mono">Chapter 06</span>
+            <h3>Checkout <em>&amp; consignments</em></h3>
+            <div class="ba">
+              <span class="mono">Before</span><span>One cart, one buyer. Stylists ordering for clients had to work around the flow, especially on returns.</span>
+              <span class="mono">After</span><span class="after">Checkout was rebuilt around how stylists actually buy: shopping for several clients in one go, managing consignment orders, and handling returns on their behalf. Shoppers got promo codes and easier payments along the way.</span>
+            </div>
+          </div>
+          <div class="bag-scene" aria-label="Product cards and a vêtir shopping bag">
+            <div class="carousel">
+              <div class="card"><div class="pic"><img src="img/Vetir/New%20Work/Chapter3bg/aistylistsearch6.png" alt="" loading="lazy"><svg class="fav" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg></div><div class="pc-meta"><span class="nm">Draped jersey gown</span><span class="pr">$1,180</span></div></div>
+              <div class="card"><div class="pic"><img src="img/Vetir/New%20Work/Chapter3bg/aistylistsearch2.png" alt="" loading="lazy"><svg class="fav" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg></div><div class="pc-meta"><span class="nm">Ruffled chiffon blouse</span><span class="pr">$640</span></div></div>
+              <div class="card"><div class="pic"><img src="img/Vetir/New%20Work/Chapter3bg/aistylistsearch3.png" alt="" loading="lazy"><svg class="fav" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg></div><div class="pc-meta"><span class="nm">Slingback pumps</span><span class="pr">$895</span></div></div>
+              <div class="card"><div class="pic"><img src="img/Vetir/New%20Work/Chapter3bg/aistylistsearch4.png" alt="" loading="lazy"><svg class="fav" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg></div><div class="pc-meta"><span class="nm">One-shoulder swimsuit</span><span class="pr">$320</span></div></div>
+            </div>
+            <div class="bag">
+              <div class="handle"></div>
+              <div class="peek"><img src="img/Vetir/New%20Work/Chapter3bg/aistylistsearch7.png" alt="" loading="lazy"></div>
+              <div class="body"><span>vêtir</span></div>
+              <span class="bag-hint mono">Tap on a product</span>
+            </div>
+          </div>
+        </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 09 ENGINEERING ============ -->
+    <section class="cs" id="engineering">
+      <div class="wrap">
+        <div class="cs-head reveal">
+          <div class="cs-num mono">Engineering</div>
+          <h2>From two systems <em>to one language.</em></h2>
+        </div>
+        <div class="cs-body reveal">
+          <div class="col prose"><p>Rolling the system out module by module meant components arrived gradually, instead of a disruptive handoff. Engineering adopted the new components, and once we added an AI-assisted Figma-to-code workflow, variables and components mapped almost one-to-one into code.</p></div>
+        </div>
+        <div class="eng reveal">
+          <div><span class="mono">01</span>Design QA pass after every feature ships</div>
+          <div><span class="mono">02</span>Interaction docs for each redesigned module</div>
+          <div><span class="mono">03</span>On-call handovers for edge cases and missing states</div>
+          <div><span class="mono">04</span>Design work tracked in Jira alongside engineering</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 09b GO-TO-MARKET: the stylist deck ============ -->
+    <section class="cs" id="deck">
+      <div class="wrap">
+        <div class="cs-head reveal">
+          <div class="cs-num mono">For stylists</div>
+          <h2 class="h2-two">The Stylists’ Studio</h2>
+        </div>
+        <div class="cs-body reveal">
+          <div class="col prose">
+            <p>Stylists were Vêtir's growth engine: each one brought their own clients. So the product grew a toolkit around a stylist's working day: commissions on every client purchase, digitized client closets, AI-assisted styling, live chat, a look calendar, invoicing and a performance dashboard.</p>
+            <p>Together, they made Vêtir a place where a stylist could run their whole business.</p>
+          </div>
+        </div>
+        <div class="deck-strip reveal" aria-label="Stylist features">
+            <div class="deck-group"><span class="deck-label mono">Earn</span><div class="deck-row">
+              <button class="deck-slide" type="button" data-title="Earn with every client purchase"><img src="img/Vetir/New%20Work/StylistDeck/slide-01.webp" alt="Stylist feature: Earn with every client purchase" width="600" height="1299" loading="lazy"></button>
+              <button class="deck-slide" type="button" data-title="Recommend and earn commissions"><img src="img/Vetir/New%20Work/StylistDeck/slide-03.webp" alt="Stylist feature: Recommend and earn commissions" width="600" height="1299" loading="lazy"></button>
+              <button class="deck-slide" type="button" data-title="Social sharing. Earn revenue."><img src="img/Vetir/New%20Work/StylistDeck/slide-11.webp" alt="Stylist feature: Social sharing. Earn revenue." width="600" height="1299" loading="lazy"></button>
+              <button class="deck-slide" type="button" data-title="Top commission rates in the industry"><img src="img/Vetir/New%20Work/StylistDeck/slide-12.webp" alt="Stylist feature: Top commission rates in the industry" width="600" height="1299" loading="lazy"></button>
+            </div></div>
+            <div class="deck-group"><span class="deck-label mono">Run the business</span><div class="deck-row">
+              <button class="deck-slide" type="button" data-title="Digitize your clients' closets"><img src="img/Vetir/New%20Work/StylistDeck/slide-02.webp" alt="Stylist feature: Digitize your clients' closets" width="600" height="1299" loading="lazy"></button>
+              <button class="deck-slide" type="button" data-title="Style faster with AI"><img src="img/Vetir/New%20Work/StylistDeck/slide-04.webp" alt="Stylist feature: Style faster with AI" width="600" height="1299" loading="lazy"></button>
+              <button class="deck-slide" type="button" data-title="Live chat enabled"><img src="img/Vetir/New%20Work/StylistDeck/slide-05.webp" alt="Stylist feature: Live chat enabled" width="600" height="1299" loading="lazy"></button>
+              <button class="deck-slide" type="button" data-title="Calendarize client looks"><img src="img/Vetir/New%20Work/StylistDeck/slide-06.webp" alt="Stylist feature: Calendarize client looks" width="600" height="1299" loading="lazy"></button>
+              <button class="deck-slide" type="button" data-title="Your day, at a glance"><img src="img/Vetir/New%20Work/StylistDeck/slide-09.webp" alt="Stylist feature: Your day, at a glance" width="600" height="1299" loading="lazy"></button>
+              <button class="deck-slide" type="button" data-title="Manage client invoices in one place"><img src="img/Vetir/New%20Work/StylistDeck/slide-10.webp" alt="Stylist feature: Manage client invoices in one place" width="600" height="1299" loading="lazy"></button>
+              <button class="deck-slide" type="button" data-title="See it. Snap it. Own it."><img src="img/Vetir/New%20Work/StylistDeck/slide-13.webp" alt="Stylist feature: See it. Snap it. Own it." width="600" height="1299" loading="lazy"></button>
+            </div></div>
+            <div class="deck-group"><span class="deck-label mono">Grow, with backup</span><div class="deck-row">
+              <button class="deck-slide" type="button" data-title="Your performance dashboard"><img src="img/Vetir/New%20Work/StylistDeck/slide-07.webp" alt="Stylist feature: Your performance dashboard" width="600" height="1299" loading="lazy"></button>
+              <button class="deck-slide" type="button" data-title="Insights to boost sales"><img src="img/Vetir/New%20Work/StylistDeck/slide-08.webp" alt="Stylist feature: Insights to boost sales" width="600" height="1299" loading="lazy"></button>
+              <button class="deck-slide" type="button" data-title="Your dedicated Vêtir support team"><img src="img/Vetir/New%20Work/StylistDeck/slide-14.webp" alt="Stylist feature: Your dedicated Vêtir support team" width="600" height="1299" loading="lazy"></button>
+            </div></div>
+        </div>
+        <p class="cap mono deck-hint">Scroll sideways · click a slide to enlarge</p>
+      </div>
+    </section>
+
+    <!-- ============ 10 OUTCOMES: customer favorite spread ============ -->
+    <section class="cs" id="outcomes">
+      <div class="oc-bg" aria-hidden="true">
+        <video autoplay muted loop playsinline preload="metadata">
+          <source src="img/Vetir/Outcomes_video.webm" type="video/webm">
+          <source src="img/Vetir/Outcomes_video.mp4" type="video/mp4">
+        </video>
+      </div>
+      <div class="wrap">
+        <div class="cs-head reveal">
+          <div class="cs-num mono">Outcomes</div>
+          <h2 class="h2-two">Finally, it <em>looked the part.</em></h2>
+        </div>
+        <div class="outcomes reveal">
+          <div class="oc"><div class="n">13×</div><p><b>Stylists on the platform</b> (~14 → 190), as it became something stylists could run their business on.</p></div>
+          <div class="oc"><div class="n">↑ <small>organic</small></div><p><b>More search traffic and orders</b> after the type and hierarchy overhaul.</p></div>
+          <div class="oc"><div class="n">–40% <small>drop-off</small></div><p><b>Lower drop-off, higher engagement.</b> More active users, longer sessions. <span class="tbd">placeholder, confirm once analytics are reconciled</span></p></div>
+          <div class="oc"><div class="n">≈0</div><p><b>Complaints about confusing UI.</b> Also faster design-to-build and fewer QA issues.</p></div>
+        </div>
+
+        <div class="spread fav-spread reveal" hidden>
+          <div class="page left">
+            <h3>Customer<br>favorite</h3>
+            <div class="row">
+              <figure class="ph"><div class="ph-tag">Lifestyle</div><div class="ph-desc">User or avatar shot</div></figure>
+              <figure class="ph"><div class="ph-tag">Try-on</div><div class="ph-desc">Avatar still</div></figure>
+            </div>
+          </div>
+          <div class="page right">
+            <div class="fav-photo" role="img" aria-label="Vêtir on laptop and phone"></div>
+            <blockquote>"Personalized, chic, and finally in line with luxury fashion."</blockquote>
+            <p class="cap" style="margin-top:6px">Users &amp; stylists <span class="tbd">paraphrased, real quote?</span></p>
+            <div class="small-q">
+              <span>Relevant styling advice, right on the homepage.</span>
+              <span>Seeing yourself in the pieces before you buy.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============ 11 NEXT ============ -->
+  <footer>
+    <section class="next" id="next">
+      <div class="wrap">
+        <span class="mono" style="color:#8C8883">What's next</span>
+        <h2>A foundation, <em>not a finish line.</em></h2>
+        <p>The redesign was phased on purpose, so the foundation is ready for what's next: the AI Stylist's deeper agentic flows. Next for me: putting hard numbers behind what the redesign already shows.</p>
+        <div class="next-links">
+          <a href="#" aria-disabled="true"><span class="mono">Deep dive · soon</span><b>Outfit Module + AI Stylist</b></a>
+          <a href="#" aria-disabled="true"><span class="mono">Deep dive · soon</span><b>Personalized homepages</b></a>
+          <a href="index.html"><span class="mono">Back to</span><b>← Homepage</b></a>
+        </div>
+      </div>
+    </section>
+    <div class="foot mono">
+      <div class="wrap"><span>Stacy Dias · Product Designer</span><span hidden>Designed between Goa &amp; Kuwait 🌍</span></div>
+    </div>
+  </footer>
+
+  <dialog class="lightbox" id="lightbox" aria-label="Full homepage">
+    <div class="lb-inner">
+      <div class="lb-bar"><em id="lb-title"></em><button class="lb-close" type="button" id="lb-close">Close ✕</button></div>
+      <div class="lb-scroll"><img id="lb-img" alt=""></div>
+    </div>
+  </dialog>
+
+  <script>
+    // Serving looks: finds img/Vetir/Cutouts/servinglooks1, 2, 3, ... (.webp
+    // preferred, else .png) and flips through them in number order like a GIF.
+    // Stops looking after three missing numbers in a row, so a gap is fine.
+    (function () {
+      const card = document.querySelector('.serve-card');
+      const first = card && card.querySelector('.look');
+      if (!first) return;
+      const BASE = 'img/Vetir/Cutouts/servinglooks';
+      const FRAME_MS = 900;
+
+      const find = (n) => new Promise((resolve) => {
+        const attempt = (exts) => {
+          if (!exts.length) return resolve(null);
+          const probe = new Image();
+          probe.onload = () => resolve(probe.src);
+          probe.onerror = () => attempt(exts.slice(1));
+          probe.src = `${BASE}${n}.${exts[0]}`;
+        };
+        attempt(['webp', 'png']);
+      });
+
+      (async () => {
+        const found = [];
+        for (let n = 1, misses = 0; misses < 3; n++) {
+          const src = await find(n);
+          if (src) { found.push(src); misses = 0; } else misses++;
+        }
+        if (!found.length) return;
+        first.src = found[0];
+        const looks = [first];
+        found.slice(1).forEach((src) => {
+          const img = document.createElement('img');
+          img.className = 'look';
+          img.src = src;
+          img.alt = '';
+          img.setAttribute('aria-hidden', 'true');
+          card.appendChild(img);
+          looks.push(img);
+        });
+        if (looks.length < 2 || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        let i = 0;
+        setInterval(() => {
+          looks[i].classList.remove('is-shown');
+          i = (i + 1) % looks.length;
+          looks[i].classList.add('is-shown');
+        }, FRAME_MS);
+      })();
+    })();
+
+    // Reading progress bar
+    const bar = document.getElementById('progress');
+    const onScroll = () => {
+      const h = document.documentElement;
+      bar.style.transform = `scaleX(${h.scrollTop / Math.max(1, h.scrollHeight - h.clientHeight)})`;
+    };
+    document.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+
+    // Before/after sliders
+    document.querySelectorAll('[data-compare]').forEach(el => {
+      const input = el.querySelector('input');
+      const before = el.querySelector('.before-ph');
+      const handle = el.querySelector('.handle');
+      const set = v => { before.style.clipPath = `inset(0 ${100 - v}% 0 0)`; handle.style.left = v + '%'; };
+      input.addEventListener('input', e => set(e.target.value));
+      set(input.value);
+    });
+
+    // Scroll reveal + active section in the contents row
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+    // Floating guide: appears after the hero, tracks the current section, flips to light ink over dark sections
+    const guide = document.getElementById('guide');
+    const gLinks = [...guide.querySelectorAll('a')];
+    const sectionIds = gLinks.map(a => a.getAttribute('href').slice(1));
+    const darkIds = ['learned', 'principles', 'next'];
+    const updateGuide = () => {
+      const mid = innerHeight * 0.5;
+      let current = null;
+      sectionIds.forEach(id => { const el = document.getElementById(id); if (el && el.getBoundingClientRect().top <= mid) current = id; });
+      gLinks.forEach(a => a.classList.toggle('on', a.getAttribute('href') === '#' + current));
+      const hero = document.querySelector('.hero').getBoundingClientRect();
+      const endNext = document.getElementById('next').getBoundingClientRect().top < mid;
+      guide.classList.toggle('show', hero.bottom < mid && !endNext);
+      const gy = guide.getBoundingClientRect(); const gMid = gy.top + gy.height / 2;
+      guide.classList.toggle('dark', darkIds.some(id => { const r = document.getElementById(id)?.getBoundingClientRect(); return r && r.top < gMid && r.bottom > gMid; }));
+    };
+    document.addEventListener('scroll', updateGuide, { passive: true });
+    addEventListener('resize', updateGuide);
+    updateGuide();
+
+
+    // Homepage covers: load the first existing file (webp → png → jpg), then auto-scroll it while in view
+    const lb = document.getElementById('lightbox');
+    const lbImg = document.getElementById('lb-img');
+    document.querySelectorAll('.scroll-frame').forEach(frame => {
+      const img = frame.querySelector('.sf-img');
+      const exts = ['webp', 'png', 'jpg'];
+      let i = 0;
+      const next = () => { if (i < exts.length) img.src = `${frame.dataset.base}.${exts[i++]}`; };
+      const measure = () => {
+        const dist = Math.max(0, img.offsetHeight - frame.clientHeight);
+        frame.style.setProperty('--dist', dist + 'px');
+        frame.style.setProperty('--dur', Math.max(8, dist / 70) + 's');   // ~70px per second each way
+      };
+      img.addEventListener('error', next);
+      // Files dropped in after the page loaded: try again when the tab regains focus
+      const retry = () => { if (!frame.classList.contains('loaded') && i >= exts.length) { i = 0; const t = Date.now(); img.src = `${frame.dataset.base}.${exts[i++]}?t=${t}`; } };
+      window.addEventListener('focus', retry);
+      document.addEventListener('visibilitychange', () => { if (!document.hidden) retry(); });
+      img.addEventListener('load', () => {
+        img.hidden = false; frame.classList.add('loaded'); measure();
+        new ResizeObserver(measure).observe(frame);
+        new IntersectionObserver(([e]) => frame.classList.toggle('run', e.isIntersecting), { threshold: 0.4 }).observe(frame);
+      });
+      next();
+      frame.addEventListener('click', () => {
+        if (!frame.classList.contains('loaded')) return;
+        lbImg.src = img.src; lbImg.alt = img.alt;
+        document.getElementById('lb-title').textContent = frame.dataset.title;
+        lb.classList.remove('lb-wide');
+        lb.showModal(); document.documentElement.style.overflow = 'hidden';
+        lb.querySelector('.lb-scroll').scrollTop = 0;
+      });
+    });
+
+    // Section 02 prints: scroll down while hovered, freeze wherever the pointer leaves,
+    // and only head back to the top once the bottom of the page has been reached
+    const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    document.querySelectorAll('.shot-btn').forEach(btn => {
+      const box = btn.querySelector('.shot'), img = box.querySelector('img');
+      let pos = 0, dir = 1, hold = 0, active = false, raf = 0, last = 0;
+      const DOWN = 250, UP = 600, PAUSE = 0.8;            // px per second, seconds
+      const step = t => {
+        if (!active) { raf = 0; last = 0; return; }
+        const dt = last ? Math.min(0.25, (t - last) / 1000) : 0; last = t;
+        const max = Math.max(0, img.offsetHeight - box.clientHeight);
+        if (hold > 0) hold -= dt;
+        else {
+          pos += dir * (dir > 0 ? DOWN : UP) * dt;
+          if (pos >= max) { pos = max; dir = -1; hold = PAUSE; }
+          else if (pos <= 0) { pos = 0; dir = 1; hold = PAUSE; }
+        }
+        img.style.transform = `translateY(${-pos}px)`;
+        raf = requestAnimationFrame(step);
+      };
+      const start = () => { if (reduceMotion) return; active = true; if (!raf) raf = requestAnimationFrame(step); };
+      const stop = () => { active = false; };
+      btn.addEventListener('mouseenter', start);
+      btn.addEventListener('mouseleave', stop);
+      btn.addEventListener('focus', start);
+      btn.addEventListener('blur', stop);
+    });
+
+    // Printed "before" screenshots open full-length in the same lightbox
+    document.querySelectorAll('.shot-btn').forEach(btn => btn.addEventListener('click', () => {
+      lbImg.src = btn.dataset.full; lbImg.alt = btn.getAttribute('aria-label');
+      document.getElementById('lb-title').textContent = btn.dataset.title;
+      lb.classList.toggle('lb-wide', !!btn.querySelector('.shot.desktop'));
+      lb.showModal(); document.documentElement.style.overflow = 'hidden';
+      lb.querySelector('.lb-scroll').scrollTop = 0;
+    }));
+    document.getElementById('lb-close').addEventListener('click', () => lb.close());
+    lb.addEventListener('click', e => { if (e.target === lb || e.target.classList.contains('lb-inner')) lb.close(); });
+    lb.addEventListener('close', () => { document.documentElement.style.overflow = ''; });
+
+
+    // Section 03: one insight at a time in the centre; its two messages light up.
+    // Arrows step through insights; clicking any message brings its insight back to the centre.
+    const INSIGHTS = [
+      ["People couldn't find what already existed.", "Navigation hid the product's range, so existing features went unused."],
+      ['"Smart" was invisible.', "A generic, editorial homepage. Personalization, the whole point of the product, sat in an easy-to-miss section."],
+      ["The AI Stylist felt like search.", "People expected a stylist that thinks for them. They got a list of products."],
+      ["Stylists needed a story, not a dashboard.", "The dashboard was full of data nobody could act on: no engagement signals, no next steps. Meanwhile, the unique styling data we had went unused."],
+    ];
+    const lqs = [...document.querySelectorAll('.lq')];
+    const insCard = document.querySelector('.ins-card');
+    let ins = 0;
+    const showInsight = (n, animate = true) => {
+      ins = (n + INSIGHTS.length) % INSIGHTS.length;
+      const apply = () => {
+        document.getElementById('ins-k').textContent = `Insight 0${ins + 1}`;
+        document.getElementById('ins-t').textContent = INSIGHTS[ins][0];
+        document.getElementById('ins-d').textContent = INSIGHTS[ins][1];
+        document.getElementById('ins-count').textContent = `0${ins + 1} / 0${INSIGHTS.length}`;
+        insCard.classList.remove('swap');
+      };
+      lqs.forEach(q => q.classList.toggle('on', +q.dataset.ins === ins + 1));
+      document.querySelectorAll('.ins-step').forEach((b, k) => { b.classList.toggle('on', k === ins); b.setAttribute('aria-selected', k === ins); });
+      if (animate) { insCard.classList.add('swap'); setTimeout(apply, 200); } else apply();
+    };
+    const insSteps = [...document.querySelectorAll('.ins-step')];
+    insSteps.forEach(b => b.addEventListener('click', () => showInsight(+b.dataset.i)));
+    lqs.forEach(q => {
+      const go = () => { if (+q.dataset.ins !== ins + 1) showInsight(+q.dataset.ins - 1); };
+      // hover switches the insight (after a short pause so passing over a bubble doesn't flicker); click/tap does it instantly
+      let hoverT;
+      q.addEventListener('mouseenter', () => { hoverT = setTimeout(go, 140); });
+      q.addEventListener('mouseleave', () => clearTimeout(hoverT));
+      q.addEventListener('click', go);
+      // bubble PNGs differ in width; scale each by its own width so the text size matches
+      const img = q.querySelector('img');
+      const fit = () => q.style.setProperty('--k', img.naturalWidth / 500);
+      img.complete ? fit() : img.addEventListener('load', fit);
+    });
+    document.getElementById('learned').addEventListener('keydown', e => {
+      if (e.key === 'ArrowRight') showInsight(ins + 1);
+      if (e.key === 'ArrowLeft') showInsight(ins - 1);
+    });
+    // Lock the card to the tallest insight so nothing below it shifts when the text changes
+    const lockCardHeight = () => {
+      const probe = insCard.cloneNode(true);
+      probe.removeAttribute('aria-live'); probe.classList.remove('swap');
+      Object.assign(probe.style, { position: 'absolute', visibility: 'hidden', height: 'auto', width: getComputedStyle(insCard).width, left: '-9999px' });
+      insCard.parentNode.appendChild(probe);
+      let max = 0;
+      INSIGHTS.forEach(([t, d]) => { probe.querySelector('h3').textContent = t; probe.querySelector('p').textContent = d; max = Math.max(max, probe.querySelector('h3').offsetHeight + probe.querySelector('p').offsetHeight + probe.querySelector('.ins-k').offsetHeight + 24); });
+      probe.remove();
+      insCard.style.height = max + 'px';
+    };
+    showInsight(0, false);
+    lockCardHeight();
+    document.fonts && document.fonts.ready.then(lockCardHeight);
+    addEventListener('resize', lockCardHeight);
+
+    // Chapters: tabs switch the panel; clicking the card behind brings it to the front
+    const chTabs = [...document.querySelectorAll('.ch-tab')];
+    const chPanes = [...document.querySelectorAll('.ch-pane')];
+    const showChapter = i => {
+      chTabs.forEach((t, k) => { t.classList.toggle('on', k === i); t.setAttribute('aria-selected', k === i); t.tabIndex = k === i ? 0 : -1; });
+      chPanes.forEach((p, k) => { p.hidden = k !== i; p.classList.toggle('on', k === i); });
+    };
+    chTabs.forEach((t, i) => {
+      t.addEventListener('click', () => showChapter(i));
+      t.addEventListener('keydown', e => {
+        if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+          const n = (i + (e.key === 'ArrowRight' ? 1 : -1) + chTabs.length) % chTabs.length;
+          showChapter(n); chTabs[n].focus();
+        }
+      });
+    });
+    document.querySelectorAll('.ch-stack').forEach(st => st.addEventListener('click', e => {
+      const card = e.target.closest('.ch-card');
+      if (card && !card.classList.contains('front')) {
+        e.stopPropagation(); e.preventDefault();
+        st.querySelector('.ch-card.front')?.classList.remove('front');
+        card.classList.add('front');
+      }
+    }, true));
+
+
+    // Chapter 06: tap a product card and it arcs into the shopping bag; the bag's peeking item becomes that product
+    (function () {
+      const scene = document.querySelector('.bag-scene');
+      if (!scene) return;
+      const bag = scene.querySelector('.bag'), peek = bag.querySelector('.peek'), peekImg = peek.querySelector('img');
+      const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      let busy = false;
+      const drop = card => {
+        const img = card.querySelector('img');
+        if (!img || busy) return;
+        if (still) { peekImg.src = img.src; return; }
+        busy = true;
+        const a = img.getBoundingClientRect(), b = peek.getBoundingClientRect();
+        const fly = img.cloneNode();
+        Object.assign(fly.style, { position: 'fixed', left: a.left + 'px', top: a.top + 'px', width: a.width + 'px', height: a.height + 'px',
+          margin: 0, objectFit: 'contain', objectPosition: 'center bottom', zIndex: 60, pointerEvents: 'none' });
+        document.body.appendChild(fly);
+        const dx = (b.left + b.width / 2) - (a.left + a.width / 2), dy = (b.top + b.height * 0.35) - (a.top + a.height / 2);
+        fly.animate([
+          { transform: 'translate(0, 0) scale(1)' },
+          { transform: `translate(${dx * 0.6}px, ${dy * 0.3 - 40}px) scale(0.8)`, offset: 0.45 },
+          { transform: `translate(${dx}px, ${dy + 30}px) scale(0.5)`, opacity: 0 }
+        ], { duration: 700, easing: 'cubic-bezier(0.45, 0, 0.55, 1)' }).onfinish = () => {
+          fly.remove();
+          peekImg.src = img.src;
+          bag.animate([{ transform: 'translateX(-50%) translateY(0)' }, { transform: 'translateX(-50%) translateY(7px)' }, { transform: 'translateX(-50%) translateY(0)' }],
+            { duration: 320, easing: 'ease-out' });
+          busy = false;
+        };
+      };
+      scene.querySelectorAll('.carousel .card').forEach(card => {
+        const name = card.querySelector('.nm');
+        card.setAttribute('role', 'button');
+        card.tabIndex = 0;
+        card.setAttribute('aria-label', `Add ${name ? name.textContent : 'product'} to bag`);
+        card.addEventListener('click', () => drop(card));
+        card.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); drop(card); } });
+      });
+    })();
+
+
+    // Stylist deck: click a slide to open it in the lightbox
+    document.querySelectorAll('.deck-slide').forEach(btn => btn.addEventListener('click', () => {
+      const img = btn.querySelector('img');
+      lbImg.src = img.src; lbImg.alt = img.alt;
+      document.getElementById('lb-title').textContent = btn.dataset.title;
+      lb.classList.remove('lb-wide');
+      lb.showModal(); document.documentElement.style.overflow = 'hidden';
+      lb.querySelector('.lb-scroll').scrollTop = 0;
+    }));
+
+
+    // Roadmap: the receipt prints out of the printer as the section scrolls into view
+    (function () {
+      const mock = document.querySelector('.receipt-mock');
+      if (!mock || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      const START = 0.12;            // the printer and a sliver of paper are already showing
+      let raf = 0;
+      const update = () => {
+        raf = 0;
+        const r = mock.getBoundingClientRect(), vh = innerHeight;
+        // the paper's bottom edge tracks a line ~78% down the screen, so the printing always happens in view
+        const p = Math.min(1, Math.max(START, (vh * 0.78 - r.top) / r.height));
+        mock.style.setProperty('--print', p.toFixed(4));
+      };
+      const onScroll = () => { if (!raf) raf = requestAnimationFrame(update); };
+      addEventListener('scroll', onScroll, { passive: true });
+      addEventListener('resize', onScroll);
+      update();
+    })();
+
+
+    // Chapter 01: flip between the outfit mocks like a GIF
+    (function () {
+      const shots = [...document.querySelectorAll('.sheet .ootd-look')];
+      if (shots.length < 2 || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      let k = 0;
+      setInterval(() => {
+        shots[k].classList.remove('is-shown');
+        k = (k + 1) % shots.length;
+        shots[k].classList.add('is-shown');
+      }, 900);
+    })();
+
+
+    // Section 02: as the desk of prints scrolls through the screen, they straighten into one tidy row.
+    // Scroll-scrubbed (not pinned): scattered at the top of the screen, aligned by the time it's near the top.
+    (function () {
+      const desk = document.querySelector('.prints');
+      if (!desk) return;
+      const prints = [...desk.querySelectorAll('.print')];
+      const notes = [...desk.querySelectorAll('.note')];
+      const small = matchMedia('(max-width: 640px)');
+      const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      let plan = [], collapse = 0;
+      const TOP = 28;                 // gap above the aligned row
+      const measure = () => {
+        prints.forEach(el => { el.style.transform = ''; });
+        desk.style.marginBottom = '';
+        if (small.matches) { plan = []; return; }
+        const W = desk.clientWidth, H = desk.clientHeight, gap = W * 0.018;
+        const items = prints.map(el => {
+          const m = new DOMMatrixReadOnly(getComputedStyle(el).transform);
+          return { el, rot: Math.atan2(m.b, m.a) * 180 / Math.PI, x: el.offsetLeft, y: el.offsetTop, w: el.offsetWidth, h: el.offsetHeight };
+        }).sort((a, b) => a.x - b.x);
+        const total = items.reduce((t, i) => t + i.w, 0) + gap * (items.length - 1);
+        const scale = Math.min(1, (W * 0.98) / total);
+        let cursor = (W - total * scale) / 2;
+        const rowH = Math.max(...items.map(i => i.h)) * scale;
+        collapse = H - (TOP + rowH);   // empty desk left under the aligned row
+        plan = items.map(i => {
+          const tx = cursor + (i.w * scale) / 2, ty = TOP + rowH / 2;
+          cursor += i.w * scale + gap * scale;
+          return { ...i, dx: tx - (i.x + i.w / 2), dy: ty - (i.y + i.h / 2), scale };
+        });
+      };
+      const ease = t => t * t * (3 - 2 * t);
+      const update = () => {
+        if (!plan.length) return;
+        const r = desk.getBoundingClientRect(), vh = innerHeight;
+        const p = still ? 1 : ease(Math.min(1, Math.max(0, (vh * 0.85 - r.top) / (vh * 0.65))));
+        plan.forEach(i => {
+          const sc = 1 + (i.scale - 1) * p;
+          i.el.style.transform = `translate(${i.dx * p}px, ${i.dy * p}px) rotate(${i.rot * (1 - p)}deg) scale(${sc})`;
+        });
+        notes.forEach(n => { n.style.opacity = Math.max(0, 1 - p * 1.6); });
+        // pull the content below up as the desk tidies, so the row isn't followed by empty space
+        desk.style.marginBottom = `${-collapse * p}px`;
+      };
+      const refresh = () => { measure(); update(); };
+      document.addEventListener('scroll', update, { passive: true });
+      addEventListener('resize', refresh);
+      addEventListener('load', refresh);
+      refresh();
+    })();
+
+    // Deep-dive links aren't live yet
+    document.querySelectorAll('a[aria-disabled="true"]').forEach(a => a.addEventListener('click', e => e.preventDefault()));
+  
+    // Outcomes background video: hold still for reduced motion
+    (() => {
+      const v = document.querySelector('.oc-bg video');
+      if (v && matchMedia('(prefers-reduced-motion: reduce)').matches) { v.removeAttribute('autoplay'); v.pause(); }
+    })();
+  </script>
+</body>
+
+</html>

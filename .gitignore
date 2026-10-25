@@ -1,0 +1,113 @@
+# macOS / editor clutter
+.DS_Store
+.claude/
+
+# Private drafts and old copies - kept on this Mac only
+*.md
+versions/
+
+# Images: only the files the pages actually use are published. Everything
+# else in img/ (PNG originals with WebP twins, raw recordings, the stylist
+# deck, the 178 MB .mov that is over GitHub's 100 MB limit) stays local.
+# To publish a new image, add a "!/img/..." line for it below.
+/img/**
+!/img/**/
+!/img/PhonePlayer.png
+!/img/Phone_closed.png
+!/img/Postcard default.png
+!/img/Selected Work bg/sw-background1.png
+!/img/Selected Work bg/sw-background2.png
+!/img/Selected Work bg/sw-background3.png
+!/img/Vetir/Cutouts/Avatars/Avatar1.png
+!/img/Vetir/Cutouts/Avatars/Avatar2.webp
+!/img/Vetir/Cutouts/Avatars/Avatar3.webp
+!/img/Vetir/Cutouts/Avatars/Avatar4.webp
+!/img/Vetir/Cutouts/Chat bubble 1.png
+!/img/Vetir/Cutouts/Chat bubble 2.png
+!/img/Vetir/Cutouts/Chat bubble 3.png
+!/img/Vetir/Cutouts/Chat bubble 4.png
+!/img/Vetir/Cutouts/Chat bubble 5.png
+!/img/Vetir/Cutouts/Chat bubble 6.png
+!/img/Vetir/Cutouts/Chat bubble 7.png
+!/img/Vetir/Cutouts/Chat bubble 8.png
+!/img/Vetir/Cutouts/Hand Serve.png
+!/img/Vetir/Cutouts/Outfit-1.png
+!/img/Vetir/Cutouts/Phone mock.png
+!/img/Vetir/Cutouts/Redesign Receipt.webp
+!/img/Vetir/Cutouts/servinglooks1.png
+!/img/Vetir/New Work/Chapter1.png
+!/img/Vetir/New Work/Chapter1a.png
+!/img/Vetir/New Work/Chapter1b.png
+!/img/Vetir/New Work/Chapter2.png
+!/img/Vetir/New Work/Chapter3.png
+!/img/Vetir/New Work/Chapter3bg/aistylistsearch1.png
+!/img/Vetir/New Work/Chapter3bg/aistylistsearch2.png
+!/img/Vetir/New Work/Chapter3bg/aistylistsearch3.png
+!/img/Vetir/New Work/Chapter3bg/aistylistsearch4.png
+!/img/Vetir/New Work/Chapter3bg/aistylistsearch5.png
+!/img/Vetir/New Work/Chapter3bg/aistylistsearch6.png
+!/img/Vetir/New Work/Chapter3bg/aistylistsearch7.png
+!/img/Vetir/New Work/Chapter3bg/aistylistsearch8.png
+!/img/Vetir/New Work/Chapter5.webp
+!/img/Vetir/New Work/Chapter5_Guest_Homepage_clean.mp4
+!/img/Vetir/New Work/Chapter5_Guest_Homepage_clean.webm
+!/img/Vetir/New Work/DesignSys/Component-EmptyState.png
+!/img/Vetir/New Work/DesignSys/Component-Premium.png
+!/img/Vetir/New Work/DesignSys/Component-ShopThisLook.png
+!/img/Vetir/New Work/DesignSys/Component-SkinTone.png
+!/img/Vetir/New Work/DesignSys/Component-WeddingLooks.png
+!/img/Vetir/New Work/DesignSys/Molecule-ai-prompt.png
+!/img/Vetir/New Work/DesignSys/Molecule-ask-ai.png
+!/img/Vetir/New Work/DesignSys/Molecule-earning.png
+!/img/Vetir/New Work/DesignSys/Molecule-events.png
+!/img/Vetir/New Work/DesignSys/Molecule-friday.png
+!/img/Vetir/New Work/DesignSys/Molecule-listening.png
+!/img/Vetir/New Work/DesignSys/ProductCard1.png
+!/img/Vetir/New Work/DesignSys/ProductCard2.png
+!/img/Vetir/New Work/DesignSys/ProductCard3.png
+!/img/Vetir/New Work/DesignSys/ProductCard4.png
+!/img/Vetir/New Work/DesignSys/ProductCard5.png
+!/img/Vetir/New Work/StylistDeck/slide-01.webp
+!/img/Vetir/New Work/StylistDeck/slide-02.webp
+!/img/Vetir/New Work/StylistDeck/slide-03.webp
+!/img/Vetir/New Work/StylistDeck/slide-04.webp
+!/img/Vetir/New Work/StylistDeck/slide-05.webp
+!/img/Vetir/New Work/StylistDeck/slide-06.webp
+!/img/Vetir/New Work/StylistDeck/slide-07.webp
+!/img/Vetir/New Work/StylistDeck/slide-08.webp
+!/img/Vetir/New Work/StylistDeck/slide-09.webp
+!/img/Vetir/New Work/StylistDeck/slide-10.webp
+!/img/Vetir/New Work/StylistDeck/slide-11.webp
+!/img/Vetir/New Work/StylistDeck/slide-12.webp
+!/img/Vetir/New Work/StylistDeck/slide-13.webp
+!/img/Vetir/New Work/StylistDeck/slide-14.webp
+!/img/Vetir/Outcomes_video.mp4
+!/img/Vetir/Outcomes_video.webm
+!/img/Vetir/designs_ss/AIStylist_old.jpeg
+!/img/Vetir/designs_ss/Analytics_old.png
+!/img/Vetir/designs_ss/Closet_old.png
+!/img/Vetir/designs_ss/homepage_desktop_before.webp
+!/img/Vetir/designs_ss/homepage_mobile_before.webp
+!/img/Vetir/learn-bg.png
+!/img/Vetir/paper-bg.jpg
+!/img/flatlay/airpods-case.png
+!/img/flatlay/airpods.png
+!/img/flatlay/base.png
+!/img/flatlay/book-stack.png
+!/img/flatlay/coffee.png
+!/img/flatlay/laptop.png
+!/img/flatlay/notebook.png
+!/img/flatlay/passport.png
+!/img/flatlay/pclip.png
+!/img/flatlay/pen.png
+!/img/flatlay/phone-polaroid.png
+!/img/flatlay/shades.png
+!/img/icici-postcard.png
+!/img/paperdown.png
+!/img/paperup.png
+!/img/portrait.png
+!/img/sticker 3.png
+!/img/sticker 4.png
+!/img/sticker 5.png
+!/img/testback.png
+!/img/vetr-postcard.png

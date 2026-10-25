@@ -1,0 +1,2814 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DESIGNERS IDENTIFICATION</title>
+  <!-- Image format: prefer .webp, fall back to .png when there's no .webp yet.
+       <img> tags point at the .webp; if it 404s, the handler below swaps in the
+       .png (or the tag's data-fallback). Backgrounds use data-bg="....png" and
+       get whichever format exists. Must run before any <img> is parsed. -->
+  <script>
+    document.addEventListener('error', function (e) {
+      var el = e.target;
+      if (!el || el.tagName !== 'IMG') return;
+      var src = el.getAttribute('src') || '';
+      if (!el.dataset.webpFailed && /\.webp(\?|$)/i.test(src)) {
+        el.dataset.webpFailed = '1';
+        el.src = el.getAttribute('data-fallback') || src.replace(/\.webp(\?|$)/i, '.png$1');
+        return;
+      }
+      // Neither format exists. A flat-lay object is hidden along with its
+      // floating wrapper rather than showing a broken-image icon.
+      var piece = el.closest('.flatlay-float');
+      if (piece) piece.style.display = 'none';
+    }, true);
+
+    // Resolves to the .webp twin of a .png/.jpg path if it loads, else the original
+    window.preferWebp = function (src) {
+      var webp = src.replace(/\.(png|jpe?g)(\?|$)/i, '.webp$2');
+      if (webp === src) return Promise.resolve(src);
+      return new Promise(function (resolve) {
+        var probe = new Image();
+        probe.onload = function () { resolve(webp); };
+        probe.onerror = function () { resolve(src); };
+        probe.src = webp;
+      });
+    };
+
+    document.addEventListener('DOMContentLoaded', function () {
+      document.querySelectorAll('[data-bg]').forEach(function (el) {
+        window.preferWebp(el.getAttribute('data-bg')).then(function (src) {
+          el.style.backgroundImage = "url('" + src + "')";
+        });
+      });
+    });
+  </script>
+  <!-- Tailwind CSS v4 -->
+  <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,100..900,0..100,0..1;1,9..144,100..900,0..100,0..1&family=Figtree:ital,wght@0,300..900;1,300..900&family=Geist+Mono:wght@100..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Tailwind's browser build only reads @theme from a <style type="text/tailwindcss">
+       block, so these tokens are set as plain custom properties instead. Unlayered
+       rules beat Tailwind's own @layer theme, so font-sans/font-mono resolve here. */
+    :root {
+      --font-sans: "Figtree", ui-sans-serif, system-ui, sans-serif;
+      --font-mono: "Geist Mono", ui-monospace, monospace;
+    }
+    /* Section headings / display type */
+    /* Section headings: Fraunces, a soft, slightly quirky old-style serif that
+       suits the postcards, stamps and typewriter labels. */
+    .font-serif-display {
+      font-family: 'Fraunces', Georgia, serif;
+      font-weight: 800;
+      font-optical-sizing: auto;
+      font-variation-settings: "SOFT" 100, "WONK" 0;
+      letter-spacing: -0.02em;
+    }
+
+    /* Intro / bio copy - geometric humanist sans to match the reference */
+    .font-bio {
+      font-family: 'Figtree', sans-serif;
+    }
+    /* Highlighted phrase pills in the intro copy */
+    .bio-chip {
+      display: inline;
+      padding: 0.12em 0.42em;
+      margin: 0 0.04em;
+      border-radius: 999px;
+      font-weight: 700;
+      box-decoration-break: clone;
+      -webkit-box-decoration-break: clone;
+    }
+
+    #paper-up,
+    #paper-down {
+      width: 106vw !important;
+      left: -3vw !important;
+      max-width: none !important;
+    }
+
+    /* Portfolio flat-lay hero: canvas locked to the 1672x941 design ratio, always covering the viewport */
+    .flatlay-canvas {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: max(100vw, 177.68vh);
+      height: max(56.28vw, 100vh);
+    }
+    .flatlay-float {
+      position: absolute;
+      animation-name: flatlay-bob;
+      animation-timing-function: ease-in-out;
+      animation-iteration-count: infinite;
+    }
+    .flatlay-float:hover {
+      z-index: 20;
+    }
+    .flatlay-inner {
+      width: 100%;
+      height: 100%;
+      transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.45s ease;
+      transform-origin: 50% 50%;
+    }
+    .flatlay-float:hover .flatlay-inner {
+      transform: translateY(-3%) scale(1.06) rotate(-1.5deg);
+      filter: drop-shadow(0 22px 26px rgba(20, 10, 40, 0.3));
+    }
+    .flatlay-inner img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+      pointer-events: none;
+      user-select: none;
+    }
+    @keyframes flatlay-bob {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-1.2%); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .flatlay-float { animation: none; }
+    }
+
+    /* Dynamic barcode generator using linear gradient */
+    .barcode {
+      background: repeating-linear-gradient(90deg,
+          #1c1c1a,
+          #1c1c1a 2px,
+          transparent 2px,
+          transparent 5px,
+          #1c1c1a 5px,
+          #1c1c1a 8px,
+          transparent 8px,
+          transparent 10px,
+          #1c1c1a 10px,
+          #1c1c1a 11px,
+          transparent 11px,
+          transparent 15px,
+          #1c1c1a 15px,
+          #1c1c1a 19px,
+          transparent 19px,
+          transparent 22px);
+    }
+    @keyframes stamp-effect {
+      0% {
+        opacity: 0;
+        transform: scale(3.5) rotate(-35deg);
+        filter: blur(4px);
+      }
+      85% {
+        opacity: 0.9;
+        transform: scale(0.9) rotate(-8deg);
+        filter: none;
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1) rotate(-8deg);
+      }
+    }
+    .stamped-sticker-wrapper {
+      vertical-align: middle;
+      display: inline-block;
+      width: 100px;
+      height: 32px;
+      position: relative;
+      margin: 0 10px;
+    }
+    .stamped-sticker {
+      position: absolute;
+      height: 120px !important;
+      width: auto !important;
+      max-width: none !important;
+      opacity: 0;
+      transform-origin: center;
+      top: -45px;
+      left: -10px;
+      z-index: 10;
+      pointer-events: none;
+    }
+    .stamped-sticker.visible {
+      animation: stamp-effect 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.25) forwards;
+    }
+    /* Pinned stamps sit in the right-hand gutter instead of inline in the copy.
+       The wrapper collapses to a zero-size anchor point; the stamp hangs from its
+       top-right corner. Reveal/animation logic is untouched. */
+    .stamped-sticker-wrapper.is-pinned {
+      position: absolute;
+      display: block;
+      width: 0;
+      height: 0;
+      margin: 0;
+    }
+    .stamped-sticker-wrapper.is-pinned .stamped-sticker {
+      top: 0;
+      left: auto;
+      right: 0;
+    }
+    @media (max-width: 767px) {
+      .stamped-sticker-wrapper.is-pinned .stamped-sticker {
+        height: 84px !important;
+      }
+    }
+
+    /* Floating flip phone. Closed by default, it peeks up from the bottom-left
+       corner: only its top 45% shows. The widget is pushed 30% of its height
+       below the fold, so its visible part ends at 70% of its height; the phone
+       (165px wide, ~310px tall) starts 140px above that.
+       Both phones line up 16px from the screen edge: the open phone's body sits
+       87px into the 340px widget (its PNG has margins), so the widget is placed
+       at left:-71px and the closed phone at 87px inside it. */
+    #floating-player-widget .phone-closed {
+      position: absolute;
+      left: 87px;
+      top: calc(70% - 140px);
+      width: 165px;
+      height: auto;
+      z-index: 25;
+      cursor: pointer;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(12%);
+      filter: drop-shadow(0 -6px 18px rgba(40, 25, 80, 0.22));
+      transition: opacity 0.4s ease, transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    #floating-player-widget .phone-open-part {
+      transition: opacity 0.4s ease, transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    #floating-player-widget.is-closed .phone-closed {
+      opacity: 1;
+      pointer-events: auto;
+      transform: none;
+    }
+    /* Peeks up a little further on hover, inviting the click that opens it */
+    #floating-player-widget.is-closed .phone-closed:hover {
+      transform: translateY(-10px);
+    }
+    #floating-player-widget.is-closed .phone-open-part {
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(6%);
+    }
+    /* Click target over the open phone's body (the PNG has wide transparent
+       margins, so the image itself would catch clicks beside the phone).
+       Clicking it closes the phone. Sits under the lock screen (z-30). */
+    #floating-player-widget .phone-open-hit {
+      position: absolute;
+      left: 87px;
+      width: 165px;
+      top: 1.6%;
+      bottom: 0;
+      z-index: 25;
+      cursor: pointer;
+      pointer-events: auto;
+    }
+    #floating-player-widget.is-closed .phone-open-hit {
+      pointer-events: none;
+    }
+    /* Open phone shows one screen at a time: the game, or (.is-voicemail) the
+       voicemail lock screen. Hidden with visibility so the game keeps its state. */
+    #floating-player-widget:not(.is-voicemail) #phone-widget-screen,
+    #floating-player-widget.is-voicemail #phone-game-screen {
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    /* Footer status line: fades and drops slightly as it swaps */
+    .footer-status {
+      display: inline-block;
+      transition: opacity 0.4s ease, translate 0.4s ease;
+    }
+    .footer-status.is-out {
+      opacity: 0;
+      translate: 0 4px;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .footer-status { transition: none; }
+    }
+
+    /* PORTFOLIO SLIDER / STACK CARDS CSS */
+    .portfolio-slider-section {
+      /* Tucks 45vh up over the bottom of the intro; that top strip stays
+         see-through so the intro shows beneath while the two crossfade. */
+      margin-top: -45vh;
+      z-index: 1;
+      background: linear-gradient(to bottom, transparent 45vh, var(--hand-bg, #f6efef) 45vh);
+      pointer-events: var(--sw-pe, auto);
+      color: #281950;
+      padding: 32px 24px;
+      /* Background width as a multiple of the section width. The bleed is how far
+         it overhangs each side. The corner layers derive from these, so the scene
+         and its cut-outs can never drift apart - tune the scale alone. */
+      --sw-bg-scale: 1.2;
+      --sw-bg-bleed: calc((var(--sw-bg-scale) - 1) / 2 * 100%);
+      /* One screen tall; the postcards shrink to fit rather than the frame grow */
+      height: 100vh;
+      height: 100svh;
+      min-height: 560px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+    /* Scenes sit full-width along the bottom; the cream above is the artwork's
+       own base colour, so each reads as one continuous illustration. Two layers
+       take turns: the focused postcard's scene is loaded into the idle one,
+       which fades in while the other fades out. Shown at 50% so the scene
+       stays behind the cards. */
+    .sw-scene {
+      position: absolute;
+      inset: 0;
+      background-size: calc(var(--sw-bg-scale) * 100%) auto;
+      background-position: center bottom;
+      background-repeat: no-repeat;
+      z-index: 1;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.9s ease;
+    }
+    .sw-scene.is-active {
+      opacity: 0.5;
+    }
+    /* Foreground shrubs in the two bottom corners, over whichever scene shows */
+    .sw-layer {
+      position: absolute;
+      bottom: 0;
+      z-index: 2;
+      height: auto;
+      user-select: none;
+      pointer-events: none;
+      filter: opacity(calc(var(--sw-so2, 1) * var(--sw-fo, 1))) drop-shadow(0 4px 8px rgba(45, 30, 80, 0.10));
+      /* Parked a little low and outboard; drifts into place each time the
+         section is landed on (JS toggles .is-in-view). The section clips them. */
+      transition: transform 1.6s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .sw-layer-left {
+      left: calc(-1 * var(--sw-bg-bleed));
+      width: calc(51.52% * var(--sw-bg-scale));
+      transform: translate(-3%, 12%);
+    }
+    .sw-layer-right {
+      right: calc(-1 * var(--sw-bg-bleed));
+      width: calc(18.94% * var(--sw-bg-scale));
+      transform: translate(6%, 12%);
+    }
+    .portfolio-slider-section.is-in-view .sw-layer {
+      transform: none;
+    }
+    /* Scroll-driven crossfade from the intro (same handover as the PMV site):
+       while Selected Work slides up over the intro's bottom, the intro's grid
+       and copy fade and lift away (--intro-fo, --intro-lift) and Selected
+       Work's content fades up over the same spot in three overlapping steps:
+       heading, postcards + scenery, counter (--sw-so1..3). Both share one
+       background colour (--hand-bg) so there's no seam. JS drives it all. */
+    .intro-section {
+      background-color: var(--hand-bg, #f7f5f0);
+    }
+    .intro-section::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image: linear-gradient(to right, rgba(28,20,15,0.06) 1px, transparent 1px), linear-gradient(to bottom, rgba(28,20,15,0.06) 1px, transparent 1px);
+      background-size: 42px 42px;
+      opacity: var(--intro-fo, 1);
+      pointer-events: none;
+    }
+    .intro-inner {
+      /* Breathing room after View CV before Selected Work starts to show */
+      padding-bottom: 15vh;
+      opacity: var(--intro-fo, 1);
+      translate: 0 calc(var(--intro-lift, 0) * -1px);
+    }
+    /* --sw-fo / --sw-lift fade and lift it all away again on the way out to
+       Sidequests, which then gets the same treatment coming in. */
+    .sw-in-1 {
+      opacity: calc(var(--sw-so1, 1) * var(--sw-fo, 1));
+      translate: 0 calc((1 - var(--sw-so1, 1)) * 28px - var(--sw-lift, 0) * 1px);
+    }
+    .sw-in-2 {
+      opacity: calc(var(--sw-so2, 1) * var(--sw-fo, 1));
+      translate: 0 calc((1 - var(--sw-so2, 1)) * 28px - var(--sw-lift, 0) * 1px);
+    }
+    .sw-in-3 {
+      opacity: calc(var(--sw-so3, 1) * var(--sw-fo, 1));
+      translate: 0 calc(var(--sw-lift, 0) * -1px);
+    }
+    /* squared so the artwork's baked-in cream is gone before the colour shifts */
+    .sw-scene { filter: opacity(calc(var(--sw-so2, 1) * var(--sw-fo, 1) * var(--sw-fo, 1))); }
+
+    /* Sidequests: tucks 45vh up over Selected Work's bottom with a see-through
+       top strip, exactly like Selected Work over the intro. Its grid, heading
+       and cards fade up (--sq-so1..2) while Selected Work fades out. */
+    #sidequests-section {
+      background: linear-gradient(to bottom, transparent 45vh, var(--hand-bg, #fff) 45vh);
+      pointer-events: var(--sq-pe, auto);
+    }
+    #sidequests-section::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image: linear-gradient(to right, rgba(28,20,15,0.06) 1px, transparent 1px), linear-gradient(to bottom, rgba(28,20,15,0.06) 1px, transparent 1px);
+      background-size: 42px 42px;
+      opacity: var(--sq-so1, 1);
+      pointer-events: none;
+    }
+    #sq-wrapper {
+      z-index: 2;
+      margin-top: -45vh;
+    }
+    .sq-in-1 {
+      opacity: var(--sq-so1, 1);
+      translate: 0 calc((1 - var(--sq-so1, 1)) * 28px);
+    }
+    .sq-cards-layer {
+      opacity: var(--sq-so2, 1);
+      translate: 0 calc((1 - var(--sq-so2, 1)) * 28px);
+    }
+    /* Hidden cards mustn't catch clicks meant for Selected Work underneath */
+    .sq-cards-layer .sq-card { pointer-events: var(--sq-pe, auto); }
+    @media (prefers-reduced-motion: reduce) {
+      .portfolio-slider-section { margin-top: 0; background: #f6efef; }
+      #sq-wrapper { margin-top: 0; }
+      #sidequests-section { background: #fff; }
+      .sw-layer { transition: none; transform: none; }
+      .sw-scene { transition: none; }
+    }
+    /* Swipe hint beside the counter: a short line whose bright head slides
+       left, fading in and out on a loop. Fades away on the last card. */
+    .swipe-hint {
+      position: relative;
+      width: 56px;
+      height: 2px;
+      border-radius: 2px;
+      overflow: hidden;
+      background: rgba(40, 25, 80, 0.12);
+      transition: opacity 0.4s ease;
+    }
+    .swipe-hint::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      right: 0;
+      width: 60%;
+      border-radius: 2px;
+      background: linear-gradient(to right, rgba(40, 25, 80, 0.75), rgba(40, 25, 80, 0));
+      animation: swipe-hint 2.2s ease-in-out infinite;
+    }
+    @keyframes swipe-hint {
+      0%   { transform: translateX(40%);   opacity: 0; }
+      30%  { opacity: 1; }
+      70%  { opacity: 1; }
+      100% { transform: translateX(-170%); opacity: 0; }
+    }
+    .swipe-hint.is-done {
+      opacity: 0;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .swipe-hint::before { animation: none; opacity: 0.6; }
+    }
+    /* Horizontally scrolling postcard track. The inline padding is half the
+       leftover width, so scrollLeft:0 already frames the first card centrally. */
+    .portfolio-track {
+      /* Width also capped by the viewport height: --sw-chrome is everything in the
+         section that isn't the card (heading, track padding, nav, gaps), and the
+         card is 988/1755 as tall as it is wide. */
+      --sw-chrome: 250px;
+      --card-w: min(700px, 84vw, max(240px, (100svh - var(--sw-chrome)) * 1755 / 988));
+      display: flex;
+      align-items: center;
+      gap: clamp(24px, 4vw, 56px);
+      width: 100%;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
+      /* Asymmetric block padding: the stacked cards drop and rotate well BELOW
+         the row, so the bottom needs clearance or overflow-y clips their shadows
+         into a hard line. Above them only the rotation and shadow spread matter. */
+      padding: 44px max(16px, calc((100% - var(--card-w)) / 2)) 112px;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .portfolio-track::-webkit-scrollbar {
+      display: none;
+    }
+    /* Before the first horizontal scroll the cards sit in a stack, so scrolling
+       and snapping are suppressed until they spread. */
+    .portfolio-track.is-stacked {
+      overflow-x: hidden;
+      scroll-snap-type: none;
+      cursor: pointer;
+    }
+    .portfolio-card {
+      position: relative;
+      flex: 0 0 var(--card-w);
+      width: var(--card-w);
+      /* matches the postcard artwork so it fills the card exactly */
+      aspect-ratio: 1755 / 988;
+      scroll-snap-align: center;
+      background-color: #f7f5f0;
+      border: none;
+      border-radius: 8px;
+      box-shadow: inset 0 0 0 12px #ffffff, 0 15px 35px rgba(0,0,0,0.25);
+      /* scale is set from JS as the track scrolls (side cards shrink); the short
+         transition only smooths the jump when the pile first spreads */
+      transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s ease,
+                  scale 0.25s ease-out;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    /* Slight alternating tilt, straightening on hover */
+    .portfolio-card:nth-child(odd) { transform: rotate(-1.8deg); }
+    .portfolio-card:nth-child(even) { transform: rotate(1.6deg); }
+    .portfolio-card:hover {
+      transform: rotate(0deg) translateY(-6px);
+      box-shadow: inset 0 0 0 12px #ffffff, 0 26px 50px rgba(0, 0, 0, 0.35);
+    }
+    /* Artwork postcard: the PNG carries the paper, frame and stamp, so the card
+       chrome is stripped back and the copy is laid over the right half. The
+       artwork is a plain rounded rectangle (31px corners on 1755x988), so it
+       takes the exact same box-shadow as the other cards, minus their white
+       inset frame. Radii are % of width / height so the corners stay circular. */
+    .portfolio-card.is-art {
+      background: transparent;
+      border-radius: 1.77% / 3.14%;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+    }
+    .portfolio-card.is-art:hover {
+      box-shadow: 0 26px 50px rgba(0, 0, 0, 0.35);
+    }
+    .postcard-art-base {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      pointer-events: none;
+      user-select: none;
+    }
+    .postcard-art-copy {
+      position: absolute;
+      /* Measured off the full-bleed artwork: dashed divider at 55.9%, postmark
+         waves start at 74.2%, paper runs to the canvas edge. Left edge sits ~16px
+         (on a 700px card) right of the divider; the right edge keeps a margin
+         inside the paper. The artwork is straight, so the copy sits square. */
+      left: 58.2%;
+      right: 5%;
+      top: 16%;
+      bottom: 15%;
+      display: flex;
+      flex-direction: column;
+      color: #1c1a17;
+      container-type: inline-size;
+    }
+    .postcard-art-rule {
+      height: 1px;
+      width: 100%;
+      background: rgba(28, 26, 23, 0.35);
+    }
+    .postcard-art-eyebrow {
+      /* Must end left of the postmark waves (74.2%), which sit at the same
+         height; nowrap keeps it on one line instead of breaking at the "/". */
+      white-space: nowrap;
+      font-size: clamp(6px, 2.6cqw, 15px);
+      letter-spacing: 0.06em;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+    .postcard-art-title {
+      font-size: clamp(14px, 10.5cqw, 50px);
+      line-height: 1.04;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: -0.01em;
+    }
+    .postcard-art-desc {
+      font-size: clamp(8px, 4.91cqw, 25px);
+      line-height: 1.42;
+      font-weight: 400;
+    }
+    .postcard-art-cta {
+      font-size: clamp(6px, 4.06cqw, 19px);
+      letter-spacing: 0.15em;
+      font-weight: 600;
+      text-transform: uppercase;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.9em;
+      border: 1.5px solid rgba(28, 26, 23, 0.75);
+      border-radius: 999px;
+      padding: 0.8em 1.5em;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    .postcard-art-cta:hover {
+      background: #1c1a17;
+      color: #f2efe7;
+    }
+    /* Projects not live yet: a muted, inert pill - no link, no hover */
+    .postcard-art-cta.is-soon,
+    .postcard-art-cta.is-soon:hover {
+      background: transparent;
+      color: inherit;
+      opacity: 0.5;
+      cursor: default;
+    }
+    .postcard-body {
+      flex: 1;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      background-color: transparent;
+      background-image: radial-gradient(rgba(40, 25, 80, 0.06) 1.5px, transparent 1.5px);
+      background-size: 16px 16px;
+      color: #281950;
+      height: 100%;
+      position: relative;
+    }
+    @media (min-width: 768px) {
+      .postcard-body {
+        padding: 40px;
+        flex-direction: row;
+        gap: 40px;
+      }
+    }
+    .postcard-left {
+      flex: 1.1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100%;
+      border-right: 0px;
+      padding-right: 0;
+    }
+    @media (min-width: 768px) {
+      .postcard-left {
+        border-right: 2px dashed rgba(40, 25, 80, 0.2);
+        padding-right: 40px;
+      }
+    }
+    .postcard-right {
+      flex: 0.9;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100%;
+      position: relative;
+    }
+    @media (max-width: 767px) {
+      .postcard-right {
+        display: none;
+      }
+    }
+    .postcard-stamp {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 75px;
+      height: 95px;
+      border: 3px dashed #281950;
+      border-radius: 4px;
+      background-color: #fffcf9;
+      padding: 6px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      font-family: monospace;
+      font-size: 8px;
+      font-weight: bold;
+      color: #281950;
+      transform: rotate(5deg);
+      box-shadow: 3px 3px 8px rgba(0,0,0,0.1);
+      user-select: none;
+    }
+    .postcard-polaroid {
+      position: absolute;
+      top: 12px;
+      bottom: 12px;
+      left: 50%;
+      height: calc(100% - 24px);
+      aspect-ratio: 0.83;
+      z-index: 5;
+      transform: translateX(-50%) rotate(-3deg);
+      transform-origin: center center;
+    }
+    .postcard-polaroid-img {
+      position: absolute;
+      top: 6.5%;
+      left: 7%;
+      width: 86%;
+      height: 72%;
+      background-color: #f5f3ef;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      z-index: 1;
+    }
+    /* Washi tape sticking the polaroid */
+    .washi-tape {
+      position: absolute;
+      top: -15px;
+      left: 50%;
+      transform: translateX(-50%) rotate(4deg);
+      width: 70px;
+      height: 20px;
+      background-color: rgba(250, 240, 215, 0.7);
+      backdrop-filter: blur(1px);
+      border-left: 2px dashed rgba(40, 25, 80, 0.15);
+      border-right: 2px dashed rgba(40, 25, 80, 0.15);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      z-index: 10;
+    }
+
+    .deliverable-stamp {
+      height: 125px;
+      width: auto;
+      object-fit: contain;
+      display: inline-block;
+      position: relative;
+      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), z-index 0.2s ease;
+      filter: drop-shadow(2px 3px 5px rgba(40, 25, 80, 0.15));
+    }
+    .deliverable-stamp:hover {
+      transform: scale(1.15) rotate(0deg) !important;
+      z-index: 50 !important;
+      filter: drop-shadow(4px 8px 12px rgba(40, 25, 80, 0.25));
+    }
+
+    /* SIDEQUESTS -> PORTRAIT: the sidequests section and the portrait section
+       scroll normally. A single card layer spans both, and JS lerps each card
+       from its spot on the desktop grid to its spot in the portrait collage. */
+    .sq-cards-layer {
+      position: absolute;
+      inset: 0;
+      z-index: 10;
+      pointer-events: none;
+    }
+    .sq-cards-layer .sq-card {
+      pointer-events: auto;
+    }
+
+    .sq-portrait {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      height: 76%;
+      width: auto;
+      transform: translateX(-50%);
+      z-index: 20;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    /* Unified card: position/rotation/scale come from JS */
+    .sq-card {
+      position: absolute;
+      top: 0;
+      left: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      background: none;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      appearance: none;
+      font: inherit;
+      color: inherit;
+      z-index: 4;
+      will-change: transform, opacity;
+      transform: translate(calc(var(--x, 0px) - 50%), calc(var(--y, 0px) - 50%))
+                 rotate(var(--r, 0deg)) scale(var(--s, 1));
+      transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease;
+    }
+    /* While the scene is scrolling, JS updates every frame - no easing lag */
+    .sq-stage.is-flying .sq-card {
+      transition: none;
+    }
+    .sq-card[data-hidden="true"] {
+      pointer-events: none;
+    }
+    .sq-card-inner {
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.3s ease;
+    }
+    .sq-card:hover .sq-card-inner,
+    .sq-card:focus-visible .sq-card-inner {
+      transform: translateY(-6px) scale(1.05);
+      filter: drop-shadow(0 20px 30px rgba(28, 20, 15, 0.22));
+    }
+    .sq-card-img {
+      display: block;
+      width: 132px;
+      height: 168px;
+      border-radius: 10px;
+      box-shadow: 0 14px 28px rgba(28, 20, 15, 0.14);
+    }
+    .sq-card-label {
+      font-family: 'Geist Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.02em;
+      color: rgba(28, 20, 15, 0.55);
+      white-space: nowrap;
+    }
+
+    /* Folder icon (mac-style) */
+    .sq-folder-icon {
+      display: block;
+      position: relative;
+      width: 88px;
+      height: 68px;
+    }
+    .sq-folder-icon::before {
+      content: "";
+      position: absolute;
+      top: -10px;
+      left: 2px;
+      width: 42%;
+      height: 16px;
+      background: #f4a9c9;
+      border-radius: 5px 5px 0 0;
+    }
+    .sq-folder-icon::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(160deg, #ffc3dd, #f492bc);
+      border-radius: 7px;
+      box-shadow: 0 14px 26px rgba(196, 90, 140, 0.28);
+    }
+    .sq-folder-label {
+      font-family: 'Geist Mono', monospace;
+      font-size: 12px;
+      color: rgba(28, 20, 15, 0.6);
+    }
+
+    /* Shortcut tiles (external links) sitting on the desktop alongside the files */
+    a.sq-card {
+      text-decoration: none;
+    }
+    .sq-app-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 84px;
+      height: 84px;
+      border-radius: 21px;
+      box-shadow: 0 12px 24px rgba(28, 20, 15, 0.18);
+    }
+    .sq-app-icon svg {
+      width: 54%;
+      height: 54%;
+      display: block;
+    }
+
+    /* Popup modal */
+    #sidequest-modal.is-open {
+      display: flex;
+    }
+    #sidequest-modal-panel {
+      transform: scale(0.94) translateY(10px);
+      opacity: 0;
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.25s ease;
+    }
+    #sidequest-modal.is-open #sidequest-modal-panel {
+      transform: scale(1) translateY(0);
+      opacity: 1;
+    }
+  </style>
+</head>
+
+<body class="bg-[#faf9f6] text-[#1c1c1a] overflow-x-hidden">
+
+  <!-- Main Scroll Container -->
+  <div class="relative w-full">
+
+    <!-- SECTION 1: THE UNFURL ZONE (Sticky) -->
+    <div class="h-[220vh] w-full relative" id="scroll-zone">
+
+      <!-- Sticky Wrapper -->
+      <div
+        class="sticky top-0 h-screen w-full overflow-hidden flex items-center justify-center"
+        style="background-color: #b59dd6; background-image: linear-gradient(to right, rgba(255,255,255,0.55) 1.5px, transparent 1.5px), linear-gradient(to bottom, rgba(255,255,255,0.55) 1.5px, transparent 1.5px); background-size: 36px 36px;">
+
+        <!-- Revealed Hero Content (Portfolio Flat Lay) -->
+        <div id="hero-content" class="absolute inset-0 z-10 overflow-hidden transition-all duration-300 ease-out">
+          <div class="flatlay-canvas">
+            <!-- Base layer: desk grid texture + "stacy. Portfolio" title -->
+            <img src="img/flatlay/base.webp"
+              class="absolute inset-0 w-full h-full object-cover select-none pointer-events-none" alt="Stacy Portfolio">
+
+            <!-- Objects are stacked in the same paint order as the Figma frame -->
+
+            <!-- Phone (Wordle) + polaroid -->
+            <div class="flatlay-float" style="left:0%; bottom:-4%; width:23.21%; height:44.42%; animation-duration:7.1s; animation-delay:-2.1s;">
+              <div class="flatlay-inner"><img src="img/flatlay/phone-polaroid.webp" alt="Phone with Wordle and a polaroid photo" style="object-position: bottom left;"></div>
+            </div>
+
+            <!-- Laptop + sticky note -->
+            <div class="flatlay-float" style="left:0%; top:0%; width:23.39%; height:42.08%; animation-duration:6.4s; animation-delay:-0.4s;">
+              <div class="flatlay-inner"><img src="img/flatlay/laptop.webp" alt="Laptop with a sticky note"></div>
+            </div>
+
+            <!-- Iced coffee -->
+            <div class="flatlay-float" style="left:22.55%; top:0%; width:14.83%; height:26.99%; animation-duration:5.6s; animation-delay:-1s;">
+              <div class="flatlay-inner"><img src="img/flatlay/coffee.webp" alt="Iced coffee"></div>
+            </div>
+
+            <!-- AirPods -->
+            <div class="flatlay-float" style="left:55.02%; top:0%; width:11.30%; height:17.64%; animation-duration:5s; animation-delay:-3.3s;">
+              <div class="flatlay-inner"><img src="img/flatlay/airpods.webp" alt="AirPods"></div>
+            </div>
+
+            <!-- AirPods case -->
+            <div class="flatlay-float" style="left:63.70%; top:0%; width:10.41%; height:12.86%; animation-duration:6.1s; animation-delay:-0.9s;">
+              <div class="flatlay-inner"><img src="img/flatlay/airpods-case.webp" alt="AirPods case"></div>
+            </div>
+
+            <!-- Shades -->
+            <div class="flatlay-float" style="left:70.69%; top:14.03%; width:19.14%; height:22.21%; animation-duration:5.8s; animation-delay:-4.2s;">
+              <div class="flatlay-inner"><img src="img/flatlay/shades.webp" alt="Sunglasses"></div>
+            </div>
+
+            <!-- Book stack + plant -->
+            <div class="flatlay-float" style="left:76.56%; top:0%; width:23.44%; height:36.24%; animation-duration:7.4s; animation-delay:-1.6s;">
+              <div class="flatlay-inner"><img src="img/flatlay/book-stack.webp" alt="Stack of books and a plant"></div>
+            </div>
+
+            <!-- Pen -->
+            <div class="flatlay-float" style="left:31.70%; bottom:0; width:6%; height:23.81%; animation-duration:5.4s; animation-delay:-3.8s;">
+              <div class="flatlay-inner"><img src="img/flatlay/pen.webp" alt="Pen" style="object-position: bottom left;"></div>
+            </div>
+
+            <!-- Trinket plate -->
+            <div class="flatlay-float" style="left:72.37%; top:56.32%; width:16.27%; height:27.10%; animation-duration:6.7s; animation-delay:-2.8s;">
+              <div class="flatlay-inner"><img src="img/flatlay/trinket-plate.webp" alt="Trinket plate with jewellery"></div>
+            </div>
+
+            <!-- Passport + boarding pass -->
+            <div class="flatlay-float" style="right:0; bottom:0; width:15%; height:59.7%; animation-duration:6.9s; animation-delay:-1.3s;">
+              <div class="flatlay-inner"><img src="img/flatlay/passport.webp" alt="Passport and boarding pass" style="object-position: bottom right;"></div>
+            </div>
+
+            <!-- Paperclip -->
+            <div class="flatlay-float" style="right:16%; bottom:5%; width:3.28%; height:7.59%; animation-duration:5.1s; animation-delay:-2.4s;">
+              <div class="flatlay-inner"><img src="img/flatlay/pclip.webp" alt="Paperclip"></div>
+            </div>
+
+            <!-- Notebook with checklist -->
+            <div class="flatlay-float" style="left:33.07%; bottom:-4%; width:36.24%; height:25.29%; animation-duration:6.3s; animation-delay:-5s;">
+              <div class="flatlay-inner"><img src="img/flatlay/notebook.webp" alt="Notebook with a design checklist" style="object-position: bottom center;"></div>
+            </div>
+
+            <!-- Flowers -->
+            <div class="flatlay-float" style="left:79.43%; top:78.75%; width:16.15%; height:20.19%; animation-duration:7.6s; animation-delay:-0.6s;">
+              <div class="flatlay-inner"><img src="img/flatlay/flowers.webp" alt="Flowers"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- The Paper Overlay Sheets (drawn directly using the PNG files) -->
+        <div class="absolute inset-0 w-full h-full z-20 pointer-events-none" id="paper-overlay">
+
+          <!-- Top Paper Sheet (taller and wider to crop out PNG margins and shadow borders) -->
+          <img id="paper-up" src="img/paperup.webp"
+            class="absolute top-0 left-[-3vw] w-[106vw] h-[58vh] object-cover object-bottom select-none pointer-events-auto transition-transform duration-75 ease-out"
+            style="transform: translateY(-3vh);" alt="Top Paper Sheet">
+
+          <!-- Bottom Paper Sheet (taller and wider to crop out PNG margins and shadow borders) -->
+          <img id="paper-down" src="img/paperdown.webp"
+            class="absolute bottom-0 left-[-3vw] w-[106vw] h-[58vh] object-cover object-top select-none pointer-events-auto transition-transform duration-75 ease-out"
+            style="transform: translateY(3vh);" alt="Bottom Paper Sheet">
+
+        </div>
+
+      </div>
+    </div>
+
+    <!-- SECTION 2: THE MAIN HOMEPAGE FLOW -->
+    <div class="relative bg-white z-30 w-full" id="main-content-flow">
+
+
+      <!-- Intro / bio section -->
+      <section class="intro-section relative px-6 md:px-16 lg:px-24 py-28 md:py-36 overflow-hidden">
+        <div class="intro-inner max-w-6xl mx-auto relative">
+
+          <!-- Eyebrow -->
+          <div class="flex items-center gap-5 mb-14 md:mb-20 select-none">
+            <span class="font-bio text-[11px] md:text-xs tracking-[0.35em] uppercase text-[#2d2a4e]/70">Intro</span>
+            <span class="h-px w-20 md:w-28 bg-[#2d2a4e]/30"></span>
+          </div>
+
+        <div id="bio-text-container"
+          class="font-bio text-[17px] md:text-[1.6rem] lg:text-[1.8rem] leading-[1.7] md:leading-[1.75] text-[#2d2a4e] select-none md:pr-44 lg:pr-60">
+          I’m a Product Designer currently leading design at
+          <a href="https://www.vetirapp.com/" target="_blank" rel="noopener noreferrer"
+            class="font-bio font-bold text-[#2d2a4e] border-b-2 border-[#2d2a4e]/40 hover:border-[#7c3aed] hover:text-[#7c3aed] transition-colors">Vêtir<span class="text-[0.5em] font-light align-super ml-0.5" title="Opens in a new tab">↗</span></a>,
+          with <span class="bio-chip bg-[#e6e4d3]">5+ years</span><span class="stamped-sticker-wrapper is-pinned" style="top:4%; right:3%;"><img src="img/sticker 4.webp" class="stamped-sticker" alt="Sticker 4"></span> of experience designing and shipping digital products end-to-end. I’ve designed across fashion, fintech, BFSI and SaaS – from consumer apps and websites to enterprise dashboards. I enjoy making complicated things feel simple but exciting, building systems that scale, and shaping products from the first brainstorming session to the final shipped interface.
+
+          <br><br>
+
+          When I’m not designing, you’ll find me planning my
+          <span class="bio-chip bg-[#e7d9f8]">next trip</span><span class="stamped-sticker-wrapper is-pinned" style="top:40%; right:7%;"><img src="img/sticker 5.webp" class="stamped-sticker" alt="Sticker 5"></span>, hunting for the best
+          <span class="bio-chip bg-[#e6e4d3]">Vietnamese coffee</span>, curating my personal
+          <span class="bio-chip bg-[#f9d7da]">foodie database</span><span class="stamped-sticker-wrapper is-pinned" style="top:72%; right:3%;"><img src="img/sticker 3.webp" class="stamped-sticker" alt="Sticker 3"></span> on Google Maps, or vibe-coding the next app that’s going to solve one of my first-world problems.
+
+          </div>
+
+          <div class="mt-14 md:mt-16">
+            <a href="#"
+              class="font-bio text-xs tracking-[0.2em] uppercase font-bold inline-block border-2 border-[#2d2a4e] text-[#2d2a4e] px-8 py-3.5 hover:bg-[#2d2a4e] hover:text-[#f7f5f0] transition-all duration-300 rounded-full">
+              View CV
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Centered Purple Portfolio Stack Carousel -->
+      <section class="portfolio-slider-section w-full">
+        <!-- Backdrop scenes: postcard N shows img/Selected Work bg/sw-backgroundN
+             (.webp, else .png); with no such file it stays blank. JS crossfades
+             between these two layers. -->
+        <div class="sw-scene"></div>
+        <div class="sw-scene"></div>
+        <!-- Foreground scenery layers (cut-outs of the background's bottom corners) -->
+        <img src="img/Selected Work bg/left-bottom.webp" class="sw-layer sw-layer-left" alt="">
+        <img src="img/Selected Work bg/right-bottom.webp" class="sw-layer sw-layer-right" alt="">
+
+        <!-- Section Header -->
+        <div class="text-center mb-2 select-none flex flex-col items-center relative z-10 sw-in-1">
+          <h2 class="text-4xl md:text-6xl font-serif-display tracking-tight text-[#281950] leading-tight font-black">
+            Selected work
+          </h2>
+        </div>
+
+        <div class="relative z-10 w-full flex flex-col items-center gap-8">
+          <!-- Horizontally scrolling postcard track -->
+          <div class="portfolio-track is-stacked sw-in-2" id="portfolio-track">
+              <!-- Card 1: Vetir -->
+              <div class="portfolio-card is-art font-bio select-none" id="p-card-vetir">
+                <img src="img/vetr-postcard.webp" class="postcard-art-base" alt="Vêtir postcard">
+                <div class="postcard-art-copy">
+                  <div class="postcard-art-eyebrow">Fashion / AI Styling / 01</div>
+                  <!-- kept short so it clears the postal stamp, as in the artwork -->
+                  <div class="postcard-art-rule" style="margin-top:0.7em; width:44%;"></div>
+
+                  <h3 class="postcard-art-title" style="margin-top:0.8em;">Vêtir</h3>
+                  <div class="postcard-art-rule" style="margin-top:0.7em;"></div>
+
+                  <p class="postcard-art-desc" style="margin-top:0.8em;">
+                    Rebuilding a scattered MVP into a cohesive luxury AI styling platform across
+                    iOS, web and an internal stylist CRM.
+                  </p>
+                  <div class="postcard-art-rule" style="margin-top:0.8em;"></div>
+
+                  <div style="margin-top:1em;">
+                    <a href="vetir.html" class="postcard-art-cta">
+                      View Project
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="width:1.6em;height:1.6em;">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 12h15m0 0l-5.5-5.5M19 12l-5.5 5.5" />
+                      </svg>
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Card 2: ICICI Bank Website -->
+              <div class="portfolio-card is-art font-bio select-none" id="p-card-0">
+                <img src="img/icici-postcard.webp" class="postcard-art-base" alt="ICICI Bank Website postcard">
+                <div class="postcard-art-copy">
+                  <div class="postcard-art-eyebrow">Banking / Web Revamp / 02</div>
+                  <!-- kept short so it clears the postal stamp, as in the artwork -->
+                  <div class="postcard-art-rule" style="margin-top:0.7em; width:44%;"></div>
+
+                  <h3 class="postcard-art-title" style="margin-top:0.8em;">ICICI Bank<br>Website</h3>
+                  <div class="postcard-art-rule" style="margin-top:0.7em;"></div>
+
+                  <p class="postcard-art-desc" style="margin-top:0.8em;">
+                    Revamp of a banking website catering to 30M+ users and facilitating seamless user journeys
+                    and effective financial planning.
+                  </p>
+                  <div class="postcard-art-rule" style="margin-top:0.8em;"></div>
+
+                  <div style="margin-top:1em;">
+                    <a href="#" class="postcard-art-cta">
+                      View Project
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="width:1.6em;height:1.6em;">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 12h15m0 0l-5.5-5.5M19 12l-5.5 5.5" />
+                      </svg>
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Card 3: CSB Bank App (default postcard artwork; its photo frame is left empty) -->
+              <div class="portfolio-card is-art font-bio select-none" id="p-card-1">
+                <img src="img/Postcard default.webp" class="postcard-art-base" alt="CSB Bank App postcard">
+                <div class="postcard-art-copy">
+                  <div class="postcard-art-eyebrow">Mobile Banking / App / 03</div>
+                  <div class="postcard-art-rule" style="margin-top:0.7em; width:44%;"></div>
+
+                  <h3 class="postcard-art-title" style="margin-top:0.8em;">CSB Bank<br>App</h3>
+                  <div class="postcard-art-rule" style="margin-top:0.7em;"></div>
+
+                  <p class="postcard-art-desc" style="margin-top:0.8em;">
+                    Revamp of a mobile banking app experience to drive user retention and boost conversions.
+                  </p>
+                  <div class="postcard-art-rule" style="margin-top:0.8em;"></div>
+
+                  <div style="margin-top:1em;">
+                    <a href="#" class="postcard-art-cta">
+                      View Project
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="width:1.6em;height:1.6em;">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 12h15m0 0l-5.5-5.5M19 12l-5.5 5.5" />
+                      </svg>
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Card 4: Fincare Bank Website (default postcard artwork; its photo frame is left empty) -->
+              <div class="portfolio-card is-art font-bio select-none" id="p-card-2">
+                <img src="img/Postcard default.webp" class="postcard-art-base" alt="Fincare Bank Website postcard">
+                <div class="postcard-art-copy">
+                  <div class="postcard-art-eyebrow">Financial Services / Web / 04</div>
+                  <div class="postcard-art-rule" style="margin-top:0.7em; width:44%;"></div>
+
+                  <h3 class="postcard-art-title" style="margin-top:0.8em;">Fincare Bank<br>Website</h3>
+                  <div class="postcard-art-rule" style="margin-top:0.7em;"></div>
+
+                  <p class="postcard-art-desc" style="margin-top:0.8em;">
+                    The website allows its diverse user base to easily apply for and get help on various financial products and services while educating users on the same.
+                  </p>
+                  <div class="postcard-art-rule" style="margin-top:0.8em;"></div>
+
+                  <div style="margin-top:1em;">
+                    <a href="#" class="postcard-art-cta">
+                      View Project
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="width:1.6em;height:1.6em;">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 12h15m0 0l-5.5-5.5M19 12l-5.5 5.5" />
+                      </svg>
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Card 5: HCLTech Employee Portal (default postcard artwork; its photo frame is left empty) -->
+              <div class="portfolio-card is-art font-bio select-none" id="p-card-3">
+                <img src="img/Postcard default.webp" class="postcard-art-base" alt="HCLTech Portal postcard">
+                <div class="postcard-art-copy">
+                  <div class="postcard-art-eyebrow">Corporate Intranet / Portal / 05</div>
+                  <div class="postcard-art-rule" style="margin-top:0.7em; width:44%;"></div>
+
+                  <h3 class="postcard-art-title" style="margin-top:0.8em;">HCLTech<br>Portal</h3>
+                  <div class="postcard-art-rule" style="margin-top:0.7em;"></div>
+
+                  <p class="postcard-art-desc" style="margin-top:0.8em;">
+                    The MyHCL intranet portal was redesigned to be intuitive, user-centric, engaging, and personalised for all kinds of HCL employees.
+                  </p>
+                  <div class="postcard-art-rule" style="margin-top:0.8em;"></div>
+
+                  <div style="margin-top:1em;">
+                    <span class="postcard-art-cta is-soon">Coming Soon</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Card 6: Reliance Careers Website (default postcard artwork; its photo frame is left empty) -->
+              <div class="portfolio-card is-art font-bio select-none" id="p-card-4">
+                <img src="img/Postcard default.webp" class="postcard-art-base" alt="Reliance Careers postcard">
+                <div class="postcard-art-copy">
+                  <div class="postcard-art-eyebrow">Careers Website / Portal / 06</div>
+                  <div class="postcard-art-rule" style="margin-top:0.7em; width:44%;"></div>
+
+                  <h3 class="postcard-art-title" style="margin-top:0.8em;">Reliance<br>Careers</h3>
+                  <div class="postcard-art-rule" style="margin-top:0.7em;"></div>
+
+                  <p class="postcard-art-desc" style="margin-top:0.8em;">
+                    Revamped system connecting candidates and matching career opportunities.
+                  </p>
+                  <div class="postcard-art-rule" style="margin-top:0.8em;"></div>
+
+                  <div style="margin-top:1em;">
+                    <span class="postcard-art-cta is-soon">Coming Soon</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Card 7: Edelweiss Alternative Assets Website (default postcard artwork; its photo frame is left empty) -->
+              <div class="portfolio-card is-art font-bio select-none" id="p-card-5">
+                <img src="img/Postcard default.webp" class="postcard-art-base" alt="Edelweiss Assets postcard">
+                <div class="postcard-art-copy">
+                  <div class="postcard-art-eyebrow">Alternative Assets / Web / 07</div>
+                  <div class="postcard-art-rule" style="margin-top:0.7em; width:44%;"></div>
+
+                  <h3 class="postcard-art-title" style="margin-top:0.8em;">Edelweiss<br>Assets</h3>
+                  <div class="postcard-art-rule" style="margin-top:0.7em;"></div>
+
+                  <p class="postcard-art-desc" style="margin-top:0.8em;">
+                    A portal to browse wealth analytics, alternative investment strategies and assets.
+                  </p>
+                  <div class="postcard-art-rule" style="margin-top:0.8em;"></div>
+
+                  <div style="margin-top:1em;">
+                    <span class="postcard-art-cta is-soon">Coming Soon</span>
+                  </div>
+                </div>
+              </div>
+          </div>
+
+          <!-- Navigation Controls -->
+          <!-- Arrows hidden for now (display:none keeps them easy to bring back) -->
+          <!-- Pulled up into the track's bottom padding (kept for the pile's shadows)
+               so the count sits ~46px under the cards instead of ~160px -->
+          <div class="relative flex items-center gap-4 z-40 h-6 sw-in-3" style="margin-top:-110px;">
+            <button id="portfolio-prev-btn" style="display:none" class="w-12 h-12 rounded-full border-2 border-[#281950] bg-white/50 hover:bg-[#281950] text-[#281950] hover:text-white flex items-center justify-center transition-all duration-300 shadow-md cursor-pointer">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+              </svg>
+            </button>
+            <div class="font-mono text-xs tracking-widest text-[#281950]/60">
+              <span id="portfolio-current-indicator">01</span> / <span id="portfolio-total-indicator">07</span>
+            </div>
+            <span class="swipe-hint" id="portfolio-swipe-hint" aria-hidden="true"></span>
+            <button id="portfolio-next-btn" style="display:none" class="w-12 h-12 rounded-full border-2 border-[#281950] bg-white/50 hover:bg-[#281950] text-[#281950] hover:text-white flex items-center justify-center transition-all duration-300 shadow-md cursor-pointer">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Parody Google Translate Section -->
+      <section
+        class="hidden px-6 py-24 bg-[#7c3aed] flex flex-col items-center justify-center w-full border-t border-zinc-200/80 select-none">
+
+        <!-- Section Header -->
+        <div class="text-center mb-12 select-none flex flex-col items-center">
+          <span class="text-xs text-[#ffaed5] font-semibold tracking-widest uppercase font-mono mb-4">Client Translator</span>
+          <h2 class="text-4xl md:text-6xl font-serif-display tracking-tight text-white leading-tight font-black">
+            Client decoder
+          </h2>
+        </div>
+
+        <!-- Translation Card Wrapper -->
+        <div
+          class="w-full max-w-4xl bg-[#fffcf9] rounded-2xl p-6 md:p-8 shadow-xl border border-zinc-200/50 flex flex-col justify-between relative">
+
+          <!-- Card Header (Drop-down selectors & swap arrow) -->
+          <div class="flex items-center justify-between gap-4 mb-8">
+
+            <!-- Left Selector (Client says) -->
+            <div class="relative flex-1">
+              <select id="client-says-select"
+                class="w-full border border-zinc-300 rounded-lg pl-4 pr-10 py-3 bg-white font-sans text-sm font-semibold text-zinc-700 shadow-2xs cursor-pointer appearance-none outline-none">
+                <option value="Make the logo bigger.">Make the logo bigger.</option>
+                <option value="Can you make it pop?">Can you make it pop?</option>
+                <option value="It needs more wow.">It needs more wow.</option>
+                <option value="Can we see a few more options?">Can we see a few more options?</option>
+                <option value="I don't know… something feels off.">I don't know… something feels off.</option>
+                <option value="Can we make it more premium?">Can we make it more premium?</option>
+                <option value="Can we combine Concept A and Concept B?">Can we combine Concept A and Concept B?</option>
+                <option value="Can you make it more modern?">Can you make it more modern?</option>
+                <option value="Can you make it more fun but still professional?">Can you make it more fun but still
+                  professional?</option>
+                <option value="Can we make everything bigger?">Can we make everything bigger?</option>
+                <option value="Can we remove all the whitespace?">Can we remove all the whitespace?</option>
+                <option value="Let's just copy what Apple does.">Let's just copy what Apple does.</option>
+                <option value="Let's add AI somewhere.">Let's add AI somewhere.</option>
+                <option value="Can you make the homepage say everything?">Can you make the homepage say everything?
+                </option>
+                <option value="We'll know it when we see it.">We'll know it when we see it.</option>
+              </select>
+              <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-zinc-400">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5"
+                  stroke="currentColor" class="w-4 h-4">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                </svg>
+              </div>
+            </div>
+
+            <!-- Swap Arrow Icon -->
+            <div id="swap-translation-mode"
+              class="text-white/80 font-bold text-xl cursor-pointer hover:text-white transition-colors px-1 select-none">
+              ⇄
+            </div>
+
+            <!-- Right Selector (What they mean / The question I'd ask) -->
+            <div class="relative flex-1">
+              <select id="what-it-means-select"
+                class="w-full border border-zinc-300 rounded-lg pl-4 pr-10 py-3 bg-white font-sans text-sm font-semibold text-zinc-700 shadow-2xs cursor-pointer appearance-none outline-none">
+                <option value="mean">What they actually mean</option>
+                <option value="question">The question I'd ask</option>
+              </select>
+              <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-zinc-400">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5"
+                  stroke="currentColor" class="w-4 h-4">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                </svg>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Translation Panels (Input and translated output) -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 items-stretch">
+
+            <!-- Left Box (Input: Client Quote) -->
+            <div class="flex flex-col justify-start h-[220px] md:h-[240px] pb-2">
+              <div id="translation-input-text"
+                class="text-2xl md:text-3xl font-medium text-zinc-800 font-sans tracking-tight leading-normal">
+                Make the logo bigger.
+              </div>
+            </div>
+
+            <!-- Right Box (Output: Translation) -->
+            <div class="bg-[#efeee9] rounded-xl p-5 md:p-6 flex flex-col justify-start h-[220px] md:h-[240px]">
+              <div id="translation-output-text"
+                class="text-xl md:text-2xl font-normal text-zinc-950 font-sans tracking-tight leading-relaxed">
+                I don't feel the brand is getting enough attention.
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- Testimonials / Chat Section -->
+      <!-- Client praise: hidden for now (remove "hidden" to bring it back) -->
+      <section id="chat-section" class="hidden text-[#281950] pt-20 pb-0 px-6 md:px-12 w-full select-none flex flex-col items-center justify-center relative overflow-hidden" data-bg="img/testback.png" style="background-size: cover; background-position: center; background-repeat: no-repeat;">
+        
+        <!-- Header -->
+        <div class="text-center mb-4 select-none flex flex-col items-center">
+          <h2 class="text-4xl md:text-6xl font-serif-display tracking-tight text-[#281950] leading-tight font-black">
+            Client praise
+          </h2>
+        </div>
+
+        <!-- iPhone Mockup Container (Shifted down so the bottom 20% is cut off by the section overflow boundary) -->
+        <div class="relative mx-auto w-full max-w-[380px] aspect-[9/19.3] bg-[#1c1c1e] rounded-[52px] p-3 shadow-2xl border-4 border-[#3a3a3c] ring-1 ring-black/40 select-none translate-y-[20%] mb-[-10%] sm:mb-[-12%] mt-[-80px]">
+          <!-- Dynamic Island -->
+          <div class="absolute top-5 left-1/2 -translate-x-1/2 w-[110px] h-[28px] bg-black rounded-full z-50 flex items-center justify-between px-3 text-[10px] text-white"></div>
+          
+          <!-- Speaker/Camera Details on Dynamic Island -->
+          <div class="absolute top-[26px] left-[calc(50%+30px)] w-2.5 h-2.5 bg-[#0d0d0d] rounded-full z-50 border border-white/5 shadow-inner"></div>
+
+          <!-- Screen -->
+          <div class="relative w-full h-full rounded-[42px] bg-[#f2f2f7] overflow-hidden flex flex-col border border-black/80">
+            
+            <!-- iOS Status Bar -->
+            <div class="h-12 pt-4 px-6 flex justify-between items-center text-[11px] font-bold text-black z-40 shrink-0">
+              <span id="iphone-time">9:41 AM</span>
+              <div class="flex items-center gap-1.5">
+                <!-- Signal Strengths -->
+                <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M2 22h20V2z" opacity="0.3"/><path d="M17 10L2 22h15z"/></svg>
+                <!-- Battery Icon -->
+                <div class="w-5.5 h-3 border border-black rounded-sm p-0.5 flex items-center">
+                  <div class="w-3.5 h-full bg-black rounded-3xs"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- iOS Navigation Header (iMessage Style) -->
+            <div class="bg-white/95 backdrop-blur-md border-b border-zinc-200/80 px-4 py-2 flex items-center justify-between z-40 shrink-0 shadow-xs">
+              <!-- Left navigation (Previous Testimonial) -->
+              <button id="iphone-prev-btn" class="text-[#007aff] flex items-center justify-center w-8 h-8 rounded-full hover:bg-zinc-100 transition-colors cursor-pointer" title="Previous Testimonial">
+                <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24">
+                  <path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z"/>
+                </svg>
+              </button>
+              
+              <!-- Center Contact Profile -->
+              <div class="flex flex-col items-center justify-center">
+                <span id="iphone-chat-title" class="text-xs font-bold text-zinc-900 leading-tight">Marcus Vance</span>
+              </div>
+              
+              <!-- Right navigation (Next Testimonial) -->
+              <button id="iphone-next-btn" class="text-[#007aff] flex items-center justify-center w-8 h-8 rounded-full hover:bg-zinc-100 transition-colors cursor-pointer" title="Next Testimonial">
+                <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24">
+                  <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/>
+                </svg>
+              </button>
+            </div>
+
+            <!-- Chat Area (Scrollable body) -->
+            <div class="flex-grow overflow-y-auto px-3.5 py-4 space-y-5 flex flex-col justify-start bg-[#f2f2f7]">
+              
+              <!-- Left Bubble (Client) -->
+              <div class="flex items-end gap-2.5 justify-start" id="client-row">
+                <!-- Client Profile Photo (Unsplash Avatar) -->
+                <div class="w-8 h-8 rounded-full overflow-hidden shadow-xs shrink-0 border border-white bg-zinc-200 flex items-center justify-center">
+                  <img id="client-avatar" class="w-full h-full object-cover" src="" alt="Client Avatar">
+                </div>
+                <div class="flex flex-col items-start gap-1 max-w-[82%]">
+                  <!-- Name & Title -->
+                  <span class="text-[9px] text-zinc-500 tracking-wider font-mono uppercase px-1" id="client-info">Marcus Vance (VP of Product)</span>
+                  <!-- Bubble Base -->
+                  <div class="relative bg-[#e5e5ea] text-black px-4 py-2.5 rounded-[18px] rounded-bl-none shadow-xs w-full min-h-[40px] flex items-center">
+                    <!-- Typing Indicator / Message -->
+                    <div id="client-message-content" class="w-full text-xs font-medium leading-normal text-left">
+                      <!-- Typing dots placeholder -->
+                    </div>
+                    <!-- Speech Bubble Tail -->
+                    <svg class="absolute bottom-0 -left-1 w-3 h-3 text-[#e5e5ea]" viewBox="0 0 16 16" fill="currentColor">
+                      <path d="M16 16c-3 0-6-3-6-6h6v6z" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Right Bubble (Stacy) -->
+              <div class="flex items-end gap-2.5 justify-end opacity-0 transition-opacity duration-300" id="stacy-row">
+                <div class="flex flex-col items-end gap-1 max-w-[82%]">
+                  <!-- Name & Title -->
+                  <span class="text-[9px] text-zinc-500 tracking-wider font-mono uppercase px-1">Stacy (Lead Designer)</span>
+                  <!-- Bubble Base -->
+                  <div class="relative bg-[#007aff] text-white px-4 py-2.5 rounded-[18px] rounded-br-none shadow-xs w-full min-h-[40px] flex items-center">
+                    <!-- Typing Indicator / Message -->
+                    <div id="stacy-message-content" class="w-full text-xs font-medium leading-normal text-left">
+                      <!-- Message placeholder -->
+                    </div>
+                    <!-- Speech Bubble Tail -->
+                    <svg class="absolute bottom-0 -right-1.5 w-3 h-3 text-[#007aff]" viewBox="0 0 16 16" fill="currentColor">
+                      <path d="M0 16c3 0 6-3 6-6H0v6z" />
+                    </svg>
+                  </div>
+                </div>
+                <!-- Stacy Profile Photo -->
+                <div class="w-8 h-8 rounded-full overflow-hidden border border-white shadow-xs shrink-0 bg-[#3a5a40]">
+                  <img src="img/portrait.webp" class="w-full h-full object-cover" alt="Stacy Photo">
+                </div>
+              </div>
+
+            </div>
+
+            <!-- iOS Message Input Bar -->
+            <div class="bg-white border-t border-zinc-200/80 p-2.5 pb-5 flex items-center gap-2.5 shrink-0 z-40">
+              <button class="text-zinc-400 hover:text-zinc-600">
+                <svg class="w-5.5 h-5.5 fill-none stroke-current" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+              </button>
+              <div class="flex-1 relative flex items-center">
+                <div class="w-full bg-[#f2f2f7] border border-zinc-300/40 rounded-full py-1.5 pl-3.5 pr-8 text-[11px] text-zinc-400 font-normal text-left">
+                  iMessage
+                </div>
+                <div class="absolute right-2.5 text-zinc-400">
+                  <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/></svg>
+                </div>
+              </div>
+            </div>
+
+            <!-- iOS Home Indicator Bar -->
+            <div class="absolute bottom-1.5 left-1/2 -translate-x-1/2 w-32 h-1 bg-black rounded-full z-50"></div>
+          </div>
+        </div>
+
+
+      </section>
+
+      <!-- Sidequests scene: pinned scroll scene. The cards start as a desktop
+           grid, then travel with the scroll into a collage around the portrait.
+           data-x0/y0/r0/s0 = desktop position, data-x1/y1/r1/s1 = collage
+           position (both as % of the pinned viewport). -->
+      <div id="sq-wrapper" class="relative w-full">
+
+        <!-- Sidequests section: plain scrolling section, exactly as before -->
+        <section id="sidequests-section" class="relative w-full py-28 md:py-12 px-6 md:h-svh md:min-h-[640px] md:flex md:flex-col">
+
+          <div class="sq-in-1 relative text-center mb-20 md:mb-6 select-none md:shrink-0">
+            <h2 class="font-serif-display text-4xl md:text-6xl font-black tracking-tight text-[#1c1c1a] leading-tight">My sidequests</h2>
+            <p class="font-sans text-sm md:text-base tracking-wide text-[#1c1c1a]/45 mt-6">Open a folder — tap anything to take a look</p>
+          </div>
+
+          <!-- Anchor for the cards' desktop layout (the cards live in the layer below).
+               From md up it takes whatever height is left so the section is one screen;
+               the inner padding keeps the top/bottom rows of cards inside it. -->
+          <div id="sq-desktop-area" class="relative w-full max-w-5xl mx-auto h-[900px] sm:h-[760px] md:h-auto md:flex-1 md:min-h-0"></div>
+        </section>
+
+        <!-- Portrait section: the cards settle around her, smaller -->
+        <section id="portrait-section" class="relative w-full bg-[#f4f1ea] overflow-hidden h-screen min-h-[680px]">
+          <div id="sq-collage-area" class="absolute inset-0 pointer-events-none"></div>
+          <img src="img/portrait.webp" class="sq-portrait" id="sq-portrait" alt="Stacy on the phone, holding a stack of folders">
+        </section>
+
+        <!-- Card layer spans both sections so the cards can travel between them -->
+        <div id="sq-cards" class="sq-cards-layer">
+
+          <!-- Scattered cards -->
+          <button type="button" class="sq-card"
+            data-x0="12" data-y0="17" data-r0="-6" data-s0="1"
+            data-x1="26" data-y1="4"  data-r1="5"  data-s1="0.60"
+            data-sq-title="SBM Bank" data-sq-tag="sbm.bank" data-sq-gradient="from-rose-100 to-orange-50">
+            <span class="sq-card-inner"><span class="sq-card-img bg-gradient-to-br from-rose-100 to-orange-50"></span></span>
+            <span class="sq-card-label">sbm.bank</span>
+          </button>
+
+          <button type="button" class="sq-card"
+            data-x0="88" data-y0="15" data-r0="5" data-s0="1"
+            data-x1="54" data-y1="3"  data-r1="-3" data-s1="0.64"
+            data-sq-title="Detour" data-sq-tag="detour.app" data-sq-gradient="from-sky-100 to-blue-50">
+            <span class="sq-card-inner"><span class="sq-card-img bg-gradient-to-br from-sky-100 to-blue-50"></span></span>
+            <span class="sq-card-label">detour.app</span>
+          </button>
+
+          <button type="button" class="sq-card"
+            data-x0="10" data-y0="76" data-r0="4" data-s0="1"
+            data-x1="80" data-y1="6"  data-r1="7"  data-s1="0.58"
+            data-sq-title="Desiw" data-sq-tag="desiw.app" data-sq-gradient="from-cyan-100 to-emerald-50">
+            <span class="sq-card-inner"><span class="sq-card-img bg-gradient-to-br from-cyan-100 to-emerald-50"></span></span>
+            <span class="sq-card-label">desiw.app</span>
+          </button>
+
+          <button type="button" class="sq-card"
+            data-x0="90" data-y0="79" data-r0="-5" data-s0="1"
+            data-x1="8"  data-y1="13" data-r1="-7" data-s1="0.55"
+            data-sq-title="Fino Bank" data-sq-tag="fino.bank" data-sq-gradient="from-purple-100 to-pink-50">
+            <span class="sq-card-inner"><span class="sq-card-img bg-gradient-to-br from-purple-100 to-pink-50"></span></span>
+            <span class="sq-card-label">fino.bank</span>
+          </button>
+
+          <!-- Shortcut tiles - hrefs are placeholders, add the real URLs later -->
+          <a href="https://pin.it/ttEL3jqrv" target="_blank" rel="noopener noreferrer" class="sq-card" data-sq-link
+            data-x0="26" data-y0="88" data-r0="-4" data-s0="1"
+            data-x1="9"  data-y1="40" data-r1="-6" data-s1="0.32">
+            <span class="sq-card-inner">
+              <span class="sq-app-icon" style="background:#E60023;">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <circle cx="12" cy="12" r="10.5" fill="#ffffff" />
+                  <text x="12" y="16.8" text-anchor="middle" font-size="14" font-weight="800" fill="#E60023" font-family="Figtree, sans-serif">P</text>
+                </svg>
+              </span>
+            </span>
+            <span class="sq-card-label">Pinterest</span>
+          </a>
+
+          <a href="#" target="_blank" rel="noopener noreferrer" class="sq-card" data-sq-link
+            data-x0="44" data-y0="90" data-r0="3" data-s0="1"
+            data-x1="91" data-y1="36" data-r1="5" data-s1="0.32">
+            <span class="sq-card-inner">
+              <span class="sq-app-icon" style="background:#EA4C89;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.7" stroke-linecap="round" aria-hidden="true">
+                  <circle cx="12" cy="12" r="9.2" />
+                  <path d="M4.6 7.9c4.8 1.4 10 1 14.2-1.2" />
+                  <path d="M3.4 14.4c4.5-1.7 9.9-.7 13 3.5" />
+                  <path d="M8.8 3.3c3.7 4.3 6 9.6 6.5 15.3" />
+                </svg>
+              </span>
+            </span>
+            <span class="sq-card-label">Dribbble</span>
+          </a>
+
+          <a href="#" target="_blank" rel="noopener noreferrer" class="sq-card" data-sq-link
+            data-x0="62" data-y0="87" data-r0="-3" data-s0="1"
+            data-x1="40" data-y1="6" data-r1="4" data-s1="0.30">
+            <span class="sq-card-inner">
+              <span class="sq-app-icon" style="background:#2d2a4e;">
+                <svg viewBox="0 0 24 24" fill="#ffffff" aria-hidden="true">
+                  <rect x="3.5" y="3.5" width="7.2" height="7.2" rx="2" />
+                  <rect x="13.3" y="3.5" width="7.2" height="7.2" rx="2" opacity=".6" />
+                  <rect x="3.5" y="13.3" width="7.2" height="7.2" rx="2" opacity=".6" />
+                  <rect x="13.3" y="13.3" width="7.2" height="7.2" rx="2" />
+                </svg>
+              </span>
+            </span>
+            <span class="sq-card-label">FashionTech Icon Set</span>
+          </a>
+
+          <!-- Folder: My Apps -->
+          <button type="button" class="sq-card" data-sq-folder="my-apps"
+            data-x0="32" data-y0="48" data-r0="0" data-s0="1"
+            data-x1="14" data-y1="30" data-r1="8"  data-s1="0.40">
+            <span class="sq-card-inner"><span class="sq-folder-icon"></span></span>
+            <span class="sq-folder-label">My Apps</span>
+          </button>
+
+          <button type="button" class="sq-card" data-fan="0" data-sq-parent="my-apps"
+            data-x1="38" data-y1="14" data-r1="6"  data-s1="0.43"
+            data-sq-title="Apps concept 01" data-sq-tag="my-apps / 01" data-sq-gradient="from-amber-100 to-rose-50">
+            <span class="sq-card-inner"><span class="sq-card-img bg-gradient-to-br from-amber-100 to-rose-50"></span></span>
+            <span class="sq-card-label">01</span>
+          </button>
+          <button type="button" class="sq-card" data-fan="1" data-sq-parent="my-apps"
+            data-x1="43" data-y1="25" data-r1="-8" data-s1="0.20"
+            data-sq-title="Apps concept 02" data-sq-tag="my-apps / 02" data-sq-gradient="from-indigo-100 to-sky-50">
+            <span class="sq-card-inner"><span class="sq-card-img bg-gradient-to-br from-indigo-100 to-sky-50"></span></span>
+            <span class="sq-card-label">02</span>
+          </button>
+          <button type="button" class="sq-card" data-fan="2" data-sq-parent="my-apps"
+            data-x1="26" data-y1="22" data-r1="-10" data-s1="0.30"
+            data-sq-title="Apps concept 03" data-sq-tag="my-apps / 03" data-sq-gradient="from-emerald-100 to-teal-50">
+            <span class="sq-card-inner"><span class="sq-card-img bg-gradient-to-br from-emerald-100 to-teal-50"></span></span>
+            <span class="sq-card-label">03</span>
+          </button>
+          <button type="button" class="sq-card" data-fan="3" data-sq-parent="my-apps"
+            data-x1="35" data-y1="31" data-r1="-12" data-s1="0.21"
+            data-sq-title="Apps concept 04" data-sq-tag="my-apps / 04" data-sq-gradient="from-pink-100 to-fuchsia-50">
+            <span class="sq-card-inner"><span class="sq-card-img bg-gradient-to-br from-pink-100 to-fuchsia-50"></span></span>
+            <span class="sq-card-label">04</span>
+          </button>
+
+          <!-- Folder: POCs -->
+          <button type="button" class="sq-card" data-sq-folder="pocs"
+            data-x0="67" data-y0="62" data-r0="0" data-s0="1"
+            data-x1="88" data-y1="31" data-r1="-6" data-s1="0.39">
+            <span class="sq-card-inner"><span class="sq-folder-icon"></span></span>
+            <span class="sq-folder-label">POCs</span>
+          </button>
+
+          <button type="button" class="sq-card" data-fan="0" data-sq-parent="pocs"
+            data-x1="63" data-y1="13" data-r1="-5" data-s1="0.44"
+            data-sq-title="POC 01" data-sq-tag="pocs / 01" data-sq-gradient="from-orange-100 to-amber-50">
+            <span class="sq-card-inner"><span class="sq-card-img bg-gradient-to-br from-orange-100 to-amber-50"></span></span>
+            <span class="sq-card-label">01</span>
+          </button>
+          <button type="button" class="sq-card" data-fan="1" data-sq-parent="pocs"
+            data-x1="57" data-y1="24" data-r1="7"  data-s1="0.22"
+            data-sq-title="POC 02" data-sq-tag="pocs / 02" data-sq-gradient="from-blue-100 to-indigo-50">
+            <span class="sq-card-inner"><span class="sq-card-img bg-gradient-to-br from-blue-100 to-indigo-50"></span></span>
+            <span class="sq-card-label">02</span>
+          </button>
+          <button type="button" class="sq-card" data-fan="2" data-sq-parent="pocs"
+            data-x1="76" data-y1="21" data-r1="9"  data-s1="0.32"
+            data-sq-title="POC 03" data-sq-tag="pocs / 03" data-sq-gradient="from-teal-100 to-cyan-50">
+            <span class="sq-card-inner"><span class="sq-card-img bg-gradient-to-br from-teal-100 to-cyan-50"></span></span>
+            <span class="sq-card-label">03</span>
+          </button>
+          <button type="button" class="sq-card" data-fan="3" data-sq-parent="pocs"
+            data-x1="68" data-y1="29" data-r1="10" data-s1="0.29"
+            data-sq-title="POC 04" data-sq-tag="pocs / 04" data-sq-gradient="from-fuchsia-100 to-purple-50">
+            <span class="sq-card-inner"><span class="sq-card-img bg-gradient-to-br from-fuchsia-100 to-purple-50"></span></span>
+            <span class="sq-card-label">04</span>
+          </button>
+
+        </div>
+      </div>
+
+      <!-- Sidequest popup modal -->
+      <div id="sidequest-modal" class="fixed inset-0 z-[100] hidden items-center justify-center p-6">
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" data-sq-modal-close></div>
+        <div id="sidequest-modal-panel" class="relative bg-white rounded-2xl shadow-2xl max-w-sm w-full overflow-hidden">
+          <button type="button" data-sq-modal-close
+            class="absolute top-3 right-3 z-10 w-8 h-8 flex items-center justify-center rounded-full bg-white/90 hover:bg-white text-[#1c1c1a] shadow-md transition-colors">
+            <span aria-hidden="true">&times;</span>
+            <span class="sr-only">Close</span>
+          </button>
+          <div id="sidequest-modal-image" class="w-full aspect-[4/5] bg-gradient-to-br from-rose-100 to-orange-50"></div>
+          <div class="p-6">
+            <p id="sidequest-modal-tag" class="font-mono text-xs uppercase tracking-widest text-[#1c1c1a]/40 mb-1">sbm.bank</p>
+            <h3 id="sidequest-modal-title" class="font-serif-display text-2xl text-[#281950]">Concept</h3>
+            <p class="text-sm text-[#1c1c1a]/60 mt-2 leading-relaxed">Placeholder preview — swap this image (and this text) for the real project shot whenever it's ready.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer Section -->
+      <footer class="w-full flex flex-col font-sans-body">
+
+        <!-- Dark Purple Section -->
+        <div
+          class="bg-[#281950] text-white pt-16 flex flex-col justify-between min-h-[50vh] relative overflow-hidden">
+
+          <!-- Contact Info -->
+          <div class="flex flex-col items-center justify-center flex-grow px-6 text-center">
+            <h2 class="font-serif-display text-[3rem] sm:text-[4.5rem] md:text-[6rem] lg:text-[7.5rem] text-[#ffabd2] leading-none font-black tracking-tight">
+              Get in touch
+            </h2>
+            <div class="mt-10 flex flex-wrap items-center justify-center gap-4">
+              <a href="mailto:stacydias005@gmail.com"
+                class="inline-flex items-center gap-2 rounded-full border-2 border-[#ffabd2] text-[#ffabd2] hover:bg-[#ffabd2] hover:text-[#281950] px-7 py-3 font-mono text-xs sm:text-sm font-bold tracking-widest uppercase transition-colors">
+                Email
+              </a>
+              <!-- TODO: replace # with your LinkedIn profile URL -->
+              <a href="#" target="_blank" rel="noopener noreferrer"
+                class="inline-flex items-center gap-2 rounded-full border-2 border-[#ffabd2] text-[#ffabd2] hover:bg-[#ffabd2] hover:text-[#281950] px-7 py-3 font-mono text-xs sm:text-sm font-bold tracking-widest uppercase transition-colors">
+                LinkedIn <span aria-hidden="true">↗</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Bottom Status Bar -->
+          <div
+            class="border-t border-white/10 mt-16 px-6 py-5 flex flex-col md:flex-row justify-between items-center gap-4 text-xs font-mono font-medium text-white/70">
+
+            <!-- Left side (Available status) -->
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+              <span>Open to new projects</span>
+            </div>
+
+            <!-- Center / Credit: hidden for now ("invisible" keeps the footer layout; remove it to bring the line back) -->
+            <div class="invisible flex items-center gap-2 md:translate-x-12" aria-hidden="true">
+              <span class="w-2.5 h-2.5 rounded-full bg-[#ffaed5]"></span>
+              <span class="mx-1">Designed between Goa &amp; Kuwait 🌍</span>
+              <span class="w-2.5 h-2.5 rounded-full bg-[#ffaed5]"></span>
+            </div>
+
+            <!-- Right side: rotating personal status (lines live in FOOTER_STATUSES below) -->
+            <div class="flex items-center gap-2">
+              <span id="footer-status" class="footer-status">🎧 to Philosophize This</span>
+            </div>
+
+          </div>
+        </div>
+      </footer>
+
+      <!-- Floating Sticky Lock Screen / Notification Widget (Bottom Left - Initially hidden, slides up when scrolled to the second section) -->
+      <div id="floating-player-widget" class="is-closed fixed z-50 w-[340px] aspect-[940/1672] pointer-events-none select-none hidden sm:block translate-y-[120%] opacity-0 transition-all duration-700 ease-out" style="bottom: 0px; left: -71px;">
+        <!-- Closed flip phone: the default state. Clicking it opens the phone to
+             the game; tapping the body then switches to the voicemail screen,
+             and tapping again closes it. -->
+        <div class="phone-open-hit" id="phone-open-hit" title="Close phone"></div>
+        <img src="img/Phone_closed.webp" id="phone-closed-img" class="phone-closed" alt="Flip phone, closed">
+
+        <!-- iPhone Device Frame Image -->
+        <img src="img/PhonePlayer.webp" class="phone-open-part absolute inset-0 w-full h-full object-contain z-20 pointer-events-none" alt="Phone Frame">
+        
+        <!-- Game screen: Desi Wordle, shown first when the phone opens. The page is
+             laid out at phone width and scaled down to fit (see fitPhoneGame).
+             The src is set on first open so the game only loads if it's used. -->
+        <!-- Sized to the frame's screen cut-out (measured from PhonePlayer.png) -->
+        <div id="phone-game-screen" class="phone-open-part absolute z-30 overflow-hidden bg-[#E4D3AC] pointer-events-auto"
+             style="left: 33.32%; top: 13.17%; width: 33.64%; height: 25.77%; border-radius: 2px;">
+          <iframe id="phone-game-frame" title="Desi Wordle" data-src="https://evasd560.github.io/desiwordle/"
+                  class="absolute top-0 left-0 border-0 origin-top-left" style="width: 360px;"></iframe>
+        </div>
+
+        <!-- Lock Screen / Notification UI (Positioned on top of frame with z-30 to overlay printed templates) -->
+        <!-- Laid out at its original size, then scaled to 72% so it fills the same
+             screen cut-out as the game (left/top match it; width/height are the
+             cut-out's 33.64% x 25.77% divided by 0.72). Uses the scale property so the
+             open/close slide on transform still works. -->
+        <div id="phone-widget-screen" class="phone-open-part absolute z-30 overflow-hidden bg-[#355344] flex flex-col justify-between p-3.5 text-[#d1e2d7] pointer-events-auto"
+             style="left: 33.32%; top: 13.17%; width: 46.72%; height: 35.79%; scale: 0.72; transform-origin: top left; border-radius: 3px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+          
+          <!-- Top indicators (Signal and Battery) -->
+          <div class="flex justify-between items-start text-[6px] opacity-75 font-mono leading-none">
+            <!-- Left Signal Dots -->
+            <div class="flex flex-col gap-0.5">
+              <span>▤ ▤ ▤</span>
+              <span class="scale-75 origin-left">LTE</span>
+            </div>
+            <!-- Right Battery Bar -->
+            <div class="text-right">
+              <span>100% 🔋</span>
+            </div>
+          </div>
+
+          <!-- Floating Notification Card -->
+          <div class="flex-grow flex flex-col justify-center items-center px-1 py-2">
+            <div class="w-full bg-white/10 backdrop-blur-md border border-white/15 rounded-xl p-2.5 shadow-lg flex flex-col gap-2">
+              
+              <!-- Card Header -->
+              <div class="flex justify-between items-center text-[7px] text-[#ffabd2] leading-none">
+                <div class="flex items-center gap-1">
+                  <!-- Voicemail Icon SVG -->
+                  <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M19 14c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm-14 0c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm14-8c-3.86 0-7 3.14-7 7s3.14 7 7 7 7-3.14 7-7-3.14-7-7-7zm-14 0c-3.86 0-7 3.14-7 7s3.14 7 7 7 7-3.14 7-7-3.14-7-7-7z"/>
+                  </svg>
+                  <span class="font-bold uppercase tracking-wider text-white">Voicemail</span>
+                </div>
+                <span class="opacity-60 font-mono scale-90">now</span>
+              </div>
+
+              <!-- Card Body -->
+              <div class="text-left leading-tight">
+                <p class="text-white text-[10px] font-black tracking-wide">One voice mail</p>
+                <p class="text-[7.5px] text-[#d1e2d7]/85 mt-0.5 font-medium">From Stacy Alexsius (0:42)</p>
+              </div>
+
+              <!-- Call to Action (CTA) Button -->
+              <button class="w-full bg-[#ffabd2] hover:bg-[#ff8fbe] text-[#220402] text-[8.5px] font-bold py-1 px-3 rounded-lg flex items-center justify-center gap-1 shadow-md cursor-pointer transition-all hover:scale-[1.02] active:scale-[0.98] pointer-events-auto">
+                <svg class="w-2.5 h-2.5 fill-current" viewBox="0 0 24 24">
+                  <path d="M8 5v14l11-7z"/>
+                </svg>
+                <span>Listen Now</span>
+              </button>
+
+            </div>
+          </div>
+
+          <!-- Bottom Widgets (Weather & Battery Ring) -->
+          <div class="flex justify-between items-end mt-1 px-0.5">
+            <!-- Weather (Bottom Left) -->
+            <div class="flex flex-col text-left text-[6.5px] leading-tight opacity-95">
+              <span class="font-bold flex items-center gap-0.5">☀️ 31°</span>
+              <span class="opacity-80">Mostly Sunny</span>
+              <span class="opacity-60">H:32° L:20°</span>
+            </div>
+
+            <!-- Rings (Bottom Right) -->
+            <div class="flex items-center gap-1">
+              <!-- Battery Circular Ring -->
+              <div class="w-5.5 h-5.5 rounded-full border border-dashed border-[#d1e2d7]/40 flex items-center justify-center relative">
+                <div class="w-4 h-4 rounded-full border border-[#d1e2d7]/70 flex items-center justify-center">
+                  <span class="text-[5px]">📱</span>
+                </div>
+              </div>
+              <!-- Activity Ring -->
+              <div class="w-5.5 h-5.5 rounded-full border border-[#d1e2d7]/30 flex items-center justify-center relative">
+                <div class="w-3.5 h-3.5 rounded-full border border-dashed border-[#d1e2d7]/60"></div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- JavaScript to drive the Scroll Unfurl Animation & Card Dangle -->
+  <script>
+    const paperUp = document.getElementById('paper-up');
+    const paperDown = document.getElementById('paper-down');
+    const heroContent = document.getElementById('hero-content');
+
+    // Configuration values (vh metrics)
+    const initialOffsetVh = 3;  // Top sheet goes -3vh, bottom sheet goes +3vh initially
+    const maxOffsetVh = 58;     // Fully open offset is 58vh (completely off-screen)
+
+    function updateUnfurl(progress) {
+      // Calculate current offsets in vh based on progress (0 to 1)
+      const currentOffsetUp = initialOffsetVh + progress * (maxOffsetVh - initialOffsetVh);
+      const currentOffsetDown = initialOffsetVh + progress * (maxOffsetVh - initialOffsetVh);
+
+      // Apply translations (convert from initial gap to fully open)
+      paperUp.style.transform = `translateY(-${currentOffsetUp}vh)`;
+      paperDown.style.transform = `translateY(${currentOffsetDown}vh)`;
+
+      // Scale and fade hero content underneath
+      const scale = 0.95 + (progress * 0.05);
+      heroContent.style.opacity = 0.5 + (progress * 0.5);
+      heroContent.style.transform = `scale(${scale})`;
+    }
+
+    // SCROLL LISTENER
+    window.addEventListener('scroll', () => {
+      const scrollTop = window.scrollY;
+      const unfurlRange = window.innerHeight * 1.0;
+      const progress = Math.min(Math.max(scrollTop / unfurlRange, 0), 1);
+      updateUnfurl(progress);
+    });
+
+    // TRANSLATION DATA
+    const translationData = {
+      "Make the logo bigger.": {
+        mean: "I don't feel the brand is getting enough attention.",
+        question: "Can you tell me what makes you feel the logo isn't getting enough attention? Is there something you're worried people aren't noticing about the brand?"
+      },
+      "Can you make it pop?": {
+        mean: "I don't know where my eye should go first.",
+        question: "When you look at this, what feels like it's missing? Is there something you wish stood out more or grabbed your attention first?"
+      },
+      "It needs more wow.": {
+        mean: "I expected a stronger emotional reaction.",
+        question: "What kind of first impression are you hoping someone has when they see this? Is there a particular emotion or reaction you're looking for?"
+      },
+      "Can we see a few more options?": {
+        mean: "I'm not confident enough to commit yet.",
+        question: "I'd love to understand what's making you unsure about this direction. Is there something you were expecting that you don't see yet?"
+      },
+      "I don't know… something feels off.": {
+        mean: "My expectations don't match what I'm seeing, but I can't explain why.",
+        question: "Let's narrow it down together. Is it the layout, the colours, the messaging, or just the overall feeling that's not quite working for you?"
+      },
+      "Can we make it more premium?": {
+        mean: "I want customers to perceive us as higher value.",
+        question: "When you think of a premium experience, what brands or products come to mind? What qualities would you like people to associate with your brand?"
+      },
+      "Can we combine Concept A and Concept B?": {
+        mean: "I like different parts of each and can't prioritize.",
+        question: "I'd love to hear what you like about each concept. Which parts feel successful, and what would you want to carry forward into the final direction?"
+      },
+      "Can you make it more modern?": {
+        mean: "It feels outdated compared to competitors.",
+        question: "What makes this feel outdated to you? Have you seen another product or brand recently that feels closer to what you have in mind?"
+      },
+      "Can you make it more fun but still professional?": {
+        mean: "I want to appeal to more people without losing credibility.",
+        question: "Who are we designing this for, and what balance are we trying to strike between being approachable and being credible?"
+      },
+      "Can we make everything bigger?": {
+        mean: "I'm worried people will miss important information.",
+        question: "Which information are you most concerned people might overlook? If we could make just one thing stand out, what would it be?"
+      },
+      "Can we remove all the whitespace?": {
+        mean: "Empty space feels like wasted opportunity to me.",
+        question: "What do you feel should be happening in that space? Is there information you think users are expecting to see there?"
+      },
+      "Let's just copy what Apple does.": {
+        mean: "I admire how polished and trustworthy Apple feels.",
+        question: "What is it about Apple's experience that resonates with you? Is it the visual style, the simplicity, the clarity, or the confidence it communicates?"
+      },
+      "Let's add AI somewhere.": {
+        mean: "I don't want the product to feel behind the market.",
+        question: "What challenge are you hoping AI will solve for your users, and how would you know it's genuinely adding value instead of just being a feature?"
+      },
+      "Can you make the homepage say everything?": {
+        mean: "I'm afraid users won't explore the rest of the website.",
+        question: "If a visitor only spent ten seconds on this page, what's the one message you absolutely want them to leave with?"
+      },
+      "We'll know it when we see it.": {
+        mean: "I haven't formed a clear vision yet.",
+        question: "Let's try to define what success looks like together. What would make you look at the design and immediately feel that it's the right direction?"
+      }
+    };
+
+    const clientSelect = document.getElementById('client-says-select');
+    const meaningSelect = document.getElementById('what-it-means-select');
+    const inputText = document.getElementById('translation-input-text');
+    const outputText = document.getElementById('translation-output-text');
+    const swapButton = document.getElementById('swap-translation-mode');
+
+    function performTranslation() {
+      const selectedPhrase = clientSelect.value;
+      const translationMode = meaningSelect.value; // 'mean' or 'question'
+
+      // Update text panels
+      inputText.textContent = selectedPhrase;
+      outputText.textContent = translationData[selectedPhrase][translationMode];
+    }
+
+    clientSelect.addEventListener('change', performTranslation);
+    meaningSelect.addEventListener('change', performTranslation);
+
+    // Toggle translation mode when swap icon is clicked
+    swapButton.addEventListener('click', () => {
+      meaningSelect.value = meaningSelect.value === 'mean' ? 'question' : 'mean';
+      performTranslation();
+    });
+
+    // Footer: rotating personal status, one line every few seconds
+    (function () {
+      const el = document.getElementById('footer-status');
+      if (!el) return;
+      const FOOTER_STATUSES = [
+        '🎧 to Philosophize This',
+        '📺 on The Gentlemen binge',
+        '📍 between Goa & Kuwait',
+        '✒️ catching up on #inktober',
+        '📚 Psychology of Money'
+      ];
+      let i = 0;
+      setInterval(() => {
+        el.classList.add('is-out');
+        setTimeout(() => {
+          i = (i + 1) % FOOTER_STATUSES.length;
+          el.textContent = FOOTER_STATUSES[i];
+          el.classList.remove('is-out');
+        }, 400);
+      }, 3500);
+    })();
+ 
+    // iPhone dynamic status bar clock
+    function updateIphoneClock() {
+      const iphoneTimeEl = document.getElementById('iphone-time');
+      if (!iphoneTimeEl) return;
+      const now = new Date();
+      let hours = now.getHours();
+      const minutes = now.getMinutes().toString().padStart(2, '0');
+      const ampm = hours >= 12 ? 'PM' : 'AM';
+      hours = hours % 12;
+      hours = hours ? hours : 12; // the hour '0' should be '12'
+      iphoneTimeEl.textContent = `${hours}:${minutes} ${ampm}`;
+    }
+    setInterval(updateIphoneClock, 60000);
+    updateIphoneClock();
+
+    // Typewriter with ASCII shuffle effect for Stacy's Bio
+    async function startBioTypewriter() {
+      const container = document.getElementById('bio-text-container');
+      if (!container) return;
+
+      // Hold the block at its finished height while the text types in, so the
+      // section doesn't grow line by line and push the rest of the page down.
+      // Re-measured on resize (from an invisible full copy), released when done.
+      const fullText = container.cloneNode(true);
+      fullText.removeAttribute('id');
+      fullText.setAttribute('aria-hidden', 'true');
+      Object.assign(fullText.style, { position: 'absolute', visibility: 'hidden', pointerEvents: 'none', left: '0', top: '0', width: '100%' });
+      const reserve = () => {
+        container.parentElement.appendChild(fullText);
+        fullText.style.width = container.offsetWidth + 'px';
+        container.style.minHeight = fullText.offsetHeight + 'px';
+        fullText.remove();
+      };
+      reserve();
+      window.addEventListener('resize', reserve);
+
+      const textNodes = [];
+      function findTextNodes(node) {
+        if (node.nodeType === Node.TEXT_NODE) {
+          if (node.nodeValue.trim() || node.nodeValue === ' ') {
+            textNodes.push(node);
+          }
+        } else {
+          // If it's a styled badge, icon span, or link, hide initially
+          const isStyledWrapper = node.classList && (
+            node.classList.contains('border') ||
+            node.classList.contains('border-2') ||
+            node.classList.contains('font-semibold') ||
+            node.classList.contains('bio-chip') ||
+            node.classList.contains('stamped-sticker-wrapper') ||
+            node.tagName === 'A'
+          );
+          if (isStyledWrapper) {
+            node.style.opacity = '0';
+            node.style.transition = 'opacity 0.25s ease';
+          }
+          for (let child of node.childNodes) {
+            findTextNodes(child);
+          }
+        }
+      }
+      findTextNodes(container);
+
+      const queue = [];
+      const specialChars = new Set(['♥', '✈', '☕', '♨', '⌕', '↗']);
+      
+      textNodes.forEach(node => {
+        const text = node.nodeValue;
+        node.nodeValue = ''; // Clear original text
+        
+        for (let i = 0; i < text.length; i++) {
+          const char = text[i];
+          queue.push({
+            node: node,
+            char: char,
+            isSpecial: specialChars.has(char)
+          });
+        }
+      });
+
+      function ensureParentVisible(node) {
+        let parent = node.parentElement;
+        while (parent && parent !== container) {
+          if (parent.style.opacity === '0') {
+            parent.style.opacity = '1';
+            if (parent.classList.contains('stamped-sticker-wrapper')) {
+              const sticker = parent.querySelector('.stamped-sticker');
+              if (sticker) sticker.classList.add('visible');
+            }
+          }
+          parent = parent.parentElement;
+        }
+      }
+
+      let index = 0;
+      const shufflePool = ['✦', '❖', '✧', '★', '☀', '✿', '✂', '⛁', '⚙', '☁', '⚲', '⌕', '✖', '✚'];
+      
+      async function typeNext() {
+        if (index >= queue.length) {
+          window.removeEventListener('resize', reserve);
+          container.style.minHeight = '';
+          return;
+        }
+        
+        const op = queue[index];
+        ensureParentVisible(op.node);
+        
+        // Trigger stamp sticker if we start typing a node whose previous sibling is the sticker
+        if (op.node.nodeValue === '') {
+          let prev = op.node.previousSibling;
+          if (prev && prev.classList && prev.classList.contains('stamped-sticker-wrapper')) {
+            prev.style.opacity = '1';
+            const sticker = prev.querySelector('.stamped-sticker');
+            if (sticker) sticker.classList.add('visible');
+          }
+        }
+        
+        if (op.isSpecial) {
+          // Shuffle 5 times
+          for (let s = 0; s < 5; s++) {
+            const randChar = shufflePool[Math.floor(Math.random() * shufflePool.length)];
+            op.node.nodeValue += randChar;
+            await new Promise(r => setTimeout(r, 200));
+            op.node.nodeValue = op.node.nodeValue.slice(0, -1);
+          }
+          op.node.nodeValue += op.char;
+          index++;
+          setTimeout(typeNext, 30);
+        } else {
+          op.node.nodeValue += op.char;
+          index++;
+          const delay = (op.char === ' ' || op.char === '\n') ? 12 : 20;
+          setTimeout(typeNext, delay);
+        }
+      }
+      
+      setTimeout(typeNext, 400);
+    }
+
+    // Trigger bio typewriter only when scrolled into view
+    const bioObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          startBioTypewriter();
+          bioObserver.disconnect(); // Trigger only once
+        }
+      });
+    }, { threshold: 0.1 });
+
+    const bioContainer = document.getElementById('bio-text-container');
+    if (bioContainer) {
+      bioObserver.observe(bioContainer);
+    }
+
+    // Testimonial Chat Cycle & Typing Simulation
+    const testimonials = [
+      {
+        initials: "MV",
+        avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&h=150&q=80",
+        clientInfo: "Marcus Vance — VP of Product, Vêtir",
+        clientText: "Stacy completely simplified our Fintech dashboard. She took our most complex data screens and turned them into intuitive, user-friendly experiences. Working with her was a game-changer for our team!",
+        stacyReply: "Thank you so much, Marcus! It was an absolute joy collaborating with your team to bring clarity and structure to the platform."
+      },
+      {
+        initials: "SJ",
+        avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=150&h=150&q=80",
+        clientInfo: "Sarah Jenkins — Co-founder, FashionTech",
+        clientText: "Stacy's eye for detail is unmatched. She helped us launch our mobile app on time, designing a sleek fashion catalog flow that converted 20% higher in the first month.",
+        stacyReply: "Thanks Sarah! Designing for the fashion space is always a creative blast, loved working with your design language."
+      },
+      {
+        initials: "AM",
+        avatar: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=150&h=150&q=80",
+        clientInfo: "Aman Mehta — Lead Developer, CSB Bank",
+        clientText: "Rare to find a product designer who deeply understands dev handoff. Stacy's design systems are modular, clean, and extremely easy to implement. Highly recommend her!",
+        stacyReply: "Really appreciate it Aman! Good dev collaboration is key to a great product, thanks for the smooth coding partnership."
+      }
+    ];
+
+    let testimonialIndex = 0;
+    let testimonialTimeout = null;
+    let activeTestimonialToken = 0;
+
+    const typingHtml = `
+      <div class="flex items-center gap-1.5 py-1 px-2 text-[#2d563a]/60">
+        <div class="w-2 h-2 rounded-full bg-current animate-bounce" style="animation-delay: 0ms; animation-duration: 0.8s;"></div>
+        <div class="w-2 h-2 rounded-full bg-current animate-bounce" style="animation-delay: 150ms; animation-duration: 0.8s;"></div>
+        <div class="w-2 h-2 rounded-full bg-current animate-bounce" style="animation-delay: 300ms; animation-duration: 0.8s;"></div>
+      </div>
+    `;
+
+    const stacyTypingHtml = `
+      <div class="flex items-center gap-1.5 py-1 px-2 text-white/60">
+        <div class="w-2 h-2 rounded-full bg-current animate-bounce" style="animation-delay: 0ms; animation-duration: 0.8s;"></div>
+        <div class="w-2 h-2 rounded-full bg-current animate-bounce" style="animation-delay: 150ms; animation-duration: 0.8s;"></div>
+        <div class="w-2 h-2 rounded-full bg-current animate-bounce" style="animation-delay: 300ms; animation-duration: 0.8s;"></div>
+      </div>
+    `;
+
+    async function showTestimonial(index) {
+      if (testimonialTimeout) clearTimeout(testimonialTimeout);
+
+      testimonialIndex = index;
+      const data = testimonials[testimonialIndex];
+
+      const clientAvatar = document.getElementById('client-avatar');
+      const clientInfo = document.getElementById('client-info');
+      const clientMsg = document.getElementById('client-message-content');
+      const stacyRow = document.getElementById('stacy-row');
+      const stacyMsg = document.getElementById('stacy-message-content');
+      const chatTitle = document.getElementById('iphone-chat-title');
+
+      if (!clientAvatar || !clientInfo || !clientMsg || !stacyRow || !stacyMsg) return;
+
+      const currentToken = ++activeTestimonialToken;
+
+      // Update the chat title to show client name
+      if (chatTitle) {
+        chatTitle.textContent = data.clientInfo.split('—')[0].split('(')[0].trim();
+      }
+
+      // 1. Reset state (fade out stacy row, set client to typing)
+      stacyRow.classList.add('opacity-0');
+      stacyRow.classList.remove('opacity-100');
+      
+      // Update dynamic avatar image src
+      if (clientAvatar) {
+        clientAvatar.src = data.avatar;
+        clientAvatar.alt = data.clientInfo.split('—')[0].trim();
+      }
+      
+      clientInfo.textContent = data.clientInfo;
+      clientMsg.innerHTML = typingHtml;
+      stacyMsg.innerHTML = '';
+
+      // 2. Wait for client typing animation
+      await new Promise(r => setTimeout(r, 1500));
+      if (currentToken !== activeTestimonialToken) return;
+
+      // 3. Show client message
+      clientMsg.textContent = data.clientText;
+
+      // 4. Wait, then show Stacy row typing animation
+      await new Promise(r => setTimeout(r, 800));
+      if (currentToken !== activeTestimonialToken) return;
+      stacyRow.classList.remove('opacity-0');
+      stacyRow.classList.add('opacity-100');
+      stacyMsg.innerHTML = stacyTypingHtml;
+
+      // 5. Wait for Stacy typing animation
+      await new Promise(r => setTimeout(r, 1200));
+      if (currentToken !== activeTestimonialToken) return;
+
+      // 6. Show Stacy reply
+      stacyMsg.textContent = data.stacyReply;
+
+      // 7. Schedule next cycle
+      testimonialTimeout = setTimeout(() => {
+        const nextIndex = (testimonialIndex + 1) % testimonials.length;
+        showTestimonial(nextIndex);
+      }, 8000);
+    }
+
+    // Bind click events to the iPhone navigation chevrons
+    const iphonePrevBtn = document.getElementById('iphone-prev-btn');
+    const iphoneNextBtn = document.getElementById('iphone-next-btn');
+    if (iphonePrevBtn && iphoneNextBtn) {
+      iphonePrevBtn.addEventListener('click', () => {
+        const prevIndex = (testimonialIndex - 1 + testimonials.length) % testimonials.length;
+        showTestimonial(prevIndex);
+      });
+      iphoneNextBtn.addEventListener('click', () => {
+        const nextIndex = (testimonialIndex + 1) % testimonials.length;
+        showTestimonial(nextIndex);
+      });
+    }
+
+    // Trigger testimonial chat only when scrolled into view
+    const chatObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          showTestimonial(0);
+          chatObserver.disconnect(); // Trigger and stay active
+        }
+      });
+    }, { threshold: 0.1 });
+
+    const chatSection = document.getElementById('chat-section');
+    if (chatSection) {
+      chatObserver.observe(chatSection);
+    }
+
+    // Selected Work scenery: the corner shrubs drift into place when the section
+    // is landed on, and park again once it has fully left the screen so the
+    // move replays on the next visit.
+    (function () {
+      const sec = document.querySelector('.portfolio-slider-section');
+      if (!sec) return;
+      if (!('IntersectionObserver' in window)) { sec.classList.add('is-in-view'); return; }
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.intersectionRatio >= 0.45) sec.classList.add('is-in-view');
+          else if (!entry.isIntersecting) sec.classList.remove('is-in-view');
+        });
+      }, { threshold: [0, 0.45] });
+      io.observe(sec);
+
+      // Scroll-driven crossfades, timed like the PMV site: intro -> Selected
+      // Work, then Selected Work -> Sidequests. Each p runs 0 -> 1 as the
+      // outgoing section's bottom edge climbs from the bottom of the screen to
+      // the top; the incoming one comes to rest at p = 0.55 (its 45vh overlap).
+      const intro = document.querySelector('.intro-section');
+      const sqWrap = document.getElementById('sq-wrapper');
+      const sqSec = document.getElementById('sidequests-section');
+      if (!intro || !sqWrap || !sqSec || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      const ease = (t) => t * t * (3 - 2 * t);
+      const step = (p, from, len) => ease(Math.min(1, Math.max(0, (p - from) / len)));
+      const mix = (a, b, t) => `rgb(${a.map((v, i) => Math.round(v + (b[i] - v) * t)).join(',')})`;
+      const INTRO_BG = [247, 245, 240], SW_BG = [246, 239, 239], SQ_BG = [255, 255, 255];
+      const leaving = (el) => Math.min(1, Math.max(0, 1 - el.getBoundingClientRect().bottom / window.innerHeight));
+      let ticking = false;
+      function syncHandover() {
+        ticking = false;
+        const p = leaving(intro);
+        const p2 = leaving(sec);
+        const fo = 1 - step(p, 0, 0.35);                       // intro copy goes first
+        intro.style.setProperty('--intro-fo', fo.toFixed(3));
+        intro.style.setProperty('--intro-lift', (p * 60).toFixed(1));
+        // then the room shifts colour, shared by all three, so there's no seam
+        const bg = mix(SW_BG, SQ_BG, step(p2, 0.05, 0.5));
+        intro.style.setProperty('--hand-bg', mix(INTRO_BG, SW_BG, step(p, 0.05, 0.5)));
+        sec.style.setProperty('--hand-bg', p2 > 0 ? bg : mix(INTRO_BG, SW_BG, step(p, 0.05, 0.5)));
+        sqSec.style.setProperty('--hand-bg', bg);
+        sec.style.setProperty('--sw-so1', step(p, 0.08, 0.3).toFixed(3));   // heading
+        sec.style.setProperty('--sw-so2', step(p, 0.18, 0.3).toFixed(3));   // postcards + scenery
+        sec.style.setProperty('--sw-so3', step(p, 0.25, 0.3).toFixed(3));   // counter
+        // Clicks pass through to the intro (View CV) until the cards have arrived
+        sec.style.setProperty('--sw-pe', p < 0.2 ? 'none' : 'auto');
+
+        // Selected Work -> Sidequests: same handover one section down
+        const fo2 = 1 - step(p2, 0, 0.35);
+        sec.style.setProperty('--sw-fo', fo2.toFixed(3));
+        sec.style.setProperty('--sw-lift', (p2 * 60).toFixed(1));
+        sqWrap.style.setProperty('--sq-so1', step(p2, 0.08, 0.3).toFixed(3));   // heading + grid
+        sqWrap.style.setProperty('--sq-so2', step(p2, 0.18, 0.3).toFixed(3));   // cards
+        sqWrap.style.setProperty('--sq-pe', p2 < 0.2 ? 'none' : 'auto');
+      }
+      const onScroll = () => { if (!ticking) { ticking = true; requestAnimationFrame(syncHandover); } };
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', onScroll);
+      syncHandover();
+    })();
+
+    // PORTFOLIO HORIZONTAL POSTCARD TRACK
+    (function () {
+      const track = document.getElementById('portfolio-track');
+      if (!track) return;
+
+      const cards = Array.from(track.querySelectorAll('.portfolio-card'));
+      const prevBtn = document.getElementById('portfolio-prev-btn');
+      const nextBtn = document.getElementById('portfolio-next-btn');
+      const indicator = document.getElementById('portfolio-current-indicator');
+      const totalEl = document.getElementById('portfolio-total-indicator');
+      const pad = (n) => String(n).padStart(2, '0');
+
+      if (totalEl) totalEl.textContent = pad(cards.length);
+
+      // Whichever card sits nearest the track's centre line is the current one
+      function currentIndex() {
+        const tr = track.getBoundingClientRect();
+        const mid = tr.left + tr.width / 2;
+        let best = 0, bestDist = Infinity;
+        cards.forEach((c, i) => {
+          const r = c.getBoundingClientRect();
+          const d = Math.abs(r.left + r.width / 2 - mid);
+          if (d < bestDist) { bestDist = d; best = i; }
+        });
+        return best;
+      }
+
+      function scrollToCard(i) {
+        const card = cards[Math.max(0, Math.min(cards.length - 1, i))];
+        if (!card) return;
+        const tr = track.getBoundingClientRect();
+        const r = card.getBoundingClientRect();
+        track.scrollBy({ left: (r.left + r.width / 2) - (tr.left + tr.width / 2), behavior: 'smooth' });
+      }
+
+      const swipeHint = document.getElementById('portfolio-swipe-hint');
+      function syncIndicator() {
+        const i = currentIndex();
+        if (indicator) indicator.textContent = pad(i + 1);
+        if (swipeHint) swipeHint.classList.toggle('is-done', i === cards.length - 1);
+      }
+
+      // --- Stacked intro state -------------------------------------------------
+      // Cards begin piled on the first one and fan out on the first sideways
+      // scroll. Depth is capped so the pile reads as a few edges, not six.
+      // Hand-dropped looking pile: irregular offsets and tilts rather than a
+      // uniform cascade, so it reads as a messy stack of real postcards.
+      // Drop is kept shallow so the pile's shadows stay inside the track's bottom
+      // padding - any deeper and overflow-y clips them into a hard line.
+      const STACK_POSE = [
+        { x:   0, y:   0, r: -1.6 },
+        { x:  22, y:   7, r:  2.8 },
+        { x: -14, y:  14, r: -3.6 },
+        { x:  30, y:  20, r:  1.5 },
+        { x:   4, y:  26, r: -2.4 },
+        { x:  24, y:  32, r:  3.4 },
+        { x: -10, y:  36, r: -1.2 }
+      ];
+
+      function applyStack() {
+        const base = cards[0].offsetLeft;
+        cards.forEach((card, i) => {
+          const pose = STACK_POSE[i] || STACK_POSE[STACK_POSE.length - 1];
+          const dx = card.offsetLeft - base;
+          card.style.transform =
+            `translateX(${-dx + pose.x}px) translateY(${pose.y}px) rotate(${pose.r}deg) scale(${1 - Math.min(i, 4) * 0.022})`;
+          card.style.zIndex = String(cards.length - i);
+          card.style.opacity = String(1 - Math.min(i, 4) * 0.06);
+        });
+      }
+
+      function spread() {
+        if (!track.classList.contains('is-stacked')) return;
+        track.classList.remove('is-stacked');
+        cards.forEach((card) => {
+          card.style.transform = '';
+          card.style.zIndex = '';
+          card.style.opacity = '';
+        });
+        syncIndicator();
+        syncFocus();
+      }
+
+      // Lay the stack out without animating it in on load
+      cards.forEach((c) => { c.style.transition = 'none'; });
+      applyStack();
+      void track.offsetWidth;
+      cards.forEach((c) => { c.style.transition = ''; });
+
+      window.addEventListener('resize', () => {
+        if (track.classList.contains('is-stacked')) applyStack();
+        else syncFocus();
+      });
+
+      // Sideways intent spreads the pile; vertical page scrolling must not
+      track.addEventListener('wheel', (e) => {
+        if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) spread();
+      }, { passive: true });
+
+      let touchX = null, touchY = null;
+      track.addEventListener('touchstart', (e) => {
+        touchX = e.touches[0].clientX; touchY = e.touches[0].clientY;
+      }, { passive: true });
+      track.addEventListener('touchmove', (e) => {
+        if (touchX === null) return;
+        const dx = e.touches[0].clientX - touchX;
+        const dy = e.touches[0].clientY - touchY;
+        if (Math.abs(dx) > 8 && Math.abs(dx) > Math.abs(dy)) spread();
+      }, { passive: true });
+
+      track.addEventListener('click', spread);
+
+      // Left/right arrow keys step between postcards while the section is mostly
+      // on screen. Ignored while typing, with modifier keys, or with a modal open.
+      const section = track.closest('.portfolio-slider-section');
+      let sectionVisible = false;
+      new IntersectionObserver(([entry]) => {
+        sectionVisible = entry.isIntersecting;
+      }, { threshold: 0.5 }).observe(section);
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+        if (!sectionVisible || e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
+        const t = e.target;
+        if (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName)) return;
+        if (document.querySelector('#sidequest-modal.is-open')) return;
+        e.preventDefault();
+        if (track.classList.contains('is-stacked')) return spread();
+        scrollToCard(currentIndex() + (e.key === 'ArrowRight' ? 1 : -1));
+      });
+
+      if (prevBtn) prevBtn.addEventListener('click', () => {
+        if (track.classList.contains('is-stacked')) return spread();
+        scrollToCard(currentIndex() - 1);
+      });
+      if (nextBtn) nextBtn.addEventListener('click', () => {
+        if (track.classList.contains('is-stacked')) return spread();
+        scrollToCard(currentIndex() + 1);
+      });
+
+      // Card centres in the track's scroll coordinates (offsets ignore the tilt)
+      const centre = (c) => c.offsetLeft + c.offsetWidth / 2 -
+        (c.offsetParent === track ? 0 : track.offsetLeft);
+
+      // Backdrop: postcard N (counting from 1) shows sw-backgroundN, preferring
+      // .webp over .png. If neither file exists the backdrop stays blank. When a
+      // different postcard comes into focus its scene fades in over the old one.
+      const SCENE_DIR = 'img/Selected Work bg/';
+      const scenes = Array.from(document.querySelectorAll('.sw-scene'));
+      const sceneCache = [];
+      // Resolves to the scene's URL, or null when there's no file. Loading it
+      // also warms the cache, so a fade never shows a half-loaded image.
+      function findScene(i) {
+        if (!sceneCache[i]) {
+          sceneCache[i] = new Promise((resolve) => {
+            const attempt = (exts) => {
+              if (!exts.length) return resolve(null);
+              const src = `${SCENE_DIR}sw-background${i + 1}.${exts[0]}`;
+              const probe = new Image();
+              probe.onload = () => resolve(src);
+              probe.onerror = () => attempt(exts.slice(1));
+              probe.src = src;
+            };
+            attempt(['webp', 'png']);
+          });
+        }
+        return sceneCache[i];
+      }
+
+      let shownIndex = -1;
+      function syncScene() {
+        if (scenes.length < 2) return;
+        const view = track.scrollLeft + track.clientWidth / 2;
+        let i = 0, best = Infinity;
+        cards.forEach((c, k) => {
+          const d = Math.abs(centre(c) - view);
+          if (d < best) { best = d; i = k; }
+        });
+        if (i === shownIndex) return;
+        shownIndex = i;
+        // Look up the neighbours too, so the next fade is ready when it's needed
+        if (i + 1 < cards.length) findScene(i + 1);
+        if (i > 0) findScene(i - 1);
+        findScene(i).then((src) => {
+          if (shownIndex !== i) return; // focus moved on before it resolved
+          const active = scenes.find((el) => el.classList.contains('is-active'));
+          const idle = scenes.find((el) => el !== active);
+          if (src) {
+            idle.style.backgroundImage = `url('${src}')`;
+            idle.classList.add('is-active');
+          }
+          if (active) active.classList.remove('is-active');
+        });
+      }
+
+      // The card in focus stays full size; neighbours shrink with their distance
+      // from the centre, down to SIDE_SCALE one card-step away. Uses the separate
+      // `scale` property so it composes with the tilt/hover transforms.
+      const SIDE_SCALE = 0.82;
+      function syncFocus() {
+        if (track.classList.contains('is-stacked') || cards.length < 2) return;
+        const step = centre(cards[1]) - centre(cards[0]);
+        const view = track.scrollLeft + track.clientWidth / 2;
+        cards.forEach((c) => {
+          const d = Math.min(1, Math.abs(centre(c) - view) / step);
+          c.style.scale = (1 - (1 - SIDE_SCALE) * d).toFixed(3);
+        });
+      }
+
+      let settle;
+      track.addEventListener('scroll', () => {
+        syncScene();
+        syncFocus();
+        clearTimeout(settle);
+        settle = setTimeout(syncIndicator, 80);
+      }, { passive: true });
+
+      syncIndicator();
+      syncScene();
+    })();
+
+
+
+    // Scroll-triggered entry animation for the floating player widget
+    const floatingWidget = document.getElementById('floating-player-widget');
+    const secondSection = document.getElementById('main-content-flow');
+    
+    if (floatingWidget && secondSection) {
+      const widgetObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            // User has scrolled to the second section - slide up
+            floatingWidget.classList.remove('translate-y-[120%]', 'opacity-0');
+            floatingWidget.classList.add('translate-y-[30%]', 'opacity-100');
+          } else {
+            // Hide it again if they scroll all the way back up to the hero
+            if (window.scrollY < window.innerHeight) {
+              floatingWidget.classList.add('translate-y-[120%]', 'opacity-0');
+              floatingWidget.classList.remove('translate-y-[30%]', 'opacity-100');
+            }
+          }
+        });
+      }, { threshold: 0.05 });
+      
+      widgetObserver.observe(secondSection);
+    }
+
+    // Open / close the flip phone. It starts closed; clicking the closed phone
+    // flips it open to the Desi Wordle game. Tapping the phone's body swaps the
+    // game for the voicemail lock screen; tapping the body or that screen again
+    // (anywhere but the Listen Now button) closes it.
+    const closedPhone = document.getElementById('phone-closed-img');
+    const openPhoneHit = document.getElementById('phone-open-hit');
+    const phoneScreen = document.getElementById('phone-widget-screen');
+    const gameScreen = document.getElementById('phone-game-screen');
+    const gameFrame = document.getElementById('phone-game-frame');
+    const GAME_W = 360;   // the game is laid out at this phone width, then scaled
+
+    function fitPhoneGame() {
+      if (!gameScreen || !gameFrame || !gameScreen.clientWidth) return;
+      const k = gameScreen.clientWidth / GAME_W;
+      gameFrame.style.transform = `scale(${k})`;
+      gameFrame.style.height = `${gameScreen.clientHeight / k}px`;
+    }
+
+    function setPhoneClosed(closed) {
+      floatingWidget.classList.toggle('is-closed', closed);
+      if (closed) return;
+      floatingWidget.classList.remove('is-voicemail');   // each open starts on the game
+      if (gameFrame && !gameFrame.src) gameFrame.src = gameFrame.dataset.src;
+      fitPhoneGame();
+    }
+
+    if (floatingWidget) {
+      window.addEventListener('resize', fitPhoneGame);
+      if (closedPhone) closedPhone.addEventListener('click', (e) => {
+        e.stopPropagation();
+        setPhoneClosed(false);
+      });
+      if (openPhoneHit) openPhoneHit.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (!floatingWidget.classList.contains('is-voicemail')) {
+          floatingWidget.classList.add('is-voicemail');
+        } else {
+          setPhoneClosed(true);
+        }
+      });
+      if (phoneScreen) phoneScreen.addEventListener('click', (e) => {
+        if (e.target.closest('button')) return;
+        e.stopPropagation();
+        setPhoneClosed(true);
+      });
+    }
+
+    // SIDEQUESTS SCENE: scroll-driven transition from desktop grid to portrait collage
+    (function () {
+      const stage = document.getElementById('sq-wrapper');
+      if (!stage) return;
+
+      const desktopArea = document.getElementById('sq-desktop-area');
+      const collageArea = document.getElementById('sq-collage-area');
+      const portraitSection = document.getElementById('portrait-section');
+      const cards = Array.from(stage.querySelectorAll('.sq-card'));
+      const labels = cards.map((c) => c.querySelector('.sq-card-label, .sq-folder-label'));
+      const modal = document.getElementById('sidequest-modal');
+      const modalImage = document.getElementById('sidequest-modal-image');
+      const modalTitle = document.getElementById('sidequest-modal-title');
+      const modalTag = document.getElementById('sidequest-modal-tag');
+
+      // Fan offsets (px from the folder centre) when a folder is opened by click
+      const FAN = [[-158, -66, -16], [-58, -168, -6], [58, -168, 6], [158, -66, 16]];
+
+      const num = (el, attr, fallback) => {
+        const v = parseFloat(el.getAttribute(attr));
+        return Number.isFinite(v) ? v : fallback;
+      };
+      const clamp = (v, lo, hi) => Math.min(Math.max(v, lo), hi);
+      const lerp = (a, b, t) => a + (b - a) * t;
+      const easeInOut = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+
+      const openFolders = new Set();
+      let flightT = 0;
+
+      // Resolve each card's desktop-state position. Fan cards inherit their
+      // folder's position, offset only while that folder is open.
+      function desktopPose(card) {
+        const parent = card.getAttribute('data-sq-parent');
+        if (!parent) {
+          return {
+            x: num(card, 'data-x0', 50), y: num(card, 'data-y0', 50),
+            r: num(card, 'data-r0', 0), s: num(card, 'data-s0', 1), o: 1, px: 0, py: 0
+          };
+        }
+        const folder = stage.querySelector(`[data-sq-folder="${parent}"]`);
+        const open = openFolders.has(parent);
+        const fan = FAN[num(card, 'data-fan', 0)] || [0, 0, 0];
+        return {
+          x: num(folder, 'data-x0', 50), y: num(folder, 'data-y0', 50),
+          r: open ? fan[2] : 0,
+          s: open ? 1 : 0.25,
+          o: open ? 1 : 0,
+          px: open ? fan[0] : 0,
+          py: open ? fan[1] : 0
+        };
+      }
+
+      function render() {
+        const wrap = stage.getBoundingClientRect();
+        const deskRect = desktopArea.getBoundingClientRect();
+        const collRect = collageArea.getBoundingClientRect();
+
+        // The flight runs while the portrait section rises into view: it starts
+        // as her section reaches the bottom of the viewport and finishes once
+        // she is most of the way up it.
+        // The first 15% of the scroll is a dead zone, so landing on the folder
+        // view a little past its top doesn't already start pulling cards away.
+        const vh = window.innerHeight;
+        const secTop = portraitSection.getBoundingClientRect().top;
+        const t = clamp((vh * 0.85 - secTop) / (vh * 0.65), 0, 1);
+        const e = easeInOut(t);
+
+        // Transitions stay off in flight so scrolling tracks exactly; they're
+        // only enabled at rest, where the folder fan uses them.
+        stage.classList.toggle('is-flying', t > 0);
+        flightT = t;
+
+        // Anchor origins, in coordinates local to the card layer
+        const dx = deskRect.left - wrap.left, dy = deskRect.top - wrap.top;
+        const cx = collRect.left - wrap.left, cy = collRect.top - wrap.top;
+
+        // The folder view is one screen tall, so on short screens the desktop
+        // shrinks below the 640px it was laid out for; cards and the fan spread
+        // shrink with it so the top and bottom rows stay inside.
+        const k = clamp(deskRect.height / 640, 0.6, 1);
+
+        cards.forEach((card, i) => {
+          const a = desktopPose(card);
+          const x0 = dx + a.x / 100 * deskRect.width + a.px * k;
+          const y0 = dy + a.y / 100 * deskRect.height + a.py * k;
+          const x1 = cx + num(card, 'data-x1', a.x) / 100 * collRect.width;
+          const y1 = cy + num(card, 'data-y1', a.y) / 100 * collRect.height;
+          card.style.setProperty('--x', lerp(x0, x1, e) + 'px');
+          card.style.setProperty('--y', lerp(y0, y1, e) + 'px');
+          card.style.setProperty('--r', lerp(a.r, num(card, 'data-r1', a.r), e) + 'deg');
+          card.style.setProperty('--s', String(lerp(a.s * k, num(card, 'data-s1', a.s), e)));
+          const opacity = Math.max(a.o, e);
+          card.style.opacity = opacity;
+          card.dataset.hidden = opacity < 0.05 ? 'true' : 'false';
+          // Filenames belong to the desktop; in the collage they'd shrink to noise
+          if (labels[i]) labels[i].style.opacity = String(Math.max(0, 1 - e * 2.5));
+        });
+      }
+
+      let ticking = false;
+      function requestRender() {
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(() => { ticking = false; render(); });
+      }
+
+      window.addEventListener('scroll', requestRender, { passive: true });
+      window.addEventListener('resize', requestRender);
+      // Late-loading images above this section shift it; without these the cards
+      // would keep whatever state they were given before layout settled.
+      window.addEventListener('load', requestRender);
+      if (window.ResizeObserver) new ResizeObserver(requestRender).observe(document.body);
+
+      // Folder click fans its cards out. Clicks used to be dropped as soon as the
+      // flight began, which was almost any scroll past the folder view; now only
+      // once the cards are well on their way to the portrait.
+      cards.forEach((card) => {
+        const folderName = card.getAttribute('data-sq-folder');
+        if (!folderName) return;
+        card.addEventListener('click', (ev) => {
+          ev.stopPropagation();
+          if (flightT > 0.35) return;
+          if (openFolders.has(folderName)) openFolders.delete(folderName);
+          else { openFolders.clear(); openFolders.add(folderName); }
+          render();
+        });
+      });
+
+      document.addEventListener('click', (ev) => {
+        if (openFolders.size && !ev.target.closest('.sq-card')) {
+          openFolders.clear();
+          render();
+        }
+      });
+
+      function openSidequestModal(btn) {
+        const gradient = btn.getAttribute('data-sq-gradient') || 'from-rose-100 to-orange-50';
+        modalImage.className = 'w-full aspect-[4/5] bg-gradient-to-br ' + gradient;
+        modalTitle.textContent = btn.getAttribute('data-sq-title') || 'Concept';
+        modalTag.textContent = btn.getAttribute('data-sq-tag') || '';
+        modal.classList.remove('hidden');
+        modal.classList.add('flex', 'is-open');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeSidequestModal() {
+        modal.classList.remove('is-open');
+        document.body.style.overflow = '';
+        setTimeout(() => {
+          if (!modal.classList.contains('is-open')) {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+          }
+        }, 300);
+      }
+
+      // Shortcut tiles still carrying the placeholder "#" shouldn't jump the page
+      // to the top. Stops applying by itself once a real URL is set.
+      stage.querySelectorAll('a.sq-card[data-sq-link]').forEach((link) => {
+        link.addEventListener('click', (ev) => {
+          if ((link.getAttribute('href') || '#').trim() === '#') ev.preventDefault();
+        });
+      });
+
+      cards.forEach((card) => {
+        // Folders fan open; shortcut tiles follow their href - neither opens the modal
+        if (card.hasAttribute('data-sq-folder') || card.hasAttribute('data-sq-link')) return;
+        card.addEventListener('click', (ev) => {
+          ev.stopPropagation();
+          openSidequestModal(card);
+        });
+      });
+
+      modal.querySelectorAll('[data-sq-modal-close]').forEach((el) => {
+        el.addEventListener('click', closeSidequestModal);
+      });
+
+      document.addEventListener('keydown', (ev) => {
+        if (ev.key === 'Escape' && modal.classList.contains('is-open')) closeSidequestModal();
+      });
+
+      render();
+    })();
+
+    // Initial update to layout
+    updateUnfurl(0);
+    performTranslation();
+  </script>
+</body>
+
+</html>
