@@ -902,7 +902,7 @@
       <!-- Sticky Wrapper -->
       <div
         class="sticky top-0 h-screen w-full overflow-hidden flex items-center justify-center"
-        style="background-color: #b59dd6; background-image: linear-gradient(to right, rgba(255,255,255,0.55) 1.5px, transparent 1.5px), linear-gradient(to bottom, rgba(255,255,255,0.55) 1.5px, transparent 1.5px); background-size: 36px 36px;">
+        style="background-color: #AAA0C3; background-image: linear-gradient(to right, rgba(255,255,255,0.28) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.28) 1px, transparent 1px); background-size: 42px 42px;">
 
         <!-- Revealed Hero Content (Portfolio Flat Lay) -->
         <div id="hero-content" class="absolute inset-0 z-10 overflow-hidden transition-all duration-300 ease-out">
@@ -1015,8 +1015,7 @@
         <div id="bio-text-container"
           class="font-bio text-[17px] md:text-[1.6rem] lg:text-[1.8rem] leading-[1.7] md:leading-[1.75] text-[#2d2a4e] select-none md:pr-44 lg:pr-60">
           I’m a Product Designer currently leading design at
-          <a href="https://www.vetirapp.com/" target="_blank" rel="noopener noreferrer"
-            class="font-bio font-bold text-[#2d2a4e] border-b-2 border-[#2d2a4e]/40 hover:border-[#7c3aed] hover:text-[#7c3aed] transition-colors">Vêtir<span class="text-[0.5em] font-light align-super ml-0.5" title="Opens in a new tab">↗</span></a>,
+          <span class="font-bio font-bold text-[#2d2a4e]">Vêtir</span>,
           with <span class="bio-chip bg-[#e6e4d3]">5+ years</span><span class="stamped-sticker-wrapper is-pinned" style="top:4%; right:3%;"><img src="img/sticker 4.webp" class="stamped-sticker" alt="Sticker 4"></span> of experience designing and shipping digital products end-to-end. I’ve designed across fashion, fintech, BFSI and SaaS – from consumer apps and websites to enterprise dashboards. I enjoy making complicated things feel simple but exciting, building systems that scale, and shaping products from the first brainstorming session to the final shipped interface.
 
           <br><br>
@@ -1028,7 +1027,8 @@
 
           </div>
 
-          <div class="mt-14 md:mt-16">
+          <!-- View CV: hidden for now (remove "hidden" to bring it back) -->
+          <div class="hidden mt-14 md:mt-16">
             <a href="#"
               class="font-bio text-xs tracking-[0.2em] uppercase font-bold inline-block border-2 border-[#2d2a4e] text-[#2d2a4e] px-8 py-3.5 hover:bg-[#2d2a4e] hover:text-[#f7f5f0] transition-all duration-300 rounded-full">
               View CV
@@ -1511,37 +1511,16 @@
         <div id="sq-cards" class="sq-cards-layer">
 
           <!-- Scattered cards -->
-          <button type="button" class="sq-card"
-            data-x0="12" data-y0="17" data-r0="-6" data-s0="1"
-            data-x1="26" data-y1="4"  data-r1="5"  data-s1="0.60"
-            data-sq-title="SBM Bank" data-sq-tag="sbm.bank" data-sq-gradient="from-rose-100 to-orange-50">
-            <span class="sq-card-inner"><span class="sq-card-img bg-gradient-to-br from-rose-100 to-orange-50"></span></span>
-            <span class="sq-card-label">sbm.bank</span>
-          </button>
+
 
           <button type="button" class="sq-card"
-            data-x0="88" data-y0="15" data-r0="5" data-s0="1"
-            data-x1="54" data-y1="3"  data-r1="-3" data-s1="0.64"
-            data-sq-title="Detour" data-sq-tag="detour.app" data-sq-gradient="from-sky-100 to-blue-50">
-            <span class="sq-card-inner"><span class="sq-card-img bg-gradient-to-br from-sky-100 to-blue-50"></span></span>
-            <span class="sq-card-label">detour.app</span>
-          </button>
-
-          <button type="button" class="sq-card"
-            data-x0="10" data-y0="76" data-r0="4" data-s0="1"
+            data-x0="89" data-y0="13" data-r0="5" data-s0="1"
             data-x1="80" data-y1="6"  data-r1="7"  data-s1="0.58"
             data-sq-title="Desiw" data-sq-tag="desiw.app" data-sq-gradient="from-cyan-100 to-emerald-50">
             <span class="sq-card-inner"><span class="sq-card-img bg-gradient-to-br from-cyan-100 to-emerald-50"></span></span>
             <span class="sq-card-label">desiw.app</span>
           </button>
 
-          <button type="button" class="sq-card"
-            data-x0="90" data-y0="79" data-r0="-5" data-s0="1"
-            data-x1="8"  data-y1="13" data-r1="-7" data-s1="0.55"
-            data-sq-title="Fino Bank" data-sq-tag="fino.bank" data-sq-gradient="from-purple-100 to-pink-50">
-            <span class="sq-card-inner"><span class="sq-card-img bg-gradient-to-br from-purple-100 to-pink-50"></span></span>
-            <span class="sq-card-label">fino.bank</span>
-          </button>
 
           <!-- Shortcut tiles - hrefs are placeholders, add the real URLs later -->
           <a href="https://pin.it/ttEL3jqrv" target="_blank" rel="noopener noreferrer" class="sq-card" data-sq-link
@@ -1587,7 +1566,7 @@
                 </svg>
               </span>
             </span>
-            <span class="sq-card-label">FashionTech Icon Set</span>
+            <span class="sq-card-label">FashionTech UI Kit</span>
           </a>
 
           <!-- Folder: My Apps -->
@@ -1598,29 +1577,24 @@
             <span class="sq-folder-label">My Apps</span>
           </button>
 
+          <!-- Three cards fan left, centre-top (fan 4) and right -->
           <button type="button" class="sq-card" data-fan="0" data-sq-parent="my-apps"
             data-x1="38" data-y1="14" data-r1="6"  data-s1="0.43"
-            data-sq-title="Apps concept 01" data-sq-tag="my-apps / 01" data-sq-gradient="from-amber-100 to-rose-50">
-            <span class="sq-card-inner"><span class="sq-card-img bg-gradient-to-br from-amber-100 to-rose-50"></span></span>
-            <span class="sq-card-label">01</span>
+            data-sq-title="Detour" data-sq-tag="my-apps / detour" data-sq-gradient="from-sky-100 to-blue-50">
+            <span class="sq-card-inner"><span class="sq-card-img bg-gradient-to-br from-sky-100 to-blue-50"></span></span>
+            <span class="sq-card-label">Detour</span>
           </button>
-          <button type="button" class="sq-card" data-fan="1" data-sq-parent="my-apps"
+          <button type="button" class="sq-card" data-fan="4" data-sq-parent="my-apps"
             data-x1="43" data-y1="25" data-r1="-8" data-s1="0.20"
-            data-sq-title="Apps concept 02" data-sq-tag="my-apps / 02" data-sq-gradient="from-indigo-100 to-sky-50">
-            <span class="sq-card-inner"><span class="sq-card-img bg-gradient-to-br from-indigo-100 to-sky-50"></span></span>
-            <span class="sq-card-label">02</span>
-          </button>
-          <button type="button" class="sq-card" data-fan="2" data-sq-parent="my-apps"
-            data-x1="26" data-y1="22" data-r1="-10" data-s1="0.30"
-            data-sq-title="Apps concept 03" data-sq-tag="my-apps / 03" data-sq-gradient="from-emerald-100 to-teal-50">
-            <span class="sq-card-inner"><span class="sq-card-img bg-gradient-to-br from-emerald-100 to-teal-50"></span></span>
-            <span class="sq-card-label">03</span>
+            data-sq-title="Desi Wordle" data-sq-tag="my-apps / desi wordle" data-sq-gradient="from-amber-100 to-rose-50">
+            <span class="sq-card-inner"><span class="sq-card-img bg-gradient-to-br from-amber-100 to-rose-50"></span></span>
+            <span class="sq-card-label">Desi Wordle</span>
           </button>
           <button type="button" class="sq-card" data-fan="3" data-sq-parent="my-apps"
-            data-x1="35" data-y1="31" data-r1="-12" data-s1="0.21"
-            data-sq-title="Apps concept 04" data-sq-tag="my-apps / 04" data-sq-gradient="from-pink-100 to-fuchsia-50">
-            <span class="sq-card-inner"><span class="sq-card-img bg-gradient-to-br from-pink-100 to-fuchsia-50"></span></span>
-            <span class="sq-card-label">04</span>
+            data-x1="26" data-y1="22" data-r1="-10" data-s1="0.30"
+            data-sq-title="BiliG" data-sq-tag="my-apps / bilig" data-sq-gradient="from-emerald-100 to-teal-50">
+            <span class="sq-card-inner"><span class="sq-card-img bg-gradient-to-br from-emerald-100 to-teal-50"></span></span>
+            <span class="sq-card-label">BiliG</span>
           </button>
 
           <!-- Folder: POCs -->
@@ -1687,7 +1661,7 @@
           <!-- Contact Info -->
           <div class="flex flex-col items-center justify-center flex-grow px-6 text-center">
             <h2 class="font-serif-display text-[3rem] sm:text-[4.5rem] md:text-[6rem] lg:text-[7.5rem] text-[#ffabd2] leading-none font-black tracking-tight">
-              Get in touch
+              Let’s Connect
             </h2>
             <div class="mt-10 flex flex-wrap items-center justify-center gap-4">
               <a href="mailto:stacydias005@gmail.com"
@@ -1698,6 +1672,11 @@
               <a href="#" target="_blank" rel="noopener noreferrer"
                 class="inline-flex items-center gap-2 rounded-full border-2 border-[#ffabd2] text-[#ffabd2] hover:bg-[#ffabd2] hover:text-[#281950] px-7 py-3 font-mono text-xs sm:text-sm font-bold tracking-widest uppercase transition-colors">
                 LinkedIn <span aria-hidden="true">↗</span>
+              </a>
+              <!-- TODO: replace # with your resume URL -->
+              <a href="#" target="_blank" rel="noopener noreferrer"
+                class="inline-flex items-center gap-2 rounded-full border-2 border-[#ffabd2] text-[#ffabd2] hover:bg-[#ffabd2] hover:text-[#281950] px-7 py-3 font-mono text-xs sm:text-sm font-bold tracking-widest uppercase transition-colors">
+                Resume <span aria-hidden="true">↗</span>
               </a>
             </div>
           </div>
@@ -2553,28 +2532,32 @@
 
 
 
-    // Scroll-triggered entry animation for the floating player widget
+    // Floating flip phone visibility: shown from the hero through the intro,
+    // tucked away while Selected Work and Sidequests are on screen, and back
+    // again once the Let's Connect footer comes into view.
     const floatingWidget = document.getElementById('floating-player-widget');
-    const secondSection = document.getElementById('main-content-flow');
-    
-    if (floatingWidget && secondSection) {
-      const widgetObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            // User has scrolled to the second section - slide up
-            floatingWidget.classList.remove('translate-y-[120%]', 'opacity-0');
-            floatingWidget.classList.add('translate-y-[30%]', 'opacity-100');
-          } else {
-            // Hide it again if they scroll all the way back up to the hero
-            if (window.scrollY < window.innerHeight) {
-              floatingWidget.classList.add('translate-y-[120%]', 'opacity-0');
-              floatingWidget.classList.remove('translate-y-[30%]', 'opacity-100');
-            }
-          }
-        });
-      }, { threshold: 0.05 });
-      
-      widgetObserver.observe(secondSection);
+    const workSection = document.querySelector('.portfolio-slider-section');
+    const footerEl = document.querySelector('footer');
+
+    if (floatingWidget && workSection && footerEl) {
+      let widgetTick = false;
+      const syncWidget = () => {
+        widgetTick = false;
+        const vh = window.innerHeight;
+        // Selected Work starts fading in around here (it overlaps the intro by 45vh)
+        const beforeWork = workSection.getBoundingClientRect().top > vh * 0.55;
+        const atFooter = footerEl.getBoundingClientRect().top < vh * 0.8;
+        const show = beforeWork || atFooter;
+        floatingWidget.classList.toggle('translate-y-[30%]', show);
+        floatingWidget.classList.toggle('opacity-100', show);
+        floatingWidget.classList.toggle('translate-y-[120%]', !show);
+        floatingWidget.classList.toggle('opacity-0', !show);
+      };
+      window.addEventListener('scroll', () => {
+        if (!widgetTick) { widgetTick = true; requestAnimationFrame(syncWidget); }
+      }, { passive: true });
+      window.addEventListener('resize', syncWidget);
+      syncWidget();
     }
 
     // Open / close the flip phone. It starts closed; clicking the closed phone
@@ -2640,7 +2623,8 @@
       const modalTag = document.getElementById('sidequest-modal-tag');
 
       // Fan offsets (px from the folder centre) when a folder is opened by click
-      const FAN = [[-158, -66, -16], [-58, -168, -6], [58, -168, 6], [158, -66, 16]];
+      // (index 4 is a centre-top spot, for folders with three cards)
+      const FAN = [[-158, -66, -16], [-58, -168, -6], [58, -168, 6], [158, -66, 16], [0, -178, 0]];
 
       const num = (el, attr, fallback) => {
         const v = parseFloat(el.getAttribute(attr));
