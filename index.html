@@ -4,7 +4,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DESIGNERS IDENTIFICATION</title>
+  <title>Stacy – Product Designer</title>
+  <meta name="description" content="Product Design Portfolio">
+  <link rel="icon" type="image/png" href="img/favicon.png">
+  <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+  <!-- Link previews (LinkedIn, WhatsApp, Slack, X). Image URLs must be absolute:
+       switch the domain here once the custom domain is live. -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Stacy – Product Designer">
+  <meta property="og:description" content="Product Design Portfolio">
+  <meta property="og:url" content="https://evasd560.github.io/stacyevaportfolio/">
+  <meta property="og:image" content="https://evasd560.github.io/stacyevaportfolio/img/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
   <!-- Image format: prefer .webp, fall back to .png when there's no .webp yet.
        <img> tags point at the .webp; if it 404s, the handler below swaps in the
        .png (or the tag's data-fallback). Backgrounds use data-bg="....png" and
@@ -128,9 +141,173 @@
       pointer-events: none;
       user-select: none;
     }
+    /* AirPods sound ping. Positioned in % of the AirPods box so the burst's
+       origin sits at the left side of the top earbud at any size. */
+    .airpods-ping {
+      position: absolute;
+      left: 13.6%;
+      top: 16.3%;
+      width: 26%;
+      overflow: visible;
+      pointer-events: none;
+    }
+    .airpods-ping line {
+      stroke: #2a2438;
+      stroke-width: 1.5;
+      stroke-linecap: round;
+      stroke-dasharray: 1;
+      stroke-dashoffset: 1;
+      opacity: 0;
+      animation: airpods-ping 6s ease-out infinite;
+    }
+    .airpods-ping line:nth-child(2) { animation-delay: 0.05s; }
+    .airpods-ping line:nth-child(3) { animation-delay: 0.1s; }
+    .airpods-ping line:nth-child(4) { animation-delay: 0.15s; }
+    /* Two pulses (each: draw outward, hold, fade) in the first ~1.3s of 6s */
+    @keyframes airpods-ping {
+      0%     { stroke-dashoffset: 1; opacity: 0; }
+      1.5%   { opacity: 0.7; }
+      4%     { stroke-dashoffset: 0; opacity: 0.7; }
+      7%     { stroke-dashoffset: 0; opacity: 0.7; }
+      10%    { stroke-dashoffset: 0; opacity: 0; }
+      10.5%  { stroke-dashoffset: 1; opacity: 0; }
+      12%    { opacity: 0.7; }
+      14.5%  { stroke-dashoffset: 0; opacity: 0.7; }
+      17.5%  { stroke-dashoffset: 0; opacity: 0.7; }
+      21%    { stroke-dashoffset: 0; opacity: 0; }
+      100%   { stroke-dashoffset: 0; opacity: 0; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .airpods-ping { display: none; }
+    }
+
+    /* Centre zone of the hero: label and the hover-only "Get to know me" CTA */
+    .hero-center {
+      position: absolute;
+      left: 25%;
+      top: 20%;
+      width: 50%;
+      height: 62%;
+    }
+    .hero-cta {
+      position: absolute;
+      left: 50%;
+      top: 73.5%;
+      translate: -50% 6px;
+      white-space: nowrap;
+      font-family: 'Figtree', sans-serif;   /* same type as the postcards' View Project */
+      font-size: 12px;
+      /* Light text on a dark pill renders heavier on macOS; thinner smoothing
+         keeps it visually in step with the dark-on-cream postcard button */
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #fff;
+      background: #281950;
+      padding: 0.95em 1.6em;
+      border-radius: 999px;
+      box-shadow: 0 8px 20px rgba(40, 25, 80, 0.25);
+      text-decoration: none;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease, translate 0.3s ease, background-color 0.2s ease;
+    }
+    .hero-center:hover .hero-cta,
+    .hero-center:focus-within .hero-cta {
+      opacity: 1;
+      translate: -50% 0;
+      pointer-events: auto;
+    }
+    .hero-cta:hover { background: #3b2770; }
+    /* No hover on touch screens: keep the button visible so it can be tapped */
+    @media (hover: none) {
+      .hero-cta { opacity: 1; translate: -50% 0; pointer-events: auto; }
+    }
+
+    /* Clickable flat-lay objects (books -> Selected work, AirPods -> playlist) */
+    .flatlay-cta {
+      cursor: pointer;
+      outline: none;
+    }
+    .flatlay-tag {
+      position: absolute;
+      left: 50%;
+      bottom: 6%;
+      translate: -50% 0;
+      white-space: nowrap;
+      font-family: 'Geist Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #281950;
+      background: rgba(255, 255, 255, 0.82);
+      padding: 6px 12px 7px;
+      border-radius: 999px;
+      box-shadow: 0 4px 12px rgba(40, 25, 80, 0.15);
+      pointer-events: none;
+      transition: opacity 0.3s ease, translate 0.3s ease;
+    }
+    .flatlay-tag.is-hover-only { opacity: 0; }
+    .flatlay-cta:hover .flatlay-tag,
+    .flatlay-cta:focus-visible .flatlay-tag {
+      opacity: 1;
+      translate: -50% -4px;
+    }
+    /* Phones and other upright screens (e.g. tablets held portrait): the desk
+       is laid out for the screen instead of being a cropped slice of the wide
+       desktop scene. Laptop and books always hold the top corners. Boxes are %
+       of the screen; each image keeps its own shape inside its box. !important
+       beats the inline desktop positions on each object. */
+    @media (max-width: 639px), (orientation: portrait) {
+      .flatlay-canvas {
+        width: 100vw;
+        height: 100vh;
+        height: 100svh;
+      }
+      .flatlay-canvas .flatlay-float { inset: auto !important; }
+      .flatlay-canvas .fl-laptop   { left: -40px !important; top: 0 !important;   width: 42% !important; height: 18% !important; }
+      .flatlay-canvas .fl-books    { right: -20px !important; top: 0 !important;   width: 48% !important; height: 19% !important; }
+      /* the images hug their corner even when the box is wider than they are */
+      .flatlay-canvas .fl-laptop img { object-position: left top; }
+      .flatlay-canvas .fl-books img  { object-position: right top; }
+      .flatlay-canvas .fl-coffee   { left: 28.5% !important; top: -2% !important; width: 31% !important; height: 15% !important; }
+      .flatlay-canvas .fl-airpods  { left: 66% !important;  top: 19% !important; width: 30% !important; height: 11% !important; }
+      .flatlay-canvas .fl-shades   { left: 2% !important;   top: 21% !important; width: 36% !important; height: 10% !important; }
+      .flatlay-canvas .fl-case     { left: 44% !important;  top: 22% !important; width: 17% !important; height: 7% !important; }
+      .hero-center { left: 4%; top: 33%; width: 92%; height: 38%; }
+      .flatlay-canvas .fl-label    { left: 3% !important;   top: 0 !important;   width: 94% !important; height: 63% !important; }
+      .hero-cta { top: 58%; font-size: 11px; }
+      .flatlay-canvas .fl-passport { right: -9% !important; top: 61% !important; width: 32% !important; height: 25% !important; }
+      .flatlay-canvas .fl-pen      { left: 46% !important;  top: 70% !important; width: 9% !important;  height: 15% !important; }
+      .flatlay-canvas .fl-clip     { left: 62% !important;  top: 73% !important; width: 6% !important;  height: 4% !important; }
+      .flatlay-canvas .fl-phone    { left: -4% !important;  bottom: 4% !important; width: 50% !important; height: 25% !important; }
+      .flatlay-canvas .fl-notebook { left: 36% !important;  bottom: -1% !important; width: 66% !important; height: 12% !important; }
+      .flatlay-tag { font-size: 9px; padding: 4px 9px 5px; }
+    }
     @keyframes flatlay-bob {
       0%, 100% { transform: translateY(0); }
       50% { transform: translateY(-1.2%); }
+    }
+    /* Big pieces move less: a fixed 1px bob (the default bob is a % of each
+       object's own height, so large objects travelled furthest) and a gentler
+       hover lift with less tilt and growth */
+    .fl-passport, .fl-notebook, .fl-phone, .fl-coffee, .fl-shades, .fl-laptop {
+      animation-name: flatlay-bob-subtle;
+    }
+    @keyframes flatlay-bob-subtle {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-1px); }
+    }
+    .fl-passport:hover .flatlay-inner,
+    .fl-notebook:hover .flatlay-inner,
+    .fl-phone:hover .flatlay-inner,
+    .fl-coffee:hover .flatlay-inner,
+    .fl-shades:hover .flatlay-inner,
+    .fl-laptop:hover .flatlay-inner {
+      transform: translateY(-4px) scale(1.02) rotate(-0.5deg);
+      filter: drop-shadow(0 12px 16px rgba(20, 10, 40, 0.22));
     }
     @media (prefers-reduced-motion: reduce) {
       .flatlay-float { animation: none; }
@@ -215,6 +392,10 @@
         height: 84px !important;
       }
     }
+    /* Phones: no stamps in the intro, the copy reads cleaner without them */
+    @media (max-width: 639px) {
+      .intro-section .stamped-sticker-wrapper { display: none !important; }
+    }
 
     /* Floating flip phone. Closed by default, it peeks up from the bottom-left
        corner: only its top 45% shows. The widget is pushed 30% of its height
@@ -236,6 +417,21 @@
       transform: translateY(12%);
       filter: drop-shadow(0 -6px 18px rgba(40, 25, 80, 0.22));
       transition: opacity 0.4s ease, transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    /* Phones: the flip phone stays closed and decorative, shrunk to fit the
+       corner of the first screen (the open phone and game are desktop only).
+       Scaled from the bottom-left corner; left and the shown-state translate
+       are rescaled so it peeks the same way it does on desktop. */
+    @media (max-width: 639px) {
+      #floating-player-widget {
+        display: block !important;
+        scale: 0.42;
+        transform-origin: 0 100%;
+        left: calc(12px - 87px * 0.42) !important;
+      }
+      #floating-player-widget.translate-y-\[30\%\] { translate: 0 12.6% !important; }
+      #floating-player-widget .phone-closed,
+      #floating-player-widget .phone-open-hit { pointer-events: none !important; }
     }
     #floating-player-widget .phone-open-part {
       transition: opacity 0.4s ease, transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
@@ -272,6 +468,38 @@
     }
     /* Open phone shows one screen at a time: the game, or (.is-voicemail) the
        voicemail lock screen. Hidden with visibility so the game keeps its state. */
+    /* Boot screen over the game: soft pink glow and a breathing "Play" */
+    .phone-boot {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at 50% 50%, rgba(255, 171, 210, 0.45), rgba(255, 171, 210, 0) 62%), #1d1530;
+      color: #ffe3f0;
+      font-family: 'Geist Mono', monospace;
+      font-size: 13px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      transition: opacity 0.45s ease;
+    }
+    .phone-boot span {
+      padding-left: 0.32em; /* balances the trailing letter-spacing */
+      text-shadow: 0 0 10px rgba(255, 171, 210, 0.9);
+      animation: phone-boot-glow 1s ease-in-out infinite alternate;
+    }
+    @keyframes phone-boot-glow {
+      from { opacity: 0.5; }
+      to { opacity: 1; }
+    }
+    .phone-boot.is-done {
+      opacity: 0;
+      pointer-events: none;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .phone-boot span { animation: none; }
+    }
     #floating-player-widget:not(.is-voicemail) #phone-widget-screen,
     #floating-player-widget.is-voicemail #phone-game-screen {
       visibility: hidden;
@@ -336,32 +564,6 @@
     .sw-scene.is-active {
       opacity: 0.5;
     }
-    /* Foreground shrubs in the two bottom corners, over whichever scene shows */
-    .sw-layer {
-      position: absolute;
-      bottom: 0;
-      z-index: 2;
-      height: auto;
-      user-select: none;
-      pointer-events: none;
-      filter: opacity(calc(var(--sw-so2, 1) * var(--sw-fo, 1))) drop-shadow(0 4px 8px rgba(45, 30, 80, 0.10));
-      /* Parked a little low and outboard; drifts into place each time the
-         section is landed on (JS toggles .is-in-view). The section clips them. */
-      transition: transform 1.6s cubic-bezier(0.22, 1, 0.36, 1);
-    }
-    .sw-layer-left {
-      left: calc(-1 * var(--sw-bg-bleed));
-      width: calc(51.52% * var(--sw-bg-scale));
-      transform: translate(-3%, 12%);
-    }
-    .sw-layer-right {
-      right: calc(-1 * var(--sw-bg-bleed));
-      width: calc(18.94% * var(--sw-bg-scale));
-      transform: translate(6%, 12%);
-    }
-    .portfolio-slider-section.is-in-view .sw-layer {
-      transform: none;
-    }
     /* Scroll-driven crossfade from the intro (same handover as the PMV site):
        while Selected Work slides up over the intro's bottom, the intro's grid
        and copy fade and lift away (--intro-fo, --intro-lift) and Selected
@@ -425,6 +627,9 @@
       /* The wrapper's own box covers Selected Work's bottom while it overlaps;
          it must let swipes and clicks through to the postcards until it lands */
       pointer-events: var(--sq-pe, auto);
+      /* Corner cards may hang past a narrow screen's edge; never let them widen
+         the page (clip, unlike hidden, doesn't make a scroll container) */
+      overflow-x: clip;
     }
     .sq-in-1 {
       opacity: var(--sq-so1, 1);
@@ -440,7 +645,6 @@
       .portfolio-slider-section { margin-top: 0; background: #f6efef; }
       #sq-wrapper { margin-top: 0; }
       #sidequests-section { background: #fff; }
-      .sw-layer { transition: none; transform: none; }
       .sw-scene { transition: none; }
     }
     /* Swipe hint beside the counter: a short line whose bright head slides
@@ -476,6 +680,16 @@
     }
     @media (prefers-reduced-motion: reduce) {
       .swipe-hint::before { animation: none; opacity: 0.6; }
+    }
+    /* Phones: no backdrop scenery behind the postcards, and the swipe hint sits
+       centred under the count instead of beside it */
+    @media (max-width: 639px) {
+      .portfolio-slider-section .sw-scene { display: none; }
+      .sw-nav {
+        flex-direction: column;
+        height: auto !important;
+        gap: 10px !important;
+      }
     }
     /* Horizontally scrolling postcard track. The inline padding is half the
        leftover width, so scrollLeft:0 already frames the first card centrally. */
@@ -907,76 +1121,95 @@
         <!-- Revealed Hero Content (Portfolio Flat Lay) -->
         <div id="hero-content" class="absolute inset-0 z-10 overflow-hidden transition-all duration-300 ease-out">
           <div class="flatlay-canvas">
-            <!-- Base layer: desk grid texture + "stacy. Portfolio" title -->
-            <img src="img/flatlay/base.webp"
-              class="absolute inset-0 w-full h-full object-cover select-none pointer-events-none" alt="Stacy Portfolio">
+            <!-- Centre of the desk: the "stacy. Portfolio" label and a "Get to know
+                 me" button that fades in while the pointer is anywhere in this
+                 central zone. Both scroll to the intro (the about-me section).
+                 Positions inside are % of this zone; the label sits exactly where
+                 the old base image drew it. -->
+            <div class="hero-center" id="hero-center">
+              <div class="flatlay-float flatlay-cta fl-label" id="hero-label" role="link" tabindex="0"
+                aria-label="Stacy's portfolio: scroll to the intro"
+                style="left:12.5%; top:15.2%; width:75%; height:65.9%; animation-duration:6.6s; animation-delay:-2.6s;">
+                <div class="flatlay-inner"><img src="img/flatlay/portfoliolabel.webp" alt="stacy. Portfolio"></div>
+              </div>
+              <a href="#" class="hero-cta" id="hero-cta">Get to know me <span aria-hidden="true">↓</span></a>
+            </div>
 
             <!-- Objects are stacked in the same paint order as the Figma frame -->
 
             <!-- Phone (Wordle) + polaroid -->
-            <div class="flatlay-float" style="left:0%; bottom:-4%; width:23.21%; height:44.42%; animation-duration:7.1s; animation-delay:-2.1s;">
+            <div class="flatlay-float fl-phone" style="left:0%; bottom:-4%; width:23.21%; height:44.42%; animation-duration:7.1s; animation-delay:-2.1s;">
               <div class="flatlay-inner"><img src="img/flatlay/phone-polaroid.webp" alt="Phone with Wordle and a polaroid photo" style="object-position: bottom left;"></div>
             </div>
 
             <!-- Laptop + sticky note -->
-            <div class="flatlay-float" style="left:0%; top:0%; width:23.39%; height:42.08%; animation-duration:6.4s; animation-delay:-0.4s;">
+            <div class="flatlay-float fl-laptop" style="left:0%; top:0%; width:23.39%; height:42.08%; animation-duration:6.4s; animation-delay:-0.4s;">
               <div class="flatlay-inner"><img src="img/flatlay/laptop.webp" alt="Laptop with a sticky note"></div>
             </div>
 
             <!-- Iced coffee -->
-            <div class="flatlay-float" style="left:22.55%; top:0%; width:14.83%; height:26.99%; animation-duration:5.6s; animation-delay:-1s;">
+            <div class="flatlay-float fl-coffee" style="left:22.55%; top:-5%; width:18%; height:32%; animation-duration:5.6s; animation-delay:-1s;">
               <div class="flatlay-inner"><img src="img/flatlay/coffee.webp" alt="Iced coffee"></div>
             </div>
 
-            <!-- AirPods -->
-            <div class="flatlay-float" style="left:55.02%; top:0%; width:11.30%; height:17.64%; animation-duration:5s; animation-delay:-3.3s;">
-              <div class="flatlay-inner"><img src="img/flatlay/airpods.webp" alt="AirPods"></div>
-            </div>
+            <!-- AirPods: opens my Spotify playlist. TODO: replace # with the playlist URL -->
+            <a class="flatlay-float flatlay-cta fl-airpods" href="#" target="_blank" rel="noopener noreferrer" data-placeholder-link
+              aria-label="Listen to my Spotify playlist (opens in a new tab)"
+              style="left:55.02%; top:0%; width:11.30%; height:17.64%; animation-duration:5s; animation-delay:-3.3s;">
+              <div class="flatlay-inner">
+                <img src="img/flatlay/airpods.webp" alt="AirPods">
+                <!-- Sound "ping": four strokes fanning out from the left side of the
+                     top earbud; every 6s they pulse twice, then stay hidden -->
+                <svg class="airpods-ping" viewBox="0 0 40 40" aria-hidden="true">
+                  <line x1="32.6" y1="15.1" x2="28.0" y2="8.5" pathLength="1" />
+                  <line x1="30.6" y1="17.5" x2="19.7" y2="12.4" pathLength="1" />
+                  <line x1="30.0" y1="20.5" x2="17.1" y2="21.7" pathLength="1" />
+                  <line x1="31.1" y1="23.4" x2="22.9" y2="29.2" pathLength="1" />
+                </svg>
+              </div>
+              <span class="flatlay-tag is-hover-only" aria-hidden="true">▶ My playlist</span>
+            </a>
 
             <!-- AirPods case -->
-            <div class="flatlay-float" style="left:63.70%; top:0%; width:10.41%; height:12.86%; animation-duration:6.1s; animation-delay:-0.9s;">
+            <div class="flatlay-float fl-case" style="left:63.70%; top:0%; width:10.41%; height:12.86%; animation-duration:6.1s; animation-delay:-0.9s;">
               <div class="flatlay-inner"><img src="img/flatlay/airpods-case.webp" alt="AirPods case"></div>
             </div>
 
             <!-- Shades -->
-            <div class="flatlay-float" style="left:70.69%; top:14.03%; width:19.14%; height:22.21%; animation-duration:5.8s; animation-delay:-4.2s;">
+            <div class="flatlay-float fl-shades" style="left:70.69%; top:14.03%; width:19.14%; height:22.21%; animation-duration:5.8s; animation-delay:-4.2s;">
               <div class="flatlay-inner"><img src="img/flatlay/shades.webp" alt="Sunglasses"></div>
             </div>
 
-            <!-- Book stack + plant -->
-            <div class="flatlay-float" style="left:76.56%; top:0%; width:23.44%; height:36.24%; animation-duration:7.4s; animation-delay:-1.6s;">
+            <!-- Book stack + plant: a way into the work. Click to scroll down to
+                 Selected work; hovering shows the "Explore my work" tag. -->
+            <div class="flatlay-float flatlay-cta fl-books" id="hero-books" role="link" tabindex="0"
+              aria-label="Explore my work: scroll to Selected work"
+              style="left:76.56%; top:0%; width:23.44%; height:36.24%; animation-duration:7.4s; animation-delay:-1.6s;">
               <div class="flatlay-inner"><img src="img/flatlay/book-stack.webp" alt="Stack of books and a plant"></div>
+              <span class="flatlay-tag is-hover-only" aria-hidden="true">Explore my work ↓</span>
             </div>
 
             <!-- Pen -->
-            <div class="flatlay-float" style="left:31.70%; bottom:0; width:6%; height:23.81%; animation-duration:5.4s; animation-delay:-3.8s;">
+            <div class="flatlay-float fl-pen" style="left:31.70%; bottom:0; width:6%; height:23.81%; animation-duration:5.4s; animation-delay:-3.8s;">
               <div class="flatlay-inner"><img src="img/flatlay/pen.webp" alt="Pen" style="object-position: bottom left;"></div>
             </div>
 
-            <!-- Trinket plate -->
-            <div class="flatlay-float" style="left:72.37%; top:56.32%; width:16.27%; height:27.10%; animation-duration:6.7s; animation-delay:-2.8s;">
-              <div class="flatlay-inner"><img src="img/flatlay/trinket-plate.webp" alt="Trinket plate with jewellery"></div>
-            </div>
 
             <!-- Passport + boarding pass -->
-            <div class="flatlay-float" style="right:0; bottom:0; width:15%; height:59.7%; animation-duration:6.9s; animation-delay:-1.3s;">
+            <div class="flatlay-float fl-passport" style="right:0; bottom:0; width:15%; height:59.7%; animation-duration:6.9s; animation-delay:-1.3s;">
               <div class="flatlay-inner"><img src="img/flatlay/passport.webp" alt="Passport and boarding pass" style="object-position: bottom right;"></div>
             </div>
 
             <!-- Paperclip -->
-            <div class="flatlay-float" style="right:16%; bottom:5%; width:3.28%; height:7.59%; animation-duration:5.1s; animation-delay:-2.4s;">
+            <div class="flatlay-float fl-clip" style="right:16%; bottom:5%; width:3.28%; height:7.59%; animation-duration:5.1s; animation-delay:-2.4s;">
               <div class="flatlay-inner"><img src="img/flatlay/pclip.webp" alt="Paperclip"></div>
             </div>
 
             <!-- Notebook with checklist -->
-            <div class="flatlay-float" style="left:33.07%; bottom:-4%; width:36.24%; height:25.29%; animation-duration:6.3s; animation-delay:-5s;">
+            <div class="flatlay-float fl-notebook" style="left:33.07%; bottom:-1.3%; width:36.24%; height:25.29%; animation-duration:6.3s; animation-delay:-5s;">
               <div class="flatlay-inner"><img src="img/flatlay/notebook.webp" alt="Notebook with a design checklist" style="object-position: bottom center;"></div>
             </div>
 
-            <!-- Flowers -->
-            <div class="flatlay-float" style="left:79.43%; top:78.75%; width:16.15%; height:20.19%; animation-duration:7.6s; animation-delay:-0.6s;">
-              <div class="flatlay-inner"><img src="img/flatlay/flowers.webp" alt="Flowers"></div>
-            </div>
           </div>
         </div>
 
@@ -1006,8 +1239,8 @@
       <section class="intro-section relative px-6 md:px-16 lg:px-24 py-28 md:py-36 overflow-hidden">
         <div class="intro-inner max-w-6xl mx-auto relative">
 
-          <!-- Eyebrow -->
-          <div class="flex items-center gap-5 mb-14 md:mb-20 select-none">
+          <!-- Eyebrow: hidden for now (remove "hidden" to bring it back) -->
+          <div class="hidden flex items-center gap-5 mb-14 md:mb-20 select-none">
             <span class="font-bio text-[11px] md:text-xs tracking-[0.35em] uppercase text-[#2d2a4e]/70">Intro</span>
             <span class="h-px w-20 md:w-28 bg-[#2d2a4e]/30"></span>
           </div>
@@ -1044,9 +1277,6 @@
              between these two layers. -->
         <div class="sw-scene"></div>
         <div class="sw-scene"></div>
-        <!-- Foreground scenery layers (cut-outs of the background's bottom corners) -->
-        <img src="img/Selected Work bg/left-bottom.webp" class="sw-layer sw-layer-left" alt="">
-        <img src="img/Selected Work bg/right-bottom.webp" class="sw-layer sw-layer-right" alt="">
 
         <!-- Section Header -->
         <div class="text-center mb-2 select-none flex flex-col items-center relative z-10 sw-in-1">
@@ -1234,7 +1464,7 @@
           <!-- Arrows hidden for now (display:none keeps them easy to bring back) -->
           <!-- Pulled up into the track's bottom padding (kept for the pile's shadows)
                so the count sits ~46px under the cards instead of ~160px -->
-          <div class="relative flex items-center gap-4 z-40 h-6 sw-in-3" style="margin-top:-110px;">
+          <div class="sw-nav relative flex items-center gap-4 z-40 h-6 sw-in-3" style="margin-top:-110px;">
             <button id="portfolio-prev-btn" style="display:none" class="w-12 h-12 rounded-full border-2 border-[#281950] bg-white/50 hover:bg-[#281950] text-[#281950] hover:text-white flex items-center justify-center transition-all duration-300 shadow-md cursor-pointer">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
@@ -1665,17 +1895,17 @@
             </h2>
             <div class="mt-10 flex flex-wrap items-center justify-center gap-4">
               <a href="mailto:stacydias005@gmail.com"
-                class="inline-flex items-center gap-2 rounded-full border-2 border-[#ffabd2] text-[#ffabd2] hover:bg-[#ffabd2] hover:text-[#281950] px-7 py-3 font-mono text-xs sm:text-sm font-bold tracking-widest uppercase transition-colors">
+                class="inline-flex items-center gap-2 rounded-full border-2 border-[#ffabd2] text-[#ffabd2] hover:bg-[#ffabd2] hover:text-[#281950] px-7 py-3 font-bio text-xs font-semibold tracking-[0.15em] uppercase antialiased transition-colors">
                 Email
               </a>
               <!-- TODO: replace # with your LinkedIn profile URL -->
               <a href="#" target="_blank" rel="noopener noreferrer"
-                class="inline-flex items-center gap-2 rounded-full border-2 border-[#ffabd2] text-[#ffabd2] hover:bg-[#ffabd2] hover:text-[#281950] px-7 py-3 font-mono text-xs sm:text-sm font-bold tracking-widest uppercase transition-colors">
+                class="inline-flex items-center gap-2 rounded-full border-2 border-[#ffabd2] text-[#ffabd2] hover:bg-[#ffabd2] hover:text-[#281950] px-7 py-3 font-bio text-xs font-semibold tracking-[0.15em] uppercase antialiased transition-colors">
                 LinkedIn <span aria-hidden="true">↗</span>
               </a>
               <!-- TODO: replace # with your resume URL -->
               <a href="#" target="_blank" rel="noopener noreferrer"
-                class="inline-flex items-center gap-2 rounded-full border-2 border-[#ffabd2] text-[#ffabd2] hover:bg-[#ffabd2] hover:text-[#281950] px-7 py-3 font-mono text-xs sm:text-sm font-bold tracking-widest uppercase transition-colors">
+                class="inline-flex items-center gap-2 rounded-full border-2 border-[#ffabd2] text-[#ffabd2] hover:bg-[#ffabd2] hover:text-[#281950] px-7 py-3 font-bio text-xs font-semibold tracking-[0.15em] uppercase antialiased transition-colors">
                 Resume <span aria-hidden="true">↗</span>
               </a>
             </div>
@@ -1726,6 +1956,9 @@
              style="left: 33.32%; top: 13.17%; width: 33.64%; height: 25.77%; border-radius: 2px;">
           <iframe id="phone-game-frame" title="Desi Wordle" data-src="https://evasd560.github.io/desiwordle/"
                   class="absolute top-0 left-0 border-0 origin-top-left" style="width: 360px;"></iframe>
+          <!-- Boot screen: a soft glow with "Play" for 2s each time the phone opens,
+               then it fades to reveal the game (which loads underneath meanwhile) -->
+          <div id="phone-boot" class="phone-boot" aria-hidden="true"><span>Play</span></div>
         </div>
 
         <!-- Lock Screen / Notification UI (Positioned on top of frame with z-30 to overlay printed templates) -->
@@ -2248,20 +2481,9 @@
       chatObserver.observe(chatSection);
     }
 
-    // Selected Work scenery: the corner shrubs drift into place when the section
-    // is landed on, and park again once it has fully left the screen so the
-    // move replays on the next visit.
     (function () {
       const sec = document.querySelector('.portfolio-slider-section');
       if (!sec) return;
-      if (!('IntersectionObserver' in window)) { sec.classList.add('is-in-view'); return; }
-      const io = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          if (entry.intersectionRatio >= 0.45) sec.classList.add('is-in-view');
-          else if (!entry.isIntersecting) sec.classList.remove('is-in-view');
-        });
-      }, { threshold: [0, 0.45] });
-      io.observe(sec);
 
       // Scroll-driven crossfades, timed like the PMV site: intro -> Selected
       // Work, then Selected Work -> Sidequests. Each p runs 0 -> 1 as the
@@ -2532,22 +2754,19 @@
 
 
 
-    // Floating flip phone visibility: shown from the hero through the intro,
-    // tucked away while Selected Work and Sidequests are on screen, and back
-    // again once the Let's Connect footer comes into view.
+    // Floating flip phone visibility: it belongs to the opened hero, so it
+    // slides up once the paper sheets have fully rolled back (one screen of
+    // scroll, see updateUnfurl) and away again once the intro scrolls in.
     const floatingWidget = document.getElementById('floating-player-widget');
-    const workSection = document.querySelector('.portfolio-slider-section');
-    const footerEl = document.querySelector('footer');
+    const introEl = document.querySelector('.intro-section');
 
-    if (floatingWidget && workSection && footerEl) {
+    if (floatingWidget && introEl) {
       let widgetTick = false;
       const syncWidget = () => {
         widgetTick = false;
         const vh = window.innerHeight;
-        // Selected Work starts fading in around here (it overlaps the intro by 45vh)
-        const beforeWork = workSection.getBoundingClientRect().top > vh * 0.55;
-        const atFooter = footerEl.getBoundingClientRect().top < vh * 0.8;
-        const show = beforeWork || atFooter;
+        const paperOpen = window.scrollY >= vh * 0.98;
+        const show = paperOpen && introEl.getBoundingClientRect().top > vh * 0.6;
         floatingWidget.classList.toggle('translate-y-[30%]', show);
         floatingWidget.classList.toggle('opacity-100', show);
         floatingWidget.classList.toggle('translate-y-[120%]', !show);
@@ -2570,6 +2789,8 @@
     const gameScreen = document.getElementById('phone-game-screen');
     const gameFrame = document.getElementById('phone-game-frame');
     const GAME_W = 360;   // the game is laid out at this phone width, then scaled
+    const phoneBoot = document.getElementById('phone-boot');
+    let bootTimer = null;
 
     function fitPhoneGame() {
       if (!gameScreen || !gameFrame || !gameScreen.clientWidth) return;
@@ -2584,6 +2805,16 @@
       floatingWidget.classList.remove('is-voicemail');   // each open starts on the game
       if (gameFrame && !gameFrame.src) gameFrame.src = gameFrame.dataset.src;
       fitPhoneGame();
+      // Glow + "Play" for 2s, then reveal the game
+      if (phoneBoot) {
+        // Snap the glow back on (no fade-in), so the game never flashes first
+        phoneBoot.style.transition = 'none';
+        phoneBoot.classList.remove('is-done');
+        void phoneBoot.offsetWidth;
+        phoneBoot.style.transition = '';
+        clearTimeout(bootTimer);
+        bootTimer = setTimeout(() => phoneBoot.classList.add('is-done'), 2000);
+      }
     }
 
     if (floatingWidget) {
@@ -2606,6 +2837,54 @@
         setPhoneClosed(true);
       });
     }
+
+    // Hero books -> Selected work, on click (hovering only shows the tag)
+    (function () {
+      const books = document.getElementById('hero-books');
+      const work = document.querySelector('.portfolio-slider-section');
+      if (!books || !work) return;
+      const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const go = () => {
+        window.scrollTo({ top: work.getBoundingClientRect().top + window.scrollY, behavior: reduced ? 'auto' : 'smooth' });
+      };
+      books.addEventListener('click', go);
+      books.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go(); }
+      });
+    })();
+
+    // Hero "Get to know me" button -> the intro (about me)
+    (function () {
+      const cta = document.getElementById('hero-cta');
+      const intro = document.querySelector('.intro-section');
+      if (!cta || !intro) return;
+      const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      cta.addEventListener('click', (e) => {
+        e.preventDefault();
+        window.scrollTo({ top: intro.getBoundingClientRect().top + window.scrollY, behavior: reduced ? 'auto' : 'smooth' });
+      });
+    })();
+
+    // Hero label -> the intro just below the first fold
+    (function () {
+      const label = document.getElementById('hero-label');
+      const intro = document.querySelector('.intro-section');
+      if (!label || !intro) return;
+      const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const go = () => window.scrollTo({ top: intro.getBoundingClientRect().top + window.scrollY, behavior: reduced ? 'auto' : 'smooth' });
+      label.addEventListener('click', go);
+      label.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go(); }
+      });
+    })();
+
+    // Links still waiting for their real URL (href="#") stay put instead of
+    // opening a blank tab. Stops applying by itself once a URL is set.
+    document.querySelectorAll('[data-placeholder-link]').forEach((link) => {
+      link.addEventListener('click', (e) => {
+        if ((link.getAttribute('href') || '#').trim() === '#') e.preventDefault();
+      });
+    });
 
     // SIDEQUESTS SCENE: scroll-driven transition from desktop grid to portrait collage
     (function () {
