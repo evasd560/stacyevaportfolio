@@ -14,7 +14,7 @@
   <meta property="og:title" content="Stacy – Product Designer">
   <meta property="og:description" content="Product Design Portfolio">
   <meta property="og:url" content="https://evasd560.github.io/stacyevaportfolio/">
-  <meta property="og:image" content="https://evasd560.github.io/stacyevaportfolio/img/og-image.jpg">
+  <meta property="og:image" content="https://evasd560.github.io/stacyevaportfolio/img/og-image.jpg?v=2">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
@@ -181,16 +181,18 @@
       .airpods-ping { display: none; }
     }
 
-    /* Paperclip on the passport's top edge: % of the passport box, which has the
-       artwork's exact shape (276x476), so it lands on the same spot at any size */
-    .fl-passport .flatlay-inner { position: relative; }
-    .flatlay-inner img.passport-clip {
+    /* Paperclip on the front polaroid's top edge. The polaroid box takes the
+       artwork's exact shape (555x539, width-led), so these % land on the same
+       spot at any size; tilted to match the front polaroid (~11deg). */
+    .flatlay-canvas .fl-phone { aspect-ratio: 555 / 539; height: auto !important; }
+    .fl-phone .flatlay-inner { position: relative; }
+    .flatlay-inner img.polaroid-clip {
       position: absolute;
-      left: 45.7%;
-      top: 42.9%;
-      width: 17.2%;
-      height: 13%;
-      transform: rotate(-8deg);
+      left: 47.1%;
+      top: 5.6%;
+      width: 13.9%;
+      height: 18.5%;
+      transform: rotate(-11deg);
     }
 
     /* Centre zone of the hero: label and the hover-only "Get to know me" CTA */
@@ -302,7 +304,7 @@
       .hero-cta { top: 58%; font-size: 11px; }
       .flatlay-canvas .fl-passport { right: -3% !important; top: 65% !important; width: 32% !important; height: 25% !important; }
       .flatlay-canvas .fl-pen      { left: 46% !important;  top: 70% !important; width: 9% !important;  height: 15% !important; }
-      .flatlay-canvas .fl-phone    { left: -4% !important;  bottom: 4% !important; width: 50% !important; height: 25% !important; }
+      .flatlay-canvas .fl-phone    { left: -4% !important;  bottom: 4% !important; width: 50% !important; }
       .flatlay-canvas .fl-notebook { left: 36% !important;  bottom: -1.5% !important; width: 66% !important; height: 12% !important; }
       .flatlay-tag { font-size: 9px; padding: 4px 9px 5px; }
     }
@@ -438,8 +440,9 @@
       filter: drop-shadow(0 -6px 18px rgba(40, 25, 80, 0.22));
       transition: opacity 0.4s ease, transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
     }
-    /* Phones: the flip phone stays closed and decorative, shrunk to fit the
-       corner of the first screen (the open phone and game are desktop only).
+    /* Phones: the flip phone stays closed, shrunk to fit the corner of the
+       first screen; tapping its little screen opens Desi Wordle in a new tab
+       (the in-phone game is desktop only).
        Scaled from the bottom-left corner; left and the shown-state translate
        are rescaled so it peeks the same way it does on desktop. */
     @media (max-width: 639px) {
@@ -452,6 +455,21 @@
       #floating-player-widget.translate-y-\[30\%\] { translate: 0 16.5% !important; }
       #floating-player-widget .phone-closed,
       #floating-player-widget .phone-open-hit { pointer-events: none !important; }
+      /* only the little screen is tappable: it opens the game in a new tab */
+      #floating-player-widget .phone-screen-hit { display: block !important; }
+    }
+    /* Link over the closed phone's outer screen (measured off Phone_closed.png:
+       17-83% across, 22.6-52.4% down; the phone is 165px wide, ~310px tall) */
+    #floating-player-widget .phone-screen-hit {
+      display: none;
+      position: absolute;
+      left: calc(87px + 165px * 0.17);
+      top: calc(70% - 140px + 310px * 0.226);
+      width: calc(165px * 0.663);
+      height: calc(310px * 0.298);
+      z-index: 26;
+      border-radius: 10px;
+      pointer-events: auto;
     }
     #floating-player-widget .phone-open-part {
       transition: opacity 0.4s ease, transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
@@ -558,11 +576,28 @@
       position: relative;
       overflow: hidden;
     }
+    /* Desktop: a quarter-screen of extra scroll at the bottom of Selected Work
+       before Sidequests starts to take over, so the handover doesn't follow
+       the cards too quickly. The postcards stay centred in the first screen of
+       the section (the extra space is bottom padding) and the scenery stays
+       anchored to that screen too. Phones scroll straight through instead. */
+    @media (min-width: 640px) {
+      .portfolio-slider-section {
+        --sw-dwell: 25vh;
+        height: calc(100vh + var(--sw-dwell));
+        height: calc(100svh + var(--sw-dwell));
+        min-height: calc(560px + var(--sw-dwell));
+        /* content centred a touch above the screen's middle (24px) */
+        padding-top: 8px;
+        padding-bottom: calc(56px + var(--sw-dwell));
+      }
+      .portfolio-slider-section .sw-scene { bottom: var(--sw-dwell); }
+    }
     /* Scenes sit full-width along the bottom; the cream above is the artwork's
        own base colour, so each reads as one continuous illustration. Two layers
        take turns: the focused postcard's scene is loaded into the idle one,
-       which fades in while the other fades out. Shown at 50% so the scene
-       stays behind the cards. */
+       which fades in while the other fades out. Shown at 30% so the scene
+       stays well behind the cards. */
     .sw-scene {
       position: absolute;
       inset: 0;
@@ -575,7 +610,7 @@
       transition: opacity 0.9s ease;
     }
     .sw-scene.is-active {
-      opacity: 0.5;
+      opacity: 0.3;
     }
     /* Scroll-driven crossfade from the intro (same handover as the PMV site):
        while Selected Work slides up over the intro's bottom, the intro's grid
@@ -595,7 +630,41 @@
       opacity: var(--intro-fo, 1);
       pointer-events: none;
     }
+    /* Logos: each takes a 2 x 1 cell slot of the intro's 42px grid (the grid
+       starts at the section's top-left, so left/top are multiples of 42, set
+       by JS), straight on the grid with no fill. They sit under the bio and its
+       stamps, and fade with the intro. Tablet/desktop only: phones have no
+       right-hand column. */
+    .intro-logos {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      opacity: var(--intro-fo, 1);
+      display: none;
+    }
+    .logo-tile {
+      opacity: 0;
+      translate: 0 6px;
+      transition: opacity 0.5s ease, translate 0.5s ease;
+      position: absolute;
+      width: 84px;
+      height: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      visibility: hidden;   /* until placed */
+    }
+    .logo-tile img {
+      max-height: 28px;
+      max-width: 100%;
+      object-fit: contain;
+    }
+    .intro-logos.is-shown .logo-tile { opacity: 1; translate: 0 0; }
+    @media (min-width: 768px) {
+      .intro-logos { display: block; }
+    }
     .intro-inner {
+      z-index: 1;   /* bio and stamps above the logo tiles */
       /* Breathing room after View CV before Selected Work starts to show */
       padding-bottom: 15vh;
       opacity: var(--intro-fo, 1);
@@ -671,7 +740,8 @@
     /* Phones: plain continuous scroll, no overlapping crossfades between the
        intro, Selected Work and Sidequests (the JS skips them too) */
     @media (max-width: 639px) {
-      .portfolio-slider-section { margin-top: 0; background: #f6efef; }
+      /* white, so the postcards' paper and the scenery blend into it */
+      .portfolio-slider-section { margin-top: 0; background: #fff; }
       #sq-wrapper { margin-top: 0; }
       #sidequests-section { background: #fff; }
     }
@@ -715,10 +785,32 @@
     @media (prefers-reduced-motion: reduce) {
       .swipe-hint::before { animation: none; opacity: 0.6; }
     }
-    /* Phones: the swipe hint sits centred under the count; cards are a touch
-       narrower with a tight gap so the next one peeks in on the right; no card
-       shadows; the description is cut to two lines so View Project stays on
-       the card (the text can't shrink further and still be read) */
+    /* Subtle prev/next arrows beside the count; faint at either end */
+    .sw-arrow {
+      width: 28px;
+      height: 28px;
+      border-radius: 999px;
+      border: 1px solid rgba(40, 25, 80, 0.18);
+      background: transparent;
+      color: rgba(40, 25, 80, 0.55);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: color 0.2s ease, border-color 0.2s ease, background-color 0.2s ease, opacity 0.2s ease;
+    }
+    .sw-arrow svg { width: 14px; height: 14px; }
+    .sw-arrow:hover {
+      color: #281950;
+      border-color: rgba(40, 25, 80, 0.45);
+      background: rgba(255, 255, 255, 0.4);
+    }
+    .sw-arrow:focus-visible { outline: 2px solid rgba(40, 25, 80, 0.5); outline-offset: 2px; }
+    .sw-arrow.is-disabled { opacity: 0.35; cursor: default; }
+    .sw-arrow.is-disabled:hover { color: rgba(40, 25, 80, 0.55); border-color: rgba(40, 25, 80, 0.18); background: transparent; }
+
+    /* Phones: portrait postcards, a touch narrower with a tight gap so the next
+       one peeks in on the right; no card shadows */
     @media (max-width: 639px) {
       /* (scoped to the section so these win over the base rules further down) */
       .portfolio-slider-section .portfolio-track { --card-w: 80vw; gap: 12px; }
@@ -726,17 +818,71 @@
       .portfolio-slider-section .portfolio-card:hover,
       .portfolio-slider-section .portfolio-card.is-art,
       .portfolio-slider-section .portfolio-card.is-art:hover { box-shadow: none; }
-      .postcard-art-desc {
+      /* Portrait postcards: the -v artworks (photo on top, dashed divider, paper
+         below; swapped in by each card's <picture>) with the copy laid across
+         the paper under the divider (divider at 975/1740 of the artwork) */
+      .portfolio-slider-section .portfolio-card.is-art {
+        aspect-ratio: 1000 / 1740;
+        border-radius: 2.6% / 1.49%;
+      }
+      .portfolio-slider-section .postcard-art-copy {
+        left: 7%;
+        right: 7%;
+        top: 59.2%;
+        bottom: 3.5%;
+      }
+      .portfolio-slider-section .postcard-art-eyebrow { font-size: 3.4cqw; }
+      .portfolio-slider-section .postcard-art-title { font-size: 8.5cqw; }
+      .portfolio-slider-section .postcard-art-cta { font-size: 3.6cqw; }
+      /* no thin divider lines on the portrait cards */
+      .portfolio-slider-section .postcard-art-rule { display: none; }
+      .portfolio-slider-section .postcard-art-desc {
+        flex-shrink: 0;   /* whole lines only: never squeezed by the column */
         display: -webkit-box;
-        -webkit-line-clamp: 2;
+        -webkit-line-clamp: 3;
         -webkit-box-orient: vertical;
         overflow: hidden;
       }
-      .sw-nav {
-        flex-direction: column;
-        height: auto !important;
-        gap: 10px !important;
+      /* One screen: tight spacing from the heading down to the controls, and
+         the card sized by the screen's height as well as its width (220px is
+         the heading, the stack's peeking edges, the controls and padding) */
+      .portfolio-slider-section {
+        height: auto;
+        min-height: 100svh;
+        padding-top: 16px;
+        padding-bottom: 16px;
       }
+      .portfolio-slider-section .sw-body { gap: 0; }
+      .portfolio-slider-section .sw-nav { margin-top: 0 !important; }
+
+      /* Deck: the postcards sit in a stack, the top one in front; swiping it
+         away (or the arrows) brings the next one forward. JS sets each card's
+         pose from its depth in the stack. Vertical page scrolling still works
+         through it (touch-action: pan-y). */
+      .portfolio-slider-section .portfolio-track.is-deck {
+        --card-w: min(80vw, (100svh - 220px) * 1000 / 1740);
+        display: grid;
+        overflow: visible;
+        scroll-snap-type: none;
+        /* bottom room = how far the back cards peek out below the front one */
+        padding: 4px 0 30px;
+        touch-action: pan-y;
+      }
+      .portfolio-track.is-deck .portfolio-card {
+        grid-area: 1 / 1;
+        justify-self: center;
+        scale: none;
+        transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.45s ease, filter 0.45s ease;
+        will-change: transform;
+      }
+      /* count + arrows (and the swipe line) on a soft white pill, so they stay
+         readable over the scenery drawing */
+      .portfolio-slider-section .sw-nav {
+        background: rgba(255, 255, 255, 0.88);
+        border-radius: 999px;
+        padding: 6px 12px 8px;
+      }
+      .portfolio-track.is-deck .portfolio-card.is-dragging { transition: none; }
     }
     /* Horizontally scrolling postcard track. The inline padding is half the
        leftover width, so scrollLeft:0 already frames the first card centrally. */
@@ -757,7 +903,7 @@
       /* Asymmetric block padding: the stacked cards drop and rotate well BELOW
          the row, so the bottom needs clearance or overflow-y clips their shadows
          into a hard line. Above them only the rotation and shadow spread matter. */
-      padding: 44px max(16px, calc((100% - var(--card-w)) / 2)) 112px;
+      padding: 16px max(16px, calc((100% - var(--card-w)) / 2)) 112px;
       -webkit-overflow-scrolling: touch;
       scrollbar-width: none;
     }
@@ -1022,6 +1168,20 @@
       pointer-events: auto;
     }
 
+    /* Phones: the portrait is width-limited (so shorter), and a full-screen
+       section left a big empty band between the collage and her; a shorter
+       section brings them together (the collage positions are % of it) */
+    @media (max-width: 639px) {
+      #portrait-section { height: 610px; min-height: 0; }
+      /* the collage lands lower, closer to her (its positions are % of this) */
+      #sq-collage-area { top: 16px !important; }
+    }
+    /* Desktop: a slightly shorter section and smaller portrait, so the top of
+       Let's Connect peeks in below her when she fills the screen */
+    @media (min-width: 640px) {
+      #portrait-section { height: 86vh; min-height: 600px; }
+      #portrait-section .sq-portrait { height: 70%; }
+    }
     .sq-portrait {
       position: absolute;
       bottom: 0;
@@ -1190,7 +1350,12 @@
 
             <!-- Phone (Wordle) + polaroid -->
             <div class="flatlay-float fl-phone" style="left:0%; bottom:-4%; width:20.4%; height:39.1%; animation-duration:7.1s; animation-delay:-2.1s;">
-              <div class="flatlay-inner"><img src="img/flatlay/phone-polaroid.webp" alt="Phone with Wordle and a polaroid photo" style="object-position: bottom left;"></div>
+              <div class="flatlay-inner">
+                <img src="img/flatlay/phone-polaroid.webp" alt="A stack of travel polaroids" style="object-position: bottom left;">
+                <!-- Paperclip over the front polaroid's top edge; part of the stack
+                     so it moves with it -->
+                <img src="img/flatlay/pclip.webp" class="polaroid-clip" alt="">
+              </div>
             </div>
 
             <!-- Laptop + sticky note -->
@@ -1250,9 +1415,6 @@
             <div class="flatlay-float fl-passport" style="right:0; bottom:0; width:15%; height:45.95%; animation-duration:6.9s; animation-delay:-1.3s;">
               <div class="flatlay-inner">
                 <img src="img/flatlay/passport.webp" alt="Passport and boarding pass" style="object-position: bottom right;">
-                <!-- Paperclip clipped over the passport's top edge; part of the
-                     passport so it moves with it -->
-                <img src="img/flatlay/pclip.webp" class="passport-clip" alt="">
               </div>
             </div>
 
@@ -1291,6 +1453,15 @@
 
       <!-- Intro / bio section -->
       <section class="intro-section relative px-6 md:px-16 lg:px-24 py-28 md:py-36 overflow-hidden">
+        <!-- Brands worked with: small logos on the grid in the right-hand column,
+             placed by JS into the gaps between the stamps -->
+        <div class="intro-logos" id="intro-logos" aria-label="Brands I've designed for">
+          <div class="logo-tile"><img src="img/logosportfolio/trimmed/icici.png" alt="ICICI Bank"></div>
+          <div class="logo-tile"><img src="img/logosportfolio/trimmed/csb.png" alt="CSB Bank"></div>
+          <div class="logo-tile"><img src="img/logosportfolio/trimmed/dishtv.png" alt="Dish TV"></div>
+          <div class="logo-tile"><img src="img/logosportfolio/trimmed/reliance.png" alt="Reliance Industries"></div>
+          <div class="logo-tile"><img src="img/logosportfolio/trimmed/hcltech.png" alt="HCLTech"></div>
+        </div>
         <div class="intro-inner max-w-6xl mx-auto relative">
 
           <!-- Eyebrow: hidden for now (remove "hidden" to bring it back) -->
@@ -1303,14 +1474,14 @@
           class="font-bio text-[17px] md:text-[1.6rem] lg:text-[1.8rem] leading-[1.7] md:leading-[1.75] text-[#2d2a4e] select-none md:pr-44 lg:pr-60">
           I’m a Product Designer currently leading design at
           <span class="font-bio font-bold text-[#2d2a4e]">Vêtir</span>,
-          with <span class="bio-chip bg-[#e6e4d3]">5+ years</span><span class="stamped-sticker-wrapper is-pinned" style="top:4%; right:1%;"><img src="img/sticker 4.webp" class="stamped-sticker" alt="Sticker 4"></span> of experience designing and shipping digital products end-to-end. I’ve designed across <span class="bio-chip bg-[#e7d9f8]">fashion</span>, <span class="bio-chip bg-[#f9d7da]">fintech</span>, <span class="bio-chip bg-[#e6e4d3]">BFSI</span> and <span class="bio-chip bg-[#e7d9f8]">SaaS</span> – from consumer apps and websites to enterprise dashboards. I enjoy making complicated things feel simple but exciting, <span class="bio-chip bg-[#f9d7da]">building systems that scale</span>, and shaping products from the first brainstorming session to the final shipped interface.
+          with <span class="bio-chip bg-[#e6e4d3]">5+ years</span><span class="stamped-sticker-wrapper is-pinned" style="top:4%; right:1%;"><img src="img/sticker 4.webp" class="stamped-sticker" alt="Sticker 4"></span> of experience designing and shipping digital products end-to-end. I’ve designed across <span class="bio-chip bg-[#e7d9f8]">fashion</span>, <span class="bio-chip bg-[#f9d7da]">fintech</span>, <span class="bio-chip bg-[#e6e4d3]">BFSI</span> and <span class="bio-chip bg-[#e7d9f8]">SaaS</span><span class="bio-cue" data-cue="logos" aria-hidden="true"></span> – from consumer apps and websites to enterprise dashboards. I enjoy making complicated things feel simple but exciting, <span class="bio-chip bg-[#f9d7da]">building systems that scale</span><span class="stamped-sticker-wrapper is-pinned" style="top:40%; right:5%;"><img src="img/sticker 3.webp" class="stamped-sticker" alt="Sticker 3"></span>, and shaping products from the first brainstorming session to the final shipped interface.
 
           <br><br>
 
           When I’m not designing, you’ll find me planning my
-          next trip<span class="stamped-sticker-wrapper is-pinned" style="top:40%; right:5%;"><img src="img/sticker 3.webp" class="stamped-sticker" alt="Sticker 3"></span>, hunting for the best
+          next trip, hunting for the best
           Vietnamese coffee, curating my personal
-          foodie database<span class="stamped-sticker-wrapper is-pinned" style="top:67%; right:1%;"><img src="img/sticker 5.webp" class="stamped-sticker" alt="Sticker 5"></span> on Google Maps, or vibe-coding the next app that’s going to solve one of my first-world problems.
+          foodie database on Google Maps, or vibe-coding the next app that’s going to solve one of my first-world problems.<span class="stamped-sticker-wrapper is-pinned" style="top:59%; right:8%;"><img src="img/sticker 5.webp" class="stamped-sticker" alt="Sticker 5"></span>
 
           </div>
 
@@ -1339,12 +1510,12 @@
           </h2>
         </div>
 
-        <div class="relative z-10 w-full flex flex-col items-center gap-8">
+        <div class="sw-body relative z-10 w-full flex flex-col items-center gap-8">
           <!-- Horizontally scrolling postcard track -->
           <div class="portfolio-track is-stacked sw-in-2" id="portfolio-track">
               <!-- Card 1: Vetir -->
               <div class="portfolio-card is-art font-bio select-none" id="p-card-vetir">
-                <img src="img/vetr-postcard.webp" class="postcard-art-base" alt="Vêtir postcard">
+                <picture><source media="(max-width: 639px)" srcset="img/vetr-postcard-v.webp"><img src="img/vetr-postcard.webp" class="postcard-art-base" alt="Vêtir postcard"></picture>
                 <div class="postcard-art-copy">
                   <div class="postcard-art-eyebrow">Fashion / AI Styling / 01</div>
                   <!-- kept short so it clears the postal stamp, as in the artwork -->
@@ -1372,7 +1543,7 @@
 
               <!-- Card 2: ICICI Bank Website -->
               <div class="portfolio-card is-art font-bio select-none" id="p-card-0">
-                <img src="img/icici-postcard.webp" class="postcard-art-base" alt="ICICI Bank Website postcard">
+                <picture><source media="(max-width: 639px)" srcset="img/icici-postcard-v.webp"><img src="img/icici-postcard.webp" class="postcard-art-base" alt="ICICI Bank Website postcard"></picture>
                 <div class="postcard-art-copy">
                   <div class="postcard-art-eyebrow">Banking / Web Revamp / 02</div>
                   <!-- kept short so it clears the postal stamp, as in the artwork -->
@@ -1400,7 +1571,7 @@
 
               <!-- Card 3: CSB Bank App (default postcard artwork; its photo frame is left empty) -->
               <div class="portfolio-card is-art font-bio select-none" id="p-card-1">
-                <img src="img/Postcard default.webp" class="postcard-art-base" alt="CSB Bank App postcard">
+                <picture><source media="(max-width: 639px)" srcset="img/Postcard%20default-v.webp"><img src="img/Postcard default.webp" class="postcard-art-base" alt="CSB Bank App postcard"></picture>
                 <div class="postcard-art-copy">
                   <div class="postcard-art-eyebrow">Mobile Banking / App / 03</div>
                   <div class="postcard-art-rule" style="margin-top:0.7em; width:44%;"></div>
@@ -1426,7 +1597,7 @@
 
               <!-- Card 4: Fincare Bank Website (default postcard artwork; its photo frame is left empty) -->
               <div class="portfolio-card is-art font-bio select-none" id="p-card-2">
-                <img src="img/Postcard default.webp" class="postcard-art-base" alt="Fincare Bank Website postcard">
+                <picture><source media="(max-width: 639px)" srcset="img/Postcard%20default-v.webp"><img src="img/Postcard default.webp" class="postcard-art-base" alt="Fincare Bank Website postcard"></picture>
                 <div class="postcard-art-copy">
                   <div class="postcard-art-eyebrow">Financial Services / Web / 04</div>
                   <div class="postcard-art-rule" style="margin-top:0.7em; width:44%;"></div>
@@ -1452,7 +1623,7 @@
 
               <!-- Card 5: HCLTech Employee Portal (default postcard artwork; its photo frame is left empty) -->
               <div class="portfolio-card is-art font-bio select-none" id="p-card-3">
-                <img src="img/Postcard default.webp" class="postcard-art-base" alt="HCLTech Portal postcard">
+                <picture><source media="(max-width: 639px)" srcset="img/Postcard%20default-v.webp"><img src="img/Postcard default.webp" class="postcard-art-base" alt="HCLTech Portal postcard"></picture>
                 <div class="postcard-art-copy">
                   <div class="postcard-art-eyebrow">Corporate Intranet / Portal / 05</div>
                   <div class="postcard-art-rule" style="margin-top:0.7em; width:44%;"></div>
@@ -1473,7 +1644,7 @@
 
               <!-- Card 6: Reliance Careers Website (default postcard artwork; its photo frame is left empty) -->
               <div class="portfolio-card is-art font-bio select-none" id="p-card-4">
-                <img src="img/Postcard default.webp" class="postcard-art-base" alt="Reliance Careers postcard">
+                <picture><source media="(max-width: 639px)" srcset="img/Postcard%20default-v.webp"><img src="img/Postcard default.webp" class="postcard-art-base" alt="Reliance Careers postcard"></picture>
                 <div class="postcard-art-copy">
                   <div class="postcard-art-eyebrow">Careers Website / Portal / 06</div>
                   <div class="postcard-art-rule" style="margin-top:0.7em; width:44%;"></div>
@@ -1494,7 +1665,7 @@
 
               <!-- Card 7: Edelweiss Alternative Assets Website (default postcard artwork; its photo frame is left empty) -->
               <div class="portfolio-card is-art font-bio select-none" id="p-card-5">
-                <img src="img/Postcard default.webp" class="postcard-art-base" alt="Edelweiss Assets postcard">
+                <picture><source media="(max-width: 639px)" srcset="img/Postcard%20default-v.webp"><img src="img/Postcard default.webp" class="postcard-art-base" alt="Edelweiss Assets postcard"></picture>
                 <div class="postcard-art-copy">
                   <div class="postcard-art-eyebrow">Alternative Assets / Web / 07</div>
                   <div class="postcard-art-rule" style="margin-top:0.7em; width:44%;"></div>
@@ -1514,25 +1685,26 @@
               </div>
           </div>
 
-          <!-- Navigation Controls -->
-          <!-- Arrows hidden for now (display:none keeps them easy to bring back) -->
-          <!-- Pulled up into the track's bottom padding (kept for the pile's shadows)
-               so the count sits ~46px under the cards instead of ~160px -->
-          <div class="sw-nav relative flex items-center gap-4 z-40 h-6 sw-in-3" style="margin-top:-110px;">
-            <button id="portfolio-prev-btn" style="display:none" class="w-12 h-12 rounded-full border-2 border-[#281950] bg-white/50 hover:bg-[#281950] text-[#281950] hover:text-white flex items-center justify-center transition-all duration-300 shadow-md cursor-pointer">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
-              </svg>
-            </button>
-            <div class="font-mono text-xs tracking-widest text-[#281950]/60">
-              <span id="portfolio-current-indicator">01</span> / <span id="portfolio-total-indicator">07</span>
+          <!-- Navigation: subtle arrows either side of the count, the swipe hint
+               centred underneath. Pulled up into the track's bottom padding (kept
+               for the pile's shadows) so it sits close under the cards. -->
+          <div class="sw-nav relative flex flex-col items-center gap-2.5 z-40 sw-in-3" style="margin-top:-124px;">
+            <div class="flex items-center gap-3">
+              <button id="portfolio-prev-btn" type="button" class="sw-arrow" aria-label="Previous project">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+                </svg>
+              </button>
+              <div class="font-mono text-xs tracking-widest text-[#281950]/60">
+                <span id="portfolio-current-indicator">01</span> / <span id="portfolio-total-indicator">07</span>
+              </div>
+              <button id="portfolio-next-btn" type="button" class="sw-arrow" aria-label="Next project">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                </svg>
+              </button>
             </div>
             <span class="swipe-hint" id="portfolio-swipe-hint" aria-hidden="true"></span>
-            <button id="portfolio-next-btn" style="display:none" class="w-12 h-12 rounded-full border-2 border-[#281950] bg-white/50 hover:bg-[#281950] text-[#281950] hover:text-white flex items-center justify-center transition-all duration-300 shadow-md cursor-pointer">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
-              </svg>
-            </button>
           </div>
         </div>
       </section>
@@ -1996,6 +2168,10 @@
              the game; tapping the phone's body closes it again. -->
         <div class="phone-open-hit" id="phone-open-hit" title="Close phone"></div>
         <img src="img/Phone_closed.webp" id="phone-closed-img" class="phone-closed" alt="Flip phone, closed">
+        <!-- Phones only: tapping the closed phone's little screen opens the game
+             in a new tab (the in-phone game is desktop only) -->
+        <a href="https://evasd560.github.io/desiwordle/" target="_blank" rel="noopener noreferrer"
+           class="phone-screen-hit" aria-label="Play Desi Wordle (opens in a new tab)"></a>
 
         <!-- iPhone Device Frame Image -->
         <img src="img/PhonePlayer.webp" class="phone-open-part absolute inset-0 w-full h-full object-contain z-20 pointer-events-none" alt="Phone Frame">
@@ -2263,6 +2439,14 @@
         if (index >= queue.length) {
           window.removeEventListener('resize', reserve);
           container.style.minHeight = '';
+          // the last stamp sits after the final line, so it lands as the
+          // second paragraph finishes; anything else still waiting shows too
+          container.querySelectorAll('.stamped-sticker-wrapper').forEach((w) => {
+            w.style.opacity = '1';
+            const sticker = w.querySelector('.stamped-sticker');
+            if (sticker) sticker.classList.add('visible');
+          });
+          document.dispatchEvent(new CustomEvent('bio-cue', { detail: 'done' }));
           return;
         }
         
@@ -2276,6 +2460,10 @@
             prev.style.opacity = '1';
             const sticker = prev.querySelector('.stamped-sticker');
             if (sticker) sticker.classList.add('visible');
+          }
+          // invisible cue markers in the copy (e.g. after the industry chips)
+          if (prev && prev.classList && prev.classList.contains('bio-cue')) {
+            document.dispatchEvent(new CustomEvent('bio-cue', { detail: prev.dataset.cue }));
           }
         }
         
@@ -2528,8 +2716,13 @@
 
       if (totalEl) totalEl.textContent = pad(cards.length);
 
+      // Phones get a swipeable deck instead of the sideways-scrolling row
+      const deck = matchMedia('(max-width: 639px)').matches;
+      let deckIndex = 0;
+
       // Whichever card sits nearest the track's centre line is the current one
       function currentIndex() {
+        if (deck) return deckIndex;
         const tr = track.getBoundingClientRect();
         const mid = tr.left + tr.width / 2;
         let best = 0, bestDist = Infinity;
@@ -2542,6 +2735,7 @@
       }
 
       function scrollToCard(i) {
+        if (deck) return goDeck(i);
         const card = cards[Math.max(0, Math.min(cards.length - 1, i))];
         if (!card) return;
         const tr = track.getBoundingClientRect();
@@ -2552,6 +2746,9 @@
       const swipeHint = document.getElementById('portfolio-swipe-hint');
       function syncIndicator() {
         const i = currentIndex();
+        const stacked = track.classList.contains('is-stacked');
+        if (prevBtn) prevBtn.classList.toggle('is-disabled', !stacked && i === 0);
+        if (nextBtn) nextBtn.classList.toggle('is-disabled', !stacked && i === cards.length - 1);
         if (indicator) indicator.textContent = pad(i + 1);
         if (swipeHint) swipeHint.classList.toggle('is-done', i === cards.length - 1);
       }
@@ -2565,12 +2762,12 @@
       // padding - any deeper and overflow-y clips them into a hard line.
       const STACK_POSE = [
         { x:   0, y:   0, r: -1.6 },
-        { x:  22, y:   7, r:  2.8 },
-        { x: -14, y:  14, r: -3.6 },
-        { x:  30, y:  20, r:  1.5 },
-        { x:   4, y:  26, r: -2.4 },
-        { x:  24, y:  32, r:  3.4 },
-        { x: -10, y:  36, r: -1.2 }
+        { x:  22, y:   4, r:  2.8 },
+        { x: -14, y:   7, r: -3.6 },
+        { x:  30, y:  10, r:  1.5 },
+        { x:   4, y:  13, r: -2.4 },
+        { x:  24, y:  16, r:  3.4 },
+        { x: -10, y:  18, r: -1.2 }
       ];
 
       function applyStack() {
@@ -2696,7 +2893,8 @@
         if (scenes.length < 2) return;
         const view = track.scrollLeft + track.clientWidth / 2;
         let i = 0, best = Infinity;
-        cards.forEach((c, k) => {
+        if (deck) i = deckIndex;
+        else cards.forEach((c, k) => {
           const d = Math.abs(centre(c) - view);
           if (d < best) { best = d; i = k; }
         });
@@ -2722,7 +2920,7 @@
       // `scale` property so it composes with the tilt/hover transforms.
       const SIDE_SCALE = 0.82;
       function syncFocus() {
-        if (track.classList.contains('is-stacked') || cards.length < 2) return;
+        if (deck || track.classList.contains('is-stacked') || cards.length < 2) return;
         const step = centre(cards[1]) - centre(cards[0]);
         const view = track.scrollLeft + track.clientWidth / 2;
         cards.forEach((c) => {
@@ -2739,9 +2937,81 @@
         settle = setTimeout(syncIndicator, 80);
       }, { passive: true });
 
+      // --- Phone deck ------------------------------------------------------------
+      // Depth 0 is the card in front; the next two peek out below it, slightly
+      // smaller and tilted; the rest wait hidden behind. Cards already swiped
+      // past sit off to the left, so swiping right brings the last one back.
+      const DECK_TILT = [-1.2, 3, -3.4];
+      function poseDeck(dragX) {
+        cards.forEach((card, i) => {
+          const k = i - deckIndex;
+          let t, o;
+          if (k < 0) {
+            t = 'translateX(-125%) rotate(-10deg)'; o = 0;
+          } else if (k === 0 && dragX) {
+            t = `translateX(${dragX}px) rotate(${DECK_TILT[0] + dragX * 0.03}deg)`; o = 1;
+          } else {
+            const d = Math.min(k, 2);
+            t = `translate(${d * 7}px, ${d * 18}px) scale(${1 - d * 0.045}) rotate(${DECK_TILT[d]}deg)`;
+            o = k > 2 ? 0 : 1;
+          }
+          card.style.transform = t;
+          card.style.opacity = String(o);
+          // cards further back are a shade darker, so the stack reads without shadows
+          card.style.filter = k > 0 ? `brightness(${1 - Math.min(k, 2) * 0.05})` : '';
+          card.style.zIndex = String(cards.length - Math.abs(k));
+          card.style.pointerEvents = k === 0 ? '' : 'none';
+        });
+      }
+      function goDeck(i) {
+        deckIndex = Math.max(0, Math.min(cards.length - 1, i));
+        poseDeck(0);
+        syncIndicator();
+        syncScene();
+      }
+      if (deck) {
+        track.classList.add('is-deck');
+        poseDeck(0);
+        // Drag the front card sideways; let go past ~60px to move on (left) or
+        // back (right), otherwise it springs back into the stack
+        let startX = null, startY = null, dx = 0, dragging = false, front = null;
+        track.addEventListener('pointerdown', (e) => {
+          if (e.pointerType === 'mouse' && e.button !== 0) return;
+          startX = e.clientX; startY = e.clientY; dx = 0; dragging = false;
+          front = cards[deckIndex];
+        });
+        track.addEventListener('pointermove', (e) => {
+          if (startX === null) return;
+          const mx = e.clientX - startX, my = e.clientY - startY;
+          if (!dragging) {
+            if (Math.abs(mx) < 8 || Math.abs(mx) < Math.abs(my)) return;
+            dragging = true;
+            front.classList.add('is-dragging');
+            try { track.setPointerCapture(e.pointerId); } catch (_) {}
+          }
+          dx = mx;
+          poseDeck(dx);
+        });
+        const release = () => {
+          if (startX === null) return;
+          startX = null;
+          if (!dragging) return;
+          front.classList.remove('is-dragging');
+          if (dx < -60 && deckIndex < cards.length - 1) goDeck(deckIndex + 1);
+          else if (dx > 60 && deckIndex > 0) goDeck(deckIndex - 1);
+          else poseDeck(0);
+        };
+        track.addEventListener('pointerup', release);
+        track.addEventListener('pointercancel', release);
+        // A drag mustn't also count as a tap on View Project
+        track.addEventListener('click', (e) => {
+          if (dragging) { e.preventDefault(); e.stopPropagation(); dragging = false; }
+        }, true);
+      }
+
       syncIndicator();
       syncScene();
-      if (startOpen) syncFocus();
+      if (startOpen && !deck) syncFocus();
     })();
 
 
@@ -2830,6 +3100,101 @@
       books.addEventListener('click', go);
       books.addEventListener('keydown', (e) => {
         if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go(); }
+      });
+    })();
+
+    // Intro logos: 2-square slots on the 42px grid, scattered over the free
+    // grid on the right of the intro: the right-hand column and the margin
+    // beyond it, from the top of the bio to its last line (never below; above
+    // it only if five won't fit beside it), never touching a stamp, the text
+    // or each other. Of all the free spots, the five furthest
+    // apart from each other are picked, then filled top to bottom in order.
+    // Re-run whenever the bio's size changes (it grows as the intro types out,
+    // moving the stamps).
+    (function () {
+      const wrap = document.getElementById('intro-logos');
+      const section = document.querySelector('.intro-section');
+      const bio = document.getElementById('bio-text-container');
+      if (!wrap || !section || !bio) return;
+      const tiles = Array.from(wrap.querySelectorAll('.logo-tile'));
+      const CELL = 42, W = 2 * CELL, H = CELL, PAD = 8, STAMP_PAD = 2;
+      const STAMP_TILT = 8 * Math.PI / 180;   // matches the end of @keyframes stamp-effect
+      const COS = Math.cos(STAMP_TILT), SIN = Math.sin(STAMP_TILT);
+      function layout() {
+        if (getComputedStyle(wrap).display === 'none') return;
+        const sec = section.getBoundingClientRect();
+        const b = bio.getBoundingClientRect();
+        const padR = parseFloat(getComputedStyle(bio).paddingRight) || 0;
+        const textRight = b.right - padR - sec.left;
+        const xMin = Math.ceil((textRight + PAD) / CELL) * CELL;
+        const xMax = Math.floor((sec.width - CELL / 2 - W) / CELL) * CELL;   // keep half a square from the edge
+        let yMax = Math.floor((b.bottom - sec.top - H) / CELL) * CELL;        // never below the text
+        // Each stamp's footprint once it has landed: its stamp-effect animation
+        // ends tilted by STAMP_TILT, which takes more room than the untilted
+        // stamp before it plays. Rotation/scale are about the centre, so the
+        // centre is the same whatever the stamp is doing right now; working
+        // from that keeps the logos still while the intro types out.
+        const stamps = Array.from(bio.querySelectorAll('.stamped-sticker-wrapper img')).map((el) => {
+          const r = el.getBoundingClientRect();
+          const cx = (r.left + r.right) / 2 - sec.left, cy = (r.top + r.bottom) / 2 - sec.top;
+          const w = el.offsetWidth, h = el.offsetHeight;
+          const hw = (w * COS + h * SIN) / 2 + STAMP_PAD, hh = (w * SIN + h * COS) / 2 + STAMP_PAD;
+          return { l: cx - hw, r: cx + hw, t: cy - hh, b: cy + hh };
+        });
+        // keep to the neighbourhood of the first two stamps (from the first line
+        // of text, or a row above the first stamp if lower, to a row below the
+        // second stamp), never above or below the text
+        const nearTop = stamps.length ? Math.floor((stamps[0].t - CELL) / CELL) * CELL : null;
+        if (stamps.length > 1) yMax = Math.min(yMax, Math.floor((stamps[1].b + CELL - H) / CELL) * CELL);
+        const clash = (p, q) => Math.abs(p.x - q.x) < W && Math.abs(p.y - q.y) < H;
+        function pick(yMin) {
+          const free = [];
+          for (let y = yMin; y <= yMax; y += CELL)
+            for (let x = xMin; x <= xMax; x += CELL)
+              if (!stamps.some((s) => s.r > x && s.l < x + W && s.b > y && s.t < y + H)) free.push({ x, y });
+          // farthest-point picking: start at the top, then keep adding the free
+          // spot furthest from everything chosen so far that doesn't touch one
+          // (sideways distance counts a little less, so they spread down too)
+          const chosen = [];
+          if (free.length) chosen.push(free.reduce((a, c) => (c.y < a.y || (c.y === a.y && c.x > a.x) ? c : a)));
+          while (chosen.length < tiles.length) {
+            let best = null, bestD = -1;
+            free.forEach((c) => {
+              if (chosen.some((o) => clash(c, o))) return;
+              const d = Math.min(...chosen.map((o) => Math.hypot((c.x - o.x) * 0.8, c.y - o.y)));
+              if (d > bestD) { bestD = d; best = c; }
+            });
+            if (!best) break;
+            chosen.push(best);
+          }
+          return chosen;
+        }
+        // beside the bio first; only if five don't fit, use the grid above it too
+        const bioTop = Math.ceil((b.top - sec.top) / CELL) * CELL;
+        let chosen = pick(nearTop === null ? bioTop : Math.max(bioTop, nearTop));
+        if (chosen.length < tiles.length) chosen = pick(CELL);
+        chosen.sort((p, q) => p.y - q.y || p.x - q.x);
+        tiles.forEach((tile, i) => {
+          const spot = chosen[i];
+          tile.style.visibility = spot ? 'visible' : 'hidden';
+          if (!spot) return;
+          tile.style.left = spot.x + 'px';
+          tile.style.top = spot.y + 'px';
+          tile.style.width = W + 'px';
+        });
+      }
+      // re-run once things settle after a resize (the bio re-reserves its height)
+      let settle;
+      const later = () => { clearTimeout(settle); settle = setTimeout(layout, 120); };
+      window.addEventListener('resize', later);
+      window.addEventListener('load', layout);
+      if (window.ResizeObserver) new ResizeObserver(later).observe(bio);
+      layout();
+      // fade in, one after another, once the industries have typed out
+      document.addEventListener('bio-cue', (e) => {
+        if (wrap.classList.contains('is-shown') || (e.detail !== 'logos' && e.detail !== 'done')) return;
+        tiles.forEach((t, i) => { t.style.transitionDelay = (i * 0.12) + 's'; });
+        wrap.classList.add('is-shown');
       });
     })();
 

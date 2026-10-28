@@ -90,7 +90,6 @@
     .topbar .back:hover { color: var(--gold); }
     .topbar .brand { font-weight: 700; letter-spacing: -0.02em; font-size: 18px; }
     .topbar .brand span { font-weight: 400; color: var(--ink-3); }
-    .progress { position: absolute; left: 0; bottom: -1px; height: 2px; width: 100%; transform-origin: 0 50%; transform: scaleX(0); background: var(--ink); }
 
     /* ---------- Placeholder helpers ---------- */
     .tbd {
@@ -352,7 +351,10 @@
     /* ---------- Principles + butler ---------- */
     .principles { background: var(--ink); color: var(--paper); border-top: 0; }
     .principles .cs-num { color: #8C8883; }
-    .serve-grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(32px, 6vw, 80px); align-items: center; }
+    .pr-eyebrow { padding: 0 0 28px; margin-bottom: 36px; border-bottom: 1px solid #2E2C2A; }
+    /* text left, card right; the card keeps its original half-width size, the text takes the spare gap */
+    .serve-grid { display: grid; grid-template-columns: 1fr calc((100% - clamp(32px, 6vw, 80px)) / 2); gap: clamp(24px, 3.5vw, 48px); align-items: center; }
+    .serve-grid > .serve-card { order: 2; }
     .serve-card {
       position: relative; border-radius: var(--r-card); overflow: hidden; aspect-ratio: 3 / 4;
       background: #E4E0DA;
@@ -371,7 +373,7 @@
     .principle .mono { color: var(--gold); }
     .principle h3 { font-size: clamp(32px, 4.2vw, 54px); line-height: 1.02; letter-spacing: -0.04em; margin: 14px 0 16px; }
     .principle h3 em { font-family: var(--serif); font-style: italic; font-weight: 400; color: var(--gold); letter-spacing: -0.01em; }
-    .principle p { color: #C9C4BB; margin: 0; max-width: 44ch; }
+    .principle p { color: #C9C4BB; margin: 0; max-width: 50ch; }
     .principle + .principle { margin-top: 44px; padding-top: 44px; border-top: 1px solid #2E2C2A; }
 
     /* ---------- Case steps ---------- */
@@ -449,23 +451,40 @@
     .ds-label { font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 18px; }
     .page h3 { font-size: clamp(30px, 3.6vw, 46px); line-height: 0.95; letter-spacing: -0.04em; text-transform: uppercase; margin: 0 0 18px; }
     .aa { font-size: clamp(80px, 10vw, 132px); font-weight: 700; letter-spacing: -0.06em; line-height: 0.9; }
-    .fam { font-size: 14px; color: var(--ink-2); margin: 10px 0 18px; max-width: 42ch; }
+    .fam { font-size: 14px; color: var(--ink-2); margin: 10px 0 18px; }
     .scale-row { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; border-top: 1px solid #EEE9E0; padding: 9px 0; }
     .scale-row .mono { color: var(--ink-3); font-size: 10px; flex: none; }
     .scale-row span:first-child { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .swatches { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-    .sw-chip { height: 86px; border-radius: 6px; padding: 8px; display: flex; align-items: flex-end; font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; }
-    .sw-gold { grid-column: span 2; height: 64px; background: linear-gradient(90deg, #B08D57, #D8BE8C); color: #fff; }
-    .status-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 8px; }
-    .status-row div { border-radius: 6px; padding: 8px; font-size: 11px; }
+    .sw-chip { height: 76px; border-radius: 0; padding: 8px; display: flex; flex-direction: column; justify-content: flex-end; font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; }
+    .sw-chip small, .status-row small { display: block; order: -1; margin: 0 0 3px; font-family: var(--mono); font-size: 9px; letter-spacing: 0.04em; opacity: 0.75; text-transform: none; }
+    .sw-3 { grid-template-columns: repeat(3, 1fr); }
+    .sw-group { font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-3); margin: 16px 0 6px; }
+    .sw-group:first-of-type { margin-top: 0; }
+    .neutral-row { display: grid; grid-template-columns: repeat(9, 1fr); height: 26px; margin-top: 8px; border-radius: 0; overflow: hidden; border: 1px solid #EEE9E0; }
+    .scale-head { border-top: 0; padding-bottom: 4px; }
+    .type-note { margin-top: 40px; padding-top: 14px; border-top: 1px solid #EEE9E0; font-size: 12px; color: var(--ink-3); opacity: 0.85; }
+    .type-note .mono { font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; margin-right: 6px; }
+    .scale-group { font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-2); margin: 16px 0 2px; font-weight: 500; }
+    .scale-row .tok { font-style: normal; font-size: 9px; letter-spacing: 0.06em; color: var(--ink-3); margin-left: 8px; vertical-align: middle; text-decoration: none; display: inline-block; }
+    .aa.aa-name { font-size: clamp(40px, 5vw, 64px); font-weight: 400; letter-spacing: -0.03em; line-height: 1; }
+    /* hex codes show on hover / focus */
+    .sw-chip small, .status-row small { opacity: 0; transform: translateY(3px); transition: opacity 0.2s, transform 0.2s; }
+    .sw-chip:hover small, .status-row div:hover small { opacity: 0.8; transform: none; }
+    .neutral-row { overflow: visible; }
+    .neutral-row i { position: relative; }
+    .neutral-row i::after { content: attr(data-hex); position: absolute; left: 50%; bottom: calc(100% + 6px); transform: translate(-50%, 3px); white-space: nowrap; font-family: var(--mono); font-size: 9px; padding: 3px 6px; border-radius: 4px; background: var(--ink); color: #fff; opacity: 0; pointer-events: none; transition: opacity 0.2s, transform 0.2s; z-index: 2; }
+    .neutral-row i:hover::after { opacity: 1; transform: translate(-50%, 0); }
+    @media (hover: none) { .sw-chip small, .status-row small { opacity: 0.8; transform: none; } }
+    .status-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
+    .status-row div { border-radius: 0; padding: 8px; font-size: 11px; min-height: 54px; display: flex; flex-direction: column; justify-content: flex-end; }
     .mini-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 22px; border-top: 1px solid var(--ink); padding-top: 14px; }
     .mini-stats b { display: block; font-size: 30px; letter-spacing: -0.05em; line-height: 1; }
     .mini-stats span { font-size: 12px; color: var(--ink-2); line-height: 1.35; display: block; margin-top: 6px; }
     .label-row { display: flex; justify-content: space-between; margin-bottom: 8px; color: var(--ink-3); }
     /* Signature components: a floating composition (two hero cards, widgets toward the corners, pills around them), straight pieces,
        faint headline behind. Sizes keep each 1x export at ~1.5x density or better so nothing looks soft. */
-    .ds-collage { position: relative; aspect-ratio: 1100 / 820; overflow: hidden; border-radius: var(--r-card);
-      background: radial-gradient(ellipse 60% 55% at 50% 48%, #FFFEFB, #F4EFE7 70%, #EDE6DA); }
+    .ds-collage { position: relative; aspect-ratio: 1100 / 732; overflow: hidden; }
     .ds-ghost { position: absolute; inset: 0; margin: 0; display: grid; place-content: center; text-align: center; pointer-events: none;
       font-size: clamp(40px, 8.4vw, 104px); font-weight: 700; letter-spacing: -0.05em; line-height: 0.95; color: rgba(60, 45, 25, 0.06); }
     .ds-piece { position: absolute; left: var(--x); top: var(--y); width: var(--w); z-index: var(--z); margin: 0; transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1); outline: none; }
@@ -788,6 +807,67 @@
     .ch-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; text-align: center; padding: 20px; cursor: default; color: var(--ink-3); font-size: 13px;
       background: repeating-linear-gradient(135deg, transparent 0 14px, rgba(17,17,17,0.035) 14px 15px), var(--paper-2); border: 1px dashed #BDB5A8; box-shadow: none; }
 
+    /* ---------- System book: the right page turns over to reveal the components spread ---------- */
+    .book { position: relative; display: grid; perspective: 2600px; margin-top: 8px; }
+    .book > .book-spread { grid-area: 1 / 1; transform-style: preserve-3d; }
+    .book-spread { visibility: hidden; }
+    .book-spread.is-active { visibility: visible; z-index: 2; }
+    .book-spread.is-under { visibility: visible; z-index: 1; }
+    .ds-spread { overflow: visible; margin-top: 0; }
+    .ds-spread .page.left { border-radius: 3px 0 0 3px; background: linear-gradient(90deg, #FDFCFA 78%, #F8F6F1 92%, #F2EFE9); }
+    .ds-spread .page.right { border-radius: 0 3px 3px 0; background: linear-gradient(90deg, #F2EFE9, #F8F6F1 8%, #FDFCFA 22%); }
+    /* the turning leaf: front = current right page, back = next spread's left page */
+    .leaf { position: absolute; top: 0; left: 50%; width: 50%; height: 100%; z-index: 20; transform-origin: left center; transform-style: preserve-3d; pointer-events: none; }
+    .leaf-face { position: absolute; inset: 0; overflow: hidden; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+    .leaf-face.back { transform: rotateY(180deg); }
+    .leaf-face::after { content: ""; position: absolute; inset: 0; pointer-events: none; }
+    .leaf-face.front::after { background: linear-gradient(90deg, rgba(40, 30, 10, 0.06), transparent 22%); }
+    .leaf-face.back::after { background: linear-gradient(270deg, rgba(40, 30, 10, 0.06), transparent 22%); }
+    .leaf-clone { position: absolute; top: 0; margin: 0; visibility: visible !important; }
+    .page-c { position: relative; height: 100%; box-sizing: border-box; display: flex; flex-direction: column; border-radius: 3px;
+      background: radial-gradient(ellipse 60% 55% at 50% 50%, #FFFEFB, #F4EFE7 70%, #EDE6DA);
+      padding: clamp(18px, 2.4vw, 28px); box-shadow: 0 40px 70px -40px rgba(40, 30, 10, 0.5); }
+    .page-c .ds-label { margin-bottom: 14px; }
+    .page-c .ds-collage { flex: 1; }
+    /* the spine down the middle of the components spread */
+    .page-c::after { content: ""; position: absolute; top: 0; bottom: 0; left: 50%; width: 120px; transform: translateX(-50%); pointer-events: none; z-index: 1;
+      background: linear-gradient(90deg, transparent, rgba(60, 45, 25, 0.018) 30%, rgba(60, 45, 25, 0.04) 50%, rgba(60, 45, 25, 0.018) 70%, transparent); }
+    /* Folded corners. Each corner button is a thin strip down the page edge: hovering anywhere along the edge peels the
+       corner back and reveals the label for the next spread. The flap sits on the page; the triangle by the corner is the page beneath. */
+    .page-corner { position: absolute; top: 0; bottom: 0; width: 44px; height: auto; z-index: 12; padding: 0; border: 0; cursor: pointer; background: none; }
+    .page-corner.pc-next { right: 0; }
+    .page-corner.pc-prev { left: 0; }
+    .page-corner::before { content: ""; position: absolute; bottom: 0; width: 42px; height: 42px;
+      transition: width 0.45s cubic-bezier(0.2, 0.8, 0.2, 1), height 0.45s cubic-bezier(0.2, 0.8, 0.2, 1); }
+    .page-corner.pc-next::before { right: 0; border-radius: 0 0 3px 0; filter: drop-shadow(-3px -3px 4px rgba(40, 30, 10, 0.2));
+      background: linear-gradient(135deg, #FFFFFF 0%, #F3EEE5 30%, #E2DACC 46%, #C9C0AF 49.7%, #D9D1C2 50%, #CEC5B5 100%); }
+    .page-corner.pc-prev::before { left: 0; border-radius: 0 0 0 3px; filter: drop-shadow(3px -3px 4px rgba(40, 30, 10, 0.2));
+      background: linear-gradient(225deg, #FFFFFF 0%, #F3EEE5 30%, #E2DACC 46%, #C9C0AF 49.7%, #D9D1C2 50%, #CEC5B5 100%); }
+    .page-corner:hover::before, .page-corner:focus-visible::before { width: 96px; height: 96px; }
+    .page-corner:focus-visible { outline: none; }
+    .page-corner:focus-visible::before { outline: 2px solid var(--gold); outline-offset: 2px; }
+    .page-corner span { position: absolute; bottom: 18px; white-space: nowrap; font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-2);
+      opacity: 0; transition: opacity 0.25s, transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1); pointer-events: none; }
+    .page-corner.pc-next span { right: 108px; transform: translateX(10px); }
+    .page-corner.pc-prev span { left: 108px; transform: translateX(-10px); }
+    .page-corner.pc-next span::after { content: " →"; }
+    .page-corner.pc-prev span::before { content: "← "; }
+    .page-corner:hover span, .page-corner:focus-visible span { opacity: 1; transform: none; }
+    /* first time the book scrolls into view, the corner peels once on its own */
+    .page-corner.peek-hint::before { animation: peel-hint 1.6s cubic-bezier(0.4, 0, 0.2, 1) 1; }
+    @keyframes peel-hint { 0%, 100% { width: 42px; height: 42px; } 45% { width: 78px; height: 78px; } }
+    /* shading that sweeps across the leaf while it turns */
+    .leaf-shade { position: absolute; inset: 0; opacity: 0; pointer-events: none; background: linear-gradient(90deg, rgba(40, 30, 10, 0.28), rgba(40, 30, 10, 0.04) 55%, transparent); }
+    .leaf-face.back .leaf-shade { background: linear-gradient(270deg, rgba(40, 30, 10, 0.28), rgba(40, 30, 10, 0.04) 55%, transparent); }
+    /* Iconography spread (placeholders) */
+    .icon-spread { flex: 1; display: grid; grid-template-columns: 1fr 1fr; column-gap: 96px; padding: 8px 18px 40px; }
+    .icon-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 14px; margin: 6px 0 16px; }
+    .ic-ph { display: block; aspect-ratio: 1; border: 1px dashed #BDB5A8; border-radius: 6px; background: repeating-linear-gradient(135deg, transparent 0 6px, rgba(17,17,17,0.04) 6px 7px), #F4F0E8; }
+    .ic-sizes { display: flex; align-items: flex-end; gap: 28px; margin: 6px 0 20px; }
+    .ic-sizes > div { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+    .ic-sizes .mono { font-size: 9px; color: var(--ink-3); }
+    .ic-wide { margin: 6px 0 20px; }
+
     /* ---------- Engineering ---------- */
     .eng { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 36px; }
     .eng div { border-top: 1px solid var(--ink); padding-top: 14px; font-size: 15px; }
@@ -873,6 +953,7 @@
       .stats.glance .stat:last-child { grid-column: auto; border-bottom: 1px solid var(--rule); }
       .layers, .steps, .next-links { grid-template-columns: 1fr; }
       .serve-grid, .receipt-row, .chapter { grid-template-columns: 1fr; }
+      .serve-grid > .serve-card { order: 0; }
       .receipt-row { grid-template-rows: none; grid-template-areas: "head" "mock" "body"; row-gap: 32px; }
       .learn-stage { display: flex; flex-direction: column; align-items: center; gap: 10px; min-height: 0; padding: 64px var(--gutter); --bw: min(84vw, 340px); }
       .lq { position: static; display: none; transform: none; }
@@ -889,6 +970,12 @@
       .covers { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
       .scroll-frame { border-width: 4px; border-radius: 24px; }
       .spread { grid-template-columns: 1fr; }
+      .book { display: block; perspective: none; }
+      .book-spread { visibility: visible; }
+      .book-spread + .book-spread { margin-top: 28px; }
+      .icon-spread { grid-template-columns: 1fr; padding: 0; }
+      .page-corner { display: none; }
+      .page-c::after { display: none; }
       .page.left, .page.right { background: #FDFCFA; }
       .page { min-height: 0; padding-bottom: 48px; }
       .eng { grid-template-columns: 1fr 1fr; }
@@ -915,7 +1002,7 @@
       .ds-piece { position: relative; left: auto; top: auto; width: min(100%, 150px, var(--mw)); justify-self: center; }
       .ds-piece:has(img[height="36"], img[height="40"], img[height="52"], img[height="200"], img[height="138"], img[height="120"], img[height="130"]) { grid-column: 1 / -1; width: min(100%, var(--mw)); }
       .covers { grid-template-columns: minmax(0, 300px); }
-      .status-row { grid-template-columns: repeat(2, 1fr); }
+      .status-row { grid-template-columns: repeat(3, 1fr); }
       .topbar .brand span { display: none; }
       .stage { height: 260px; }
       .stage .m2, .stage .m3 { display: none; }
@@ -959,7 +1046,6 @@
       <a class="back mono" href="index.html">← Homepage</a>
       <div class="brand"><span>case studies /</span> vêtir</div>
     </div>
-    <div class="progress" id="progress"></div>
   </header>
 
   <!-- Floating section guide: four acts, one hairline per section. Quiet until hovered. -->
@@ -1131,10 +1217,6 @@
     <!-- ============ 04 PRINCIPLES: we're serving ============ -->
     <section class="cs principles" id="principles">
       <div class="wrap">
-        <div class="cs-head reveal">
-          <div class="cs-num mono">Principles</div>
-          <div></div>
-        </div>
         <div class="serve-grid reveal">
           <div class="serve-card" aria-label="A hand serving a styled outfit on a silver tray">
             <div class="title"><span>Serving Looks</span><small class="mono">since 2024</small></div>
@@ -1143,6 +1225,7 @@
             <img class="look is-shown" src="img/Vetir/Cutouts/servinglooks1.png" alt="Model in a styled outfit, standing on the serving tray">
           </div>
           <div>
+            <div class="cs-num mono pr-eyebrow">Design principles</div>
             <div class="principle">
               <span class="mono">Principle 01</span>
               <h3>AI as a <em>stylist,</em> not a search engine.</h3>
@@ -1166,12 +1249,12 @@
           <h2>It was live. <em>It wasn't clicking yet.</em></h2>
         </div>
         <div class="cs-body reveal">
-          <div class="col prose"><p class="lede">Traction and revenue were low, and people were confused about what Vêtir actually offered: a store, a styling app or a stylist marketplace?</p><p>Adding more features felt like the obvious fix. I needed to show that the real problem was the experience holding those features together, and make that case on business terms, not aesthetics.</p></div>
+          <div class="col prose"><p>Traction and revenue were low, and people were confused about what Vêtir actually offered: a store, a styling app or a stylist marketplace?</p><p>Adding more features felt like the obvious fix. I needed to show that the real problem was the experience holding those features together, and make that case on business terms, not aesthetics.</p></div>
         </div>
         <div class="steps reveal">
-          <div class="step"><span class="mono">Step 01 · Audit</span><h3>A series of audit presentations</h3><p>Covering the website and app: where the experience broke down, and where it looked mass market next to the luxury brands it sold. <span class="tbd">+ one concrete cost</span></p></div>
-          <div class="step"><span class="mono">Step 02 · Trial</span><h3>The Outfit Module as the trial</h3><p>The founder agreed to redesign one module first to test the approach.</p></div>
-          <div class="step"><span class="mono">Step 03 · Proof</span><h3>The trial became the plan</h3><p>The ops team, who onboard clients and stylists every day, started relaying positive feedback. The redesign continued module by module.</p></div>
+          <div class="step"><span class="mono">Step 01 · Audit</span><h3>A series of audit presentations</h3><p>I mapped where the experience broke down, where functionality was difficult to discover, and where the visual language felt inconsistent with the luxury brands Vêtir sold.</p></div>
+          <div class="step"><span class="mono">Step 02 · Trial</span><h3>The Outfit Module as the trial</h3><p>Rather than proposing a disruptive redesign of the entire product, I used the Outfit Module as the trial. It was a high-value part of the product where the new approach could be demonstrated clearly.</p></div>
+          <div class="step"><span class="mono">Step 03 · Proof</span><h3>The trial became the plan</h3><p>The ops team, who onboard clients and stylists every day, started relaying positive feedback. The redesign continued module by module. The redesign became the way the roadmap was executed.</p></div>
         </div>
       </div>
     </section>
@@ -1215,9 +1298,8 @@
             </div>
           </div>
           <div class="prose receipt-body">
-            <p class="lede">A big-bang redesign wasn't realistic for a five-person engineering team at our funding stage.</p>
+            <p>A big-bang redesign wasn't realistic for a five-person engineering team at our funding stage.</p>
             <p>Instead, <strong>every incoming feature request became the entry point to redesign its whole module</strong> in the new system. The redesign absorbed the roadmap rather than competing with it. Many smaller flows shipped between these milestones.</p>
-            <p class="cap">✦ = AI-led module.</p>
             <div class="callout">
               <span class="mono">The tradeoff</span>
               <p>For months, two design systems ran side by side. Keeping the product feeling coherent across converted and unconverted pages took constant judgment calls. High-value surfaces went first, internal tools last, and the AI Stylist's agentic flows were scoped into phase two. The old system is now fully retired.</p>
@@ -1235,59 +1317,108 @@
           <h2>Quiet by design. <em>Built to scale.</em></h2>
         </div>
 
-        <div class="spread reveal">
-          <div class="page left">
-            <div class="ds-label mono">Type</div>
-            <div class="aa">Aa</div>
-            <div class="fam"><b>Helvetica Neue</b> replaces Helvetica (app) + Libre and assorted fonts (web). Vêtir is full of functional flows, so one legible family beat an editorial pairing. A proper hierarchy also fixed SEO.</div>
-            <div class="scale-row"><span style="font-size:36px;font-weight:700;letter-spacing:-0.04em;line-height:1">Display</span><span class="mono">40 / Bold</span></div>
-            <div class="scale-row"><span style="font-size:26px;font-weight:600;letter-spacing:-0.03em;line-height:1.1">Heading</span><span class="mono">28 / Medium</span></div>
-            <div class="scale-row"><span style="font-size:16px">Body copy for styling advice</span><span class="mono">17 / Regular</span></div>
-            <div class="scale-row"><span style="font-size:11px;letter-spacing:0.08em;text-transform:uppercase">Label · Caption</span><span class="mono">12 / Regular</span></div>
-            <p class="cap"><span class="tbd">placeholder scale, swap in real sizes</span></p>
+        <div class="book reveal" id="ds-book">
+          <div class="book-spread s1 is-active" data-i="0">
+          <div class="spread ds-spread">
+            <div class="page left">
+              <div class="ds-label mono">Type</div>
+              <div class="aa aa-name">Helvetica Neue</div>
+              <div class="fam">Vêtir runs on functional flows, so it needed a highly legible family and a clear hierarchy. That hierarchy also gave every web page a proper heading structure, which lifted organic search.</div>
+              <div class="scale-row scale-head"><span class="mono">Role · token</span><span class="mono">Weight · Size · Tracking</span></div>
+              <div class="scale-group mono">Display &amp; headings</div>
+              <div class="scale-row"><span style="font-size:20px;font-weight:400;letter-spacing:-0.02em;line-height:1.1;">Page title<i class="tok mono">H1</i></span><span class="mono">Regular · 20 · -2%</span></div>
+              <div class="scale-row"><span style="font-size:40px;font-weight:300;letter-spacing:0em;line-height:1.1;">Display<i class="tok mono">H2</i></span><span class="mono">Light · 40 · 0%</span></div>
+              <div class="scale-row"><span style="font-size:24px;font-weight:400;letter-spacing:-0.02em;line-height:1.1;">Banner title<i class="tok mono">H3</i></span><span class="mono">Regular · 24 · -2%</span></div>
+              <div class="scale-row"><span style="font-size:14px;font-weight:500;letter-spacing:-0.02em;line-height:1.1;">Section heading<i class="tok mono">H4</i></span><span class="mono">Medium · 14 · -2%</span></div>
+              <div class="scale-group mono">Body</div>
+              <div class="scale-row"><span style="font-size:20px;font-weight:400;letter-spacing:-0.02em;line-height:1.1;">$1,220 <i class="tok mono">Price</i></span><span class="mono">Regular · 20 · -2%</span></div>
+              <div class="scale-row"><span style="font-size:14px;font-weight:400;letter-spacing:0em;line-height:1.1;">Description · Input</span><span class="mono">Regular · 14 · 0%</span></div>
+              <div class="scale-row"><span style="font-size:14px;font-weight:500;letter-spacing:0em;line-height:1.1;">Button <i class="tok mono">CTA</i></span><span class="mono">Medium · 14 · 0%</span></div>
+              <div class="scale-row"><span style="font-size:14px;font-weight:500;letter-spacing:0em;line-height:1.1;text-decoration:underline;text-underline-offset:3px;padding-bottom:5px;">Link</span><span class="mono">Medium · 14 · 0%</span></div>
+              <div class="scale-row"><span style="font-size:12px;font-weight:400;letter-spacing:-0.02em;line-height:1.1;color:var(--ink-2);">Label</span><span class="mono">Regular · 12 · -2%</span></div>
+              <div class="scale-row"><span style="font-size:11px;font-weight:300;letter-spacing:0em;line-height:1.1;color:var(--ink-2);">Caption</span><span class="mono">Light · 11 · 0%</span></div>
+            </div>
+            <div class="page right">
+              <div class="ds-label mono">Colour</div>
+              <div class="sw-group mono">Brand</div>
+              <div class="swatches">
+                <div class="sw-chip" style="background:#222222;color:#fff">Obsidian Black<small>#222222</small></div>
+                <div class="sw-chip" style="background:#fff;border:1px solid #EEE9E0">Porcelain White<small>#FFFFFF</small></div>
+              </div>
+              <div class="sw-group mono">Accent · AI only</div>
+              <div class="swatches sw-3">
+                <div class="sw-chip" style="background:linear-gradient(#FFFFFF,#CFB286)">Light gradient<small>#FFF → #CFB286</small></div>
+                <div class="sw-chip" style="background:linear-gradient(#FFFFFF,#B08D57);color:#fff">Dark gradient<small>#FFF → #B08D57</small></div>
+                <div class="sw-chip" style="background:#A27843;color:#fff">AI text<small>#A27843</small></div>
+              </div>
+              <div class="sw-group mono">Status &amp; feedback</div>
+              <div class="status-row">
+                <div style="background:#D83F31;color:#fff">Error<small>#D83F31</small></div>
+                <div style="background:#EAC282">Warning<small>#EAC282</small></div>
+                <div style="background:#E2DACB">Nudge<small>#E2DACB</small></div>
+                <div style="background:#009CA7;color:#fff">Info<small>#009CA7</small></div>
+                <div style="background:#37B358;color:#fff">Success<small>#37B358</small></div>
+              </div>
+              <div class="neutral-row" aria-label="Neutrals from #444444 to #F9F7F1">
+                <i style="background:#444444" data-hex="#444444"></i><i style="background:#555555" data-hex="#555555"></i><i style="background:#777777" data-hex="#777777"></i><i style="background:#909090" data-hex="#909090"></i><i style="background:#C2C2C2" data-hex="#C2C2C2"></i><i style="background:#D4D4D4" data-hex="#D4D4D4"></i><i style="background:#F5F5F5" data-hex="#F5F5F5"></i><i style="background:#F5F4F1" data-hex="#F5F4F1"></i><i style="background:#F9F7F1" data-hex="#F9F7F1"></i>
+              </div>
+              <p class="cap">Black and white carry the product. Gold is reserved for AI, so users recognize "the stylist is here" at a glance. Nine warm neutrals and muted status colours keep the editorial mood.</p>
+              <div class="mini-stats">
+                <div><b>4pt</b><span>spacing; separate grids for iOS and web</span></div>
+                <div><b>200+</b><span>components on Figma variables that map to code</span></div>
+                <div><b>All</b><span>shared ownership, internal visual check before push</span></div>
+              </div>
+              <p class="cap type-note"><span class="mono">Type</span> App styles at actual size, headings in the order they appear on a page. On web the same roles scale up: Display 48, Banner title 40, Page title 80, Section heading 24.</p>
+              <button class="page-corner pc-next" type="button" aria-label="Turn the page to see the signature components"><span class="mono">Components</span></button>
+            </div>
           </div>
-          <div class="page right">
-            <div class="ds-label mono">Colour</div>
-            <div class="swatches">
-              <div class="sw-chip" style="background:#0E0E0E;color:#fff">Ink</div>
-              <div class="sw-chip" style="background:#fff;border:1px solid #EEE9E0">Paper</div>
-              <div class="sw-chip sw-gold">Gold = AI only · #B08D57 <span class="tbd" style="margin-left:6px">swap hex</span></div>
-            </div>
-            <div class="status-row">
-              <div style="background:#D8E6D6">Success</div>
-              <div style="background:#F2E6C9">Warning</div>
-              <div style="background:#F0D4CF">Error</div>
-              <div style="background:#D6DEEA">Info</div>
-            </div>
-            <p class="cap">Black and white carry the product. Gold is reserved for AI, so users recognize "the stylist is here" at a glance. Muted pastel status colours keep the editorial mood.</p>
-            <div class="mini-stats">
-              <div><b>4pt</b><span>spacing; separate grids for iOS and web</span></div>
-              <div><b>200+</b><span>components on Figma variables that map to code</span></div>
-              <div><b>All</b><span>shared ownership, internal visual check before push</span></div>
+          </div>
+          <div class="book-spread s2" data-i="1">
+            <div class="page-c">
+              <div class="ds-label mono">Signature components</div>
+              <div class="ds-collage">
+                <p class="ds-ghost" aria-hidden="true">Quiet by design.<br>Built to scale.</p>
+                <figure class="ds-piece" tabindex="0" style="--x:7.73%; --y:6.01%; --w:12.73%; --mw:159px; --z:2"><img src="img/Vetir/New%20Work/DesignSys/ProductCard3.png" alt="Product card: gold watch with add-to-bag and wishlist actions, brand and price" width="227" height="328"><figcaption class="mono">Product card</figcaption></figure>
+                <figure class="ds-piece pill" tabindex="0" style="--x:6.82%; --y:33.62%; --w:17.27%; --mw:192px; --z:5"><img src="img/Vetir/New%20Work/DesignSys/Molecule-ai-prompt.png" alt="AI Stylist prompt: Hi, what do you want to wear today?" width="275" height="52" loading="lazy"><figcaption class="mono">AI prompt</figcaption></figure>
+                <figure class="ds-piece" tabindex="0" style="--x:5.91%; --y:42.03%; --w:17.27%; --mw:240px; --z:2"><img src="img/Vetir/New%20Work/DesignSys/Component-Premium.png" alt="Premium upsell modal: unlock personalized styling, premium tools, packing lists and virtual try-on" width="343" height="386" loading="lazy"><figcaption class="mono">Premium upsell</figcaption></figure>
+                <figure class="ds-piece" tabindex="0" style="--x:5.00%; --y:72.04%; --w:20.00%; --mw:240px; --z:2"><img src="img/Vetir/New%20Work/DesignSys/ProductCard1.png" alt="Cart item: brown leather jacket with size, return policy, sale price and quantity stepper" width="343" height="130" loading="lazy"><figcaption class="mono">Cart item · sale</figcaption></figure>
+                <figure class="ds-piece" tabindex="0" style="--x:25.45%; --y:15.62%; --w:20.91%; --mw:262px; --z:3"><img src="img/Vetir/New%20Work/DesignSys/Component-WeddingLooks.png" alt="Editorial look card: Wedding Guest Looks, styled for an upcoming event" width="375" height="501" loading="lazy"><figcaption class="mono">Editorial look card</figcaption></figure>
+                <figure class="ds-piece" tabindex="0" style="--x:54.09%; --y:10.81%; --w:17.27%; --mw:262px; --z:4"><img src="img/Vetir/New%20Work/DesignSys/Molecule-events.png" alt="Nudge: You have 2 events coming up! Create outfits" width="375" height="36" loading="lazy"><figcaption class="mono">Events nudge</figcaption></figure>
+                <figure class="ds-piece" tabindex="0" style="--x:54.09%; --y:19.22%; --w:19.09%; --mw:265px; --z:3"><img src="img/Vetir/New%20Work/DesignSys/Component-ShopThisLook.png" alt="Shop This Look sheet: every piece in the look with sizes, added to cart in one tap" width="379" height="454" loading="lazy"><figcaption class="mono">Shop this look</figcaption></figure>
+                <figure class="ds-piece" tabindex="0" style="--x:26.36%; --y:58.34%; --w:20.00%; --mw:262px; --z:5"><img src="img/Vetir/New%20Work/DesignSys/Molecule-listening.png" alt="Voice search bar, listening" width="375" height="40" loading="lazy"><figcaption class="mono">Voice search</figcaption></figure>
+                <figure class="ds-piece" tabindex="0" style="--x:26.36%; --y:64.83%; --w:12.73%; --mw:265px; --z:2"><img src="img/Vetir/New%20Work/DesignSys/Component-SkinTone.png" alt="Skin tone selector for the try-on avatar, from Porcelain to Espresso" width="379" height="560" loading="lazy"><figcaption class="mono">Skin tone · try-on</figcaption></figure>
+                <figure class="ds-piece" tabindex="0" style="--x:54.55%; --y:64.83%; --w:12.73%; --mw:159px; --z:2"><img src="img/Vetir/New%20Work/DesignSys/ProductCard4.png" alt="Outfit card: Classy Evening Look flat lay with try-on, add-to-bag and AI actions" width="227" height="326" loading="lazy"><figcaption class="mono">Outfit card</figcaption></figure>
+                <figure class="ds-piece" tabindex="0" style="--x:68.64%; --y:57.63%; --w:13.64%; --mw:271px; --z:2"><img src="img/Vetir/New%20Work/DesignSys/Component-EmptyState.png" alt="Empty state: Create your next look, with Create Outfit and Ask AI Stylist actions" width="387" height="450" loading="lazy"><figcaption class="mono">Empty state · AI entry</figcaption></figure>
+                <figure class="ds-piece" tabindex="0" style="--x:73.64%; --y:6.01%; --w:20.91%; --mw:262px; --z:2"><img src="img/Vetir/New%20Work/DesignSys/Molecule-friday.png" alt="AI prompt card: Get your Friday fit in an instant" width="375" height="200" loading="lazy"><figcaption class="mono">AI prompt card</figcaption></figure>
+                <figure class="ds-piece pill" tabindex="0" style="--x:76.36%; --y:24.61%; --w:10.00%; --mw:102px; --z:5"><img src="img/Vetir/New%20Work/DesignSys/Molecule-ask-ai.png" alt="Ask AI Stylist pill with the gold AI sparkle" width="146" height="52" loading="lazy"><figcaption class="mono">AI entry</figcaption></figure>
+                <figure class="ds-piece" tabindex="0" style="--x:76.36%; --y:32.42%; --w:18.18%; --mw:262px; --z:2"><img src="img/Vetir/New%20Work/DesignSys/Molecule-earning.png" alt="Earning potential: $356 a stylist could earn from this look" width="375" height="138" loading="lazy"><figcaption class="mono">Stylist earnings</figcaption></figure>
+                <figure class="ds-piece" tabindex="0" style="--x:76.36%; --y:45.63%; --w:18.18%; --mw:241px; --z:2"><img src="img/Vetir/New%20Work/DesignSys/ProductCard5.png" alt="Collection banner: Paris Vacation '26 with a flat lay of the looks" width="344" height="120"><figcaption class="mono">Collection banner</figcaption></figure>
+                <figure class="ds-piece" tabindex="0" style="--x:76.36%; --y:82.60%; --w:20.00%; --mw:240px; --z:2"><img src="img/Vetir/New%20Work/DesignSys/ProductCard2.png" alt="Cart item: pink satin pumps with size, size chart, price and quantity stepper" width="343" height="130" loading="lazy"><figcaption class="mono">Cart item · full price</figcaption></figure>
+              </div>
+              <button class="page-corner pc-prev" type="button" aria-label="Turn back to type and colour"><span class="mono">Type &amp; colour</span></button>
+              <button class="page-corner pc-next" type="button" aria-label="Turn the page to see the icons"><span class="mono">Icons</span></button>
             </div>
           </div>
-        </div>
-
-        <div class="reveal" style="margin-top:28px">
-          <div class="ds-label mono">Signature components</div>
-          <div class="ds-collage">
-            <p class="ds-ghost" aria-hidden="true">Quiet by design.<br>Built to scale.</p>
-            <figure class="ds-piece" tabindex="0" style="--x:7.73%; --y:7.56%; --w:12.73%; --mw:159px; --z:2"><img src="img/Vetir/New%20Work/DesignSys/ProductCard3.png" alt="Product card: gold watch with add-to-bag and wishlist actions, brand and price" width="227" height="328"><figcaption class="mono">Product card</figcaption></figure>
-            <figure class="ds-piece pill" tabindex="0" style="--x:6.82%; --y:35.61%; --w:17.27%; --mw:192px; --z:5"><img src="img/Vetir/New%20Work/DesignSys/Molecule-ai-prompt.png" alt="AI Stylist prompt: Hi, what do you want to wear today?" width="275" height="52" loading="lazy"><figcaption class="mono">AI prompt</figcaption></figure>
-            <figure class="ds-piece" tabindex="0" style="--x:5.91%; --y:44.15%; --w:17.27%; --mw:240px; --z:2"><img src="img/Vetir/New%20Work/DesignSys/Component-Premium.png" alt="Premium upsell modal: unlock personalized styling, premium tools, packing lists and virtual try-on" width="343" height="386" loading="lazy"><figcaption class="mono">Premium upsell</figcaption></figure>
-            <figure class="ds-piece" tabindex="0" style="--x:5.00%; --y:74.64%; --w:20.00%; --mw:240px; --z:2"><img src="img/Vetir/New%20Work/DesignSys/ProductCard1.png" alt="Cart item: brown leather jacket with size, return policy, sale price and quantity stepper" width="343" height="130" loading="lazy"><figcaption class="mono">Cart item · sale</figcaption></figure>
-            <figure class="ds-piece" tabindex="0" style="--x:27.73%; --y:17.32%; --w:20.91%; --mw:262px; --z:3"><img src="img/Vetir/New%20Work/DesignSys/Component-WeddingLooks.png" alt="Editorial look card: Wedding Guest Looks, styled for an upcoming event" width="375" height="501" loading="lazy"><figcaption class="mono">Editorial look card</figcaption></figure>
-            <figure class="ds-piece" tabindex="0" style="--x:49.55%; --y:12.44%; --w:19.09%; --mw:262px; --z:4"><img src="img/Vetir/New%20Work/DesignSys/Molecule-events.png" alt="Nudge: You have 2 events coming up! Create outfits" width="375" height="36" loading="lazy"><figcaption class="mono">Events nudge</figcaption></figure>
-            <figure class="ds-piece" tabindex="0" style="--x:51.37%; --y:20.98%; --w:20.00%; --mw:265px; --z:3"><img src="img/Vetir/New%20Work/DesignSys/Component-ShopThisLook.png" alt="Shop This Look sheet: every piece in the look with sizes, added to cart in one tap" width="379" height="454" loading="lazy"><figcaption class="mono">Shop this look</figcaption></figure>
-            <figure class="ds-piece" tabindex="0" style="--x:35.00%; --y:58.78%; --w:23.64%; --mw:262px; --z:5"><img src="img/Vetir/New%20Work/DesignSys/Molecule-listening.png" alt="Voice search bar, listening" width="375" height="40" loading="lazy"><figcaption class="mono">Voice search</figcaption></figure>
-            <figure class="ds-piece" tabindex="0" style="--x:28.64%; --y:67.32%; --w:12.73%; --mw:265px; --z:2"><img src="img/Vetir/New%20Work/DesignSys/Component-SkinTone.png" alt="Skin tone selector for the try-on avatar, from Porcelain to Espresso" width="379" height="560" loading="lazy"><figcaption class="mono">Skin tone · try-on</figcaption></figure>
-            <figure class="ds-piece" tabindex="0" style="--x:45.00%; --y:67.32%; --w:12.73%; --mw:159px; --z:2"><img src="img/Vetir/New%20Work/DesignSys/ProductCard4.png" alt="Outfit card: Classy Evening Look flat lay with try-on, add-to-bag and AI actions" width="227" height="326" loading="lazy"><figcaption class="mono">Outfit card</figcaption></figure>
-            <figure class="ds-piece" tabindex="0" style="--x:59.09%; --y:60.00%; --w:13.64%; --mw:271px; --z:2"><img src="img/Vetir/New%20Work/DesignSys/Component-EmptyState.png" alt="Empty state: Create your next look, with Create Outfit and Ask AI Stylist actions" width="387" height="450" loading="lazy"><figcaption class="mono">Empty state · AI entry</figcaption></figure>
-            <figure class="ds-piece" tabindex="0" style="--x:71.37%; --y:7.56%; --w:20.91%; --mw:262px; --z:2"><img src="img/Vetir/New%20Work/DesignSys/Molecule-friday.png" alt="AI prompt card: Get your Friday fit in an instant" width="375" height="200" loading="lazy"><figcaption class="mono">AI prompt card</figcaption></figure>
-            <figure class="ds-piece pill" tabindex="0" style="--x:74.09%; --y:26.46%; --w:10.00%; --mw:102px; --z:5"><img src="img/Vetir/New%20Work/DesignSys/Molecule-ask-ai.png" alt="Ask AI Stylist pill with the gold AI sparkle" width="146" height="52" loading="lazy"><figcaption class="mono">AI entry</figcaption></figure>
-            <figure class="ds-piece" tabindex="0" style="--x:74.09%; --y:34.39%; --w:18.18%; --mw:262px; --z:2"><img src="img/Vetir/New%20Work/DesignSys/Molecule-earning.png" alt="Earning potential: $356 a stylist could earn from this look" width="375" height="138" loading="lazy"><figcaption class="mono">Stylist earnings</figcaption></figure>
-            <figure class="ds-piece" tabindex="0" style="--x:74.09%; --y:47.81%; --w:18.18%; --mw:241px; --z:2"><img src="img/Vetir/New%20Work/DesignSys/ProductCard5.png" alt="Collection banner: Paris Vacation '26 with a flat lay of the looks" width="344" height="120"><figcaption class="mono">Collection banner</figcaption></figure>
-            <figure class="ds-piece" tabindex="0" style="--x:76.36%; --y:69.27%; --w:20.00%; --mw:240px; --z:2"><img src="img/Vetir/New%20Work/DesignSys/ProductCard2.png" alt="Cart item: pink satin pumps with size, size chart, price and quantity stepper" width="343" height="130" loading="lazy"><figcaption class="mono">Cart item · full price</figcaption></figure>
+          <div class="book-spread s3" data-i="2">
+            <div class="page-c icons-c">
+              <div class="ds-label mono">Iconography</div>
+              <div class="icon-spread">
+                <div class="icon-page">
+                  <div class="sw-group mono">System icons · 24 px, 1 px stroke</div>
+                  <div class="icon-grid"><i class="ic-ph"></i><i class="ic-ph"></i><i class="ic-ph"></i><i class="ic-ph"></i><i class="ic-ph"></i><i class="ic-ph"></i><i class="ic-ph"></i><i class="ic-ph"></i><i class="ic-ph"></i><i class="ic-ph"></i><i class="ic-ph"></i><i class="ic-ph"></i><i class="ic-ph"></i><i class="ic-ph"></i><i class="ic-ph"></i><i class="ic-ph"></i><i class="ic-ph"></i><i class="ic-ph"></i><i class="ic-ph"></i><i class="ic-ph"></i><i class="ic-ph"></i><i class="ic-ph"></i><i class="ic-ph"></i><i class="ic-ph"></i></div>
+                  <p class="cap">Placeholder grid: drop in the line icon set (home, chat, closet, outfits, search, camera, mic, bag, heart…).</p>
+                </div>
+                <div class="icon-page">
+                  <div class="sw-group mono">Sizes</div>
+                  <div class="ic-sizes"><div><i class="ic-ph" style="width:16px"></i><span class="mono">16</span></div><div><i class="ic-ph" style="width:20px"></i><span class="mono">20</span></div><div><i class="ic-ph" style="width:24px"></i><span class="mono">24</span></div><div><i class="ic-ph" style="width:32px"></i><span class="mono">32</span></div></div>
+                  <div class="sw-group mono">Navigation</div>
+                  <figure class="ph ic-wide" style="aspect-ratio: 16 / 3.2"><svg><use href="#i-img"/></svg><div class="ph-tag">Tab bar</div><div class="ph-desc">Home · Chat · AI Stylist · Closet · Outfits</div></figure>
+                  <div class="sw-group mono">AI treatment</div>
+                  <figure class="ph ic-wide" style="aspect-ratio: 16 / 4.4"><svg><use href="#i-img"/></svg><div class="ph-tag">Gold sparkle</div><div class="ph-desc">AI icon variants + default vs active states</div></figure>
+                </div>
+              </div>
+              <button class="page-corner pc-prev" type="button" aria-label="Turn back to the components"><span class="mono">Components</span></button>
+            </div>
           </div>
         </div>
       </div>
@@ -1654,15 +1785,6 @@
       })();
     })();
 
-    // Reading progress bar
-    const bar = document.getElementById('progress');
-    const onScroll = () => {
-      const h = document.documentElement;
-      bar.style.transform = `scaleX(${h.scrollTop / Math.max(1, h.scrollHeight - h.clientHeight)})`;
-    };
-    document.addEventListener('scroll', onScroll, { passive: true });
-    onScroll();
-
     // Before/after sliders
     document.querySelectorAll('[data-compare]').forEach(el => {
       const input = el.querySelector('input');
@@ -1928,6 +2050,54 @@
       addEventListener('scroll', onScroll, { passive: true });
       addEventListener('resize', onScroll);
       update();
+    })();
+
+
+    // System book: folded corners turn the page. A temporary two-sided leaf carries the current right page on its
+    // front and the next spread's left page on its back, rotating over the spine. Desktop only; spreads stack on small screens.
+    (function () {
+      const book = document.getElementById('ds-book');
+      if (!book) return;
+      const spreads = [...book.querySelectorAll('.book-spread')];
+      const wide = matchMedia('(min-width: 961px)');
+      const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      let cur = 0, busy = false;
+      const sync = () => spreads.forEach((sp, i) => { const off = wide.matches && i !== cur; sp.inert = off; sp.setAttribute('aria-hidden', String(off)); });
+      const face = (spread, side, W, H) => {
+        const f = document.createElement('div'); f.className = 'leaf-face ' + side;
+        const c = spread.cloneNode(true); c.className = 'book-spread leaf-clone'; c.removeAttribute('data-i'); c.inert = true;
+        Object.assign(c.style, { width: W + 'px', height: H + 'px', left: side === 'front' ? (-W / 2) + 'px' : '0px', clipPath: 'none' });
+        const sh = document.createElement('div'); sh.className = 'leaf-shade';
+        f.append(c, sh); return f;
+      };
+      const go = to => {
+        if (busy || to < 0 || to >= spreads.length || to === cur) return;
+        const from = spreads[cur], next = spreads[to], fwd = to > cur;
+        const done = () => { from.classList.remove('is-active'); from.style.clipPath = ''; next.classList.remove('is-under'); next.classList.add('is-active');
+          cur = to; sync(); busy = false; const c = next.querySelector(fwd ? '.page-corner.pc-prev' : '.page-corner.pc-next') || next.querySelector('.page-corner'); if (c) c.focus({ preventScroll: true }); };
+        if (still || !wide.matches) { from.classList.remove('is-active'); next.classList.add('is-active'); cur = to; sync(); return; }
+        busy = true;
+        const W = book.clientWidth, H = book.clientHeight;
+        const leaf = document.createElement('div'); leaf.className = 'leaf';
+        // forward: front = current right half, back = next left half. backward: front = previous right half, back = current left half
+        leaf.append(face(fwd ? from : next, 'front', W, H), face(fwd ? next : from, 'back', W, H));
+        next.classList.add('is-under');
+        from.style.clipPath = fwd ? 'inset(0 50% 0 0)' : 'inset(0 0 0 50%)';
+        book.appendChild(leaf);
+        const a = leaf.animate(fwd ? [{ transform: 'rotateY(0deg)' }, { transform: 'rotateY(-180deg)' }] : [{ transform: 'rotateY(-180deg)' }, { transform: 'rotateY(0deg)' }],
+          { duration: 900, easing: 'cubic-bezier(0.645, 0.045, 0.355, 1)' });
+        leaf.querySelectorAll('.leaf-shade').forEach(sh => sh.animate([{ opacity: 0 }, { opacity: 1, offset: 0.5 }, { opacity: 0 }], { duration: 900, easing: 'ease-in-out' }));
+        a.onfinish = () => { leaf.remove(); done(); };
+      };
+      book.addEventListener('click', e => {
+        const c = e.target.closest('.page-corner'); if (!c || !book.contains(c) || c.closest('.leaf')) return;
+        go(cur + (c.classList.contains('pc-next') ? 1 : -1));
+      });
+      wide.addEventListener('change', sync);
+      sync();
+      // one-off peel hint the first time the book is well in view
+      const first = spreads[0].querySelector('.page-corner.pc-next');
+      if (first && !still) new IntersectionObserver((es, ob) => { if (es[0].isIntersecting) { first.classList.add('peek-hint'); ob.disconnect(); } }, { threshold: 0.6 }).observe(book);
     })();
 
 
