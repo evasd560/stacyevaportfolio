@@ -97,6 +97,7 @@
       box-decoration-break: clone;
       -webkit-box-decoration-break: clone;
     }
+    .industry-chip { white-space: nowrap; }   /* so e-commerce doesn't split at its hyphen */
 
     #paper-up,
     #paper-down {
@@ -440,9 +441,7 @@
       filter: drop-shadow(0 -6px 18px rgba(40, 25, 80, 0.22));
       transition: opacity 0.4s ease, transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
     }
-    /* Phones: the flip phone stays closed, shrunk to fit the corner of the
-       first screen; tapping its little screen opens Desi Wordle in a new tab
-       (the in-phone game is desktop only).
+    /* Phones: the flip phone is shrunk to fit the corner of the first screen.
        Scaled from the bottom-left corner; left and the shown-state translate
        are rescaled so it peeks the same way it does on desktop. */
     @media (max-width: 639px) {
@@ -452,24 +451,16 @@
         transform-origin: 0 100%;
         left: calc(12px - 87px * 0.55) !important;
       }
-      #floating-player-widget.translate-y-\[30\%\] { translate: 0 16.5% !important; }
-      #floating-player-widget .phone-closed,
-      #floating-player-widget .phone-open-hit { pointer-events: none !important; }
-      /* only the little screen is tappable: it opens the game in a new tab */
-      #floating-player-widget .phone-screen-hit { display: block !important; }
+      /* Lifted so the whole little screen sits above Safari's bottom bar
+         strip (taps there only bring the toolbar back) */
+      #floating-player-widget.translate-y-\[30\%\] { translate: 0 30px !important; }
     }
-    /* Link over the closed phone's outer screen (measured off Phone_closed.png:
-       17-83% across, 22.6-52.4% down; the phone is 165px wide, ~310px tall) */
-    #floating-player-widget .phone-screen-hit {
-      display: none;
+    /* Link over the open phone's screen: tapping it opens the game in a new
+       tab (the game behind it is only a preview) */
+    #floating-player-widget .phone-game-link {
       position: absolute;
-      left: calc(87px + 165px * 0.17);
-      top: calc(70% - 140px + 310px * 0.226);
-      width: calc(165px * 0.663);
-      height: calc(310px * 0.298);
-      z-index: 26;
-      border-radius: 10px;
-      pointer-events: auto;
+      inset: 0;
+      z-index: 2;
     }
     #floating-player-widget .phone-open-part {
       transition: opacity 0.4s ease, transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
@@ -630,41 +621,44 @@
       opacity: var(--intro-fo, 1);
       pointer-events: none;
     }
-    /* Logos: each takes a 2 x 1 cell slot of the intro's 42px grid (the grid
-       starts at the section's top-left, so left/top are multiples of 42, set
-       by JS), straight on the grid with no fill. They sit under the bio and its
-       stamps, and fade with the intro. Tablet/desktop only: phones have no
-       right-hand column. */
+    /* Brand stickers: hidden until an industry chip is hovered (tapped on touch
+       screens), then they pop up around the chips, above the text. Placed by JS. */
     .intro-logos {
       position: absolute;
       inset: 0;
+      z-index: 2;
       pointer-events: none;
       opacity: var(--intro-fo, 1);
-      display: none;
     }
     .logo-tile {
-      opacity: 0;
-      translate: 0 6px;
-      transition: opacity 0.5s ease, translate 0.5s ease;
       position: absolute;
-      width: 84px;
-      height: 42px;
       display: flex;
       align-items: center;
       justify-content: center;
-      visibility: hidden;   /* until placed */
+      height: 44px;
+      padding: 0 12px;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 6px 18px rgba(40, 25, 80, 0.16), 0 1px 3px rgba(40, 25, 80, 0.12);
+      opacity: 0;
+      scale: 0.8;
+      rotate: var(--tilt);
+      transition: opacity 0.15s ease, scale 0.15s ease;
     }
     .logo-tile img {
-      max-height: 28px;
-      max-width: 100%;
+      height: 24px;
+      width: auto;
+      max-width: 96px;
       object-fit: contain;
     }
-    .intro-logos.is-shown .logo-tile { opacity: 1; translate: 0 0; }
-    @media (min-width: 768px) {
-      .intro-logos { display: block; }
+    .intro-logos.is-shown .logo-tile {
+      opacity: 1;
+      scale: 1;
+      transition: opacity 0.2s ease, scale 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      transition-delay: calc(var(--i) * 40ms);
     }
     .intro-inner {
-      z-index: 1;   /* bio and stamps above the logo tiles */
+      z-index: 1;
       /* Breathing room after View CV before Selected Work starts to show */
       padding-bottom: 15vh;
       opacity: var(--intro-fo, 1);
@@ -1453,14 +1447,13 @@
 
       <!-- Intro / bio section -->
       <section class="intro-section relative px-6 md:px-16 lg:px-24 py-28 md:py-36 overflow-hidden">
-        <!-- Brands worked with: small logos on the grid in the right-hand column,
-             placed by JS into the gaps between the stamps -->
+        <!-- Brands worked with: stickers shown around the industry chips on hover -->
         <div class="intro-logos" id="intro-logos" aria-label="Brands I've designed for">
-          <div class="logo-tile"><img src="img/logosportfolio/trimmed/icici.png" alt="ICICI Bank"></div>
-          <div class="logo-tile"><img src="img/logosportfolio/trimmed/csb.png" alt="CSB Bank"></div>
-          <div class="logo-tile"><img src="img/logosportfolio/trimmed/dishtv.png" alt="Dish TV"></div>
-          <div class="logo-tile"><img src="img/logosportfolio/trimmed/reliance.png" alt="Reliance Industries"></div>
-          <div class="logo-tile"><img src="img/logosportfolio/trimmed/hcltech.png" alt="HCLTech"></div>
+          <div class="logo-tile" style="--i:0; --tilt:-5deg"><img src="img/logosportfolio/trimmed/icici.png" alt="ICICI Bank"></div>
+          <div class="logo-tile" style="--i:1; --tilt:3deg"><img src="img/logosportfolio/trimmed/csb.png" alt="CSB Bank"></div>
+          <div class="logo-tile" style="--i:2; --tilt:-2deg"><img src="img/logosportfolio/trimmed/dishtv.png" alt="Dish TV"></div>
+          <div class="logo-tile" style="--i:3; --tilt:4deg"><img src="img/logosportfolio/trimmed/reliance.png" alt="Reliance Industries"></div>
+          <div class="logo-tile" style="--i:4; --tilt:-4deg"><img src="img/logosportfolio/trimmed/hcltech.png" alt="HCLTech"></div>
         </div>
         <div class="intro-inner max-w-6xl mx-auto relative">
 
@@ -1474,7 +1467,7 @@
           class="font-bio text-[17px] md:text-[1.6rem] lg:text-[1.8rem] leading-[1.7] md:leading-[1.75] text-[#2d2a4e] select-none md:pr-44 lg:pr-60">
           I’m a Product Designer currently leading design at
           <span class="font-bio font-bold text-[#2d2a4e]">Vêtir</span>,
-          with <span class="bio-chip bg-[#e6e4d3]">5+ years</span><span class="stamped-sticker-wrapper is-pinned" style="top:4%; right:1%;"><img src="img/sticker 4.webp" class="stamped-sticker" alt="Sticker 4"></span> of experience designing and shipping digital products end-to-end. I’ve designed across <span class="bio-chip bg-[#e7d9f8]">fashion</span>, <span class="bio-chip bg-[#f9d7da]">fintech</span>, <span class="bio-chip bg-[#e6e4d3]">BFSI</span> and <span class="bio-chip bg-[#e7d9f8]">SaaS</span><span class="bio-cue" data-cue="logos" aria-hidden="true"></span> – from consumer apps and websites to enterprise dashboards. I enjoy making complicated things feel simple but exciting, <span class="bio-chip bg-[#f9d7da]">building systems that scale</span><span class="stamped-sticker-wrapper is-pinned" style="top:40%; right:5%;"><img src="img/sticker 3.webp" class="stamped-sticker" alt="Sticker 3"></span>, and shaping products from the first brainstorming session to the final shipped interface.
+          with <span class="bio-chip bg-[#e6e4d3]">5+ years</span><span class="stamped-sticker-wrapper is-pinned" style="top:4%; right:1%;"><img src="img/sticker 4.webp" class="stamped-sticker" alt="Sticker 4"></span> of experience designing and shipping digital products end-to-end. I’ve designed across <span class="bio-chip industry-chip bg-[#e7d9f8]">luxury fashion</span>, <span class="bio-chip industry-chip bg-[#f9d7da]">e-commerce</span>, <span class="bio-chip industry-chip bg-[#e6e4d3]">fintech</span>, <span class="bio-chip industry-chip bg-[#e7d9f8]">BFSI</span> and <span class="bio-chip industry-chip bg-[#f9d7da]">SaaS</span> – from consumer apps and websites to enterprise dashboards. I enjoy making complicated things feel simple but exciting, <span class="bio-chip bg-[#f9d7da]">building systems that scale</span><span class="stamped-sticker-wrapper is-pinned" style="top:40%; right:5%;"><img src="img/sticker 3.webp" class="stamped-sticker" alt="Sticker 3"></span>, and shaping products from the first brainstorming session to the final shipped interface.
 
           <br><br>
 
@@ -2168,17 +2161,14 @@
              the game; tapping the phone's body closes it again. -->
         <div class="phone-open-hit" id="phone-open-hit" title="Close phone"></div>
         <img src="img/Phone_closed.webp" id="phone-closed-img" class="phone-closed" alt="Flip phone, closed">
-        <!-- Phones only: tapping the closed phone's little screen opens the game
-             in a new tab (the in-phone game is desktop only) -->
-        <a href="https://evasd560.github.io/desiwordle/" target="_blank" rel="noopener noreferrer"
-           class="phone-screen-hit" aria-label="Play Desi Wordle (opens in a new tab)"></a>
 
         <!-- iPhone Device Frame Image -->
         <img src="img/PhonePlayer.webp" class="phone-open-part absolute inset-0 w-full h-full object-contain z-20 pointer-events-none" alt="Phone Frame">
         
         <!-- Game screen: Desi Wordle, shown first when the phone opens. The page is
              laid out at phone width and scaled down to fit (see fitPhoneGame).
-             The src is set on first open so the game only loads if it's used. -->
+             The src is set on first open so the game only loads if it's used.
+             It's a preview: tapping the screen opens the game in a new tab. -->
         <!-- Sized to the frame's screen cut-out (measured from PhonePlayer.png) -->
         <div id="phone-game-screen" class="phone-open-part absolute z-30 overflow-hidden bg-[#E4D3AC] pointer-events-auto"
              style="left: 33.32%; top: 13.17%; width: 33.64%; height: 25.77%; border-radius: 2px;">
@@ -2187,6 +2177,9 @@
           <!-- Boot screen: a soft glow with "Play" for 1.4s each time the phone opens,
                then it fades to reveal the game (which loads underneath meanwhile) -->
           <div id="phone-boot" class="phone-boot" aria-hidden="true"><span>Play</span></div>
+          <!-- Tapping the screen opens the game in a new tab -->
+          <a href="https://evasd560.github.io/desiwordle/" target="_blank" rel="noopener noreferrer"
+             class="phone-game-link" aria-label="Play Desi Wordle (opens in a new tab)"></a>
         </div>
 
       </div>
@@ -2446,7 +2439,6 @@
             const sticker = w.querySelector('.stamped-sticker');
             if (sticker) sticker.classList.add('visible');
           });
-          document.dispatchEvent(new CustomEvent('bio-cue', { detail: 'done' }));
           return;
         }
         
@@ -2460,10 +2452,6 @@
             prev.style.opacity = '1';
             const sticker = prev.querySelector('.stamped-sticker');
             if (sticker) sticker.classList.add('visible');
-          }
-          // invisible cue markers in the copy (e.g. after the industry chips)
-          if (prev && prev.classList && prev.classList.contains('bio-cue')) {
-            document.dispatchEvent(new CustomEvent('bio-cue', { detail: prev.dataset.cue }));
           }
         }
         
@@ -3103,99 +3091,96 @@
       });
     })();
 
-    // Intro logos: 2-square slots on the 42px grid, scattered over the free
-    // grid on the right of the intro: the right-hand column and the margin
-    // beyond it, from the top of the bio to its last line (never below; above
-    // it only if five won't fit beside it), never touching a stamp, the text
-    // or each other. Of all the free spots, the five furthest
-    // apart from each other are picked, then filled top to bottom in order.
-    // Re-run whenever the bio's size changes (it grows as the intro types out,
-    // moving the stamps).
+    // Brand stickers: hovering any industry chip (tapping on touch screens) pops
+    // them up around the chips: all round them on desktop, in a row above and a
+    // row below on phones, where there's no room at the sides.
     (function () {
       const wrap = document.getElementById('intro-logos');
       const section = document.querySelector('.intro-section');
-      const bio = document.getElementById('bio-text-container');
-      if (!wrap || !section || !bio) return;
+      const chips = Array.from(document.querySelectorAll('.industry-chip'));
+      if (!wrap || !section || !chips.length) return;
       const tiles = Array.from(wrap.querySelectorAll('.logo-tile'));
-      const CELL = 42, W = 2 * CELL, H = CELL, PAD = 8, STAMP_PAD = 2;
-      const STAMP_TILT = 8 * Math.PI / 180;   // matches the end of @keyframes stamp-effect
-      const COS = Math.cos(STAMP_TILT), SIN = Math.sin(STAMP_TILT);
-      function layout() {
-        if (getComputedStyle(wrap).display === 'none') return;
-        const sec = section.getBoundingClientRect();
-        const b = bio.getBoundingClientRect();
-        const padR = parseFloat(getComputedStyle(bio).paddingRight) || 0;
-        const textRight = b.right - padR - sec.left;
-        const xMin = Math.ceil((textRight + PAD) / CELL) * CELL;
-        const xMax = Math.floor((sec.width - CELL / 2 - W) / CELL) * CELL;   // keep half a square from the edge
-        let yMax = Math.floor((b.bottom - sec.top - H) / CELL) * CELL;        // never below the text
-        // Each stamp's footprint once it has landed: its stamp-effect animation
-        // ends tilted by STAMP_TILT, which takes more room than the untilted
-        // stamp before it plays. Rotation/scale are about the centre, so the
-        // centre is the same whatever the stamp is doing right now; working
-        // from that keeps the logos still while the intro types out.
-        const stamps = Array.from(bio.querySelectorAll('.stamped-sticker-wrapper img')).map((el) => {
-          const r = el.getBoundingClientRect();
-          const cx = (r.left + r.right) / 2 - sec.left, cy = (r.top + r.bottom) / 2 - sec.top;
-          const w = el.offsetWidth, h = el.offsetHeight;
-          const hw = (w * COS + h * SIN) / 2 + STAMP_PAD, hh = (w * SIN + h * COS) / 2 + STAMP_PAD;
-          return { l: cx - hw, r: cx + hw, t: cy - hh, b: cy + hh };
-        });
-        // keep to the neighbourhood of the first two stamps (from the first line
-        // of text, or a row above the first stamp if lower, to a row below the
-        // second stamp), never above or below the text
-        const nearTop = stamps.length ? Math.floor((stamps[0].t - CELL) / CELL) * CELL : null;
-        if (stamps.length > 1) yMax = Math.min(yMax, Math.floor((stamps[1].b + CELL - H) / CELL) * CELL);
-        const clash = (p, q) => Math.abs(p.x - q.x) < W && Math.abs(p.y - q.y) < H;
-        function pick(yMin) {
-          const free = [];
-          for (let y = yMin; y <= yMax; y += CELL)
-            for (let x = xMin; x <= xMax; x += CELL)
-              if (!stamps.some((s) => s.r > x && s.l < x + W && s.b > y && s.t < y + H)) free.push({ x, y });
-          // farthest-point picking: start at the top, then keep adding the free
-          // spot furthest from everything chosen so far that doesn't touch one
-          // (sideways distance counts a little less, so they spread down too)
-          const chosen = [];
-          if (free.length) chosen.push(free.reduce((a, c) => (c.y < a.y || (c.y === a.y && c.x > a.x) ? c : a)));
-          while (chosen.length < tiles.length) {
-            let best = null, bestD = -1;
-            free.forEach((c) => {
-              if (chosen.some((o) => clash(c, o))) return;
-              const d = Math.min(...chosen.map((o) => Math.hypot((c.x - o.x) * 0.8, c.y - o.y)));
-              if (d > bestD) { bestD = d; best = c; }
-            });
-            if (!best) break;
-            chosen.push(best);
-          }
-          return chosen;
-        }
-        // beside the bio first; only if five don't fit, use the grid above it too
-        const bioTop = Math.ceil((b.top - sec.top) / CELL) * CELL;
-        let chosen = pick(nearTop === null ? bioTop : Math.max(bioTop, nearTop));
-        if (chosen.length < tiles.length) chosen = pick(CELL);
-        chosen.sort((p, q) => p.y - q.y || p.x - q.x);
-        tiles.forEach((tile, i) => {
-          const spot = chosen[i];
-          tile.style.visibility = spot ? 'visible' : 'hidden';
-          if (!spot) return;
-          tile.style.left = spot.x + 'px';
-          tile.style.top = spot.y + 'px';
-          tile.style.width = W + 'px';
+      const GAP = 20, EDGE = 12, LINE_GAP = 10;
+      const NUDGE = [6, -4, 5, -5, 4];   // so the rows don't look ruled
+      let hideTimer;
+      function placeRows(sec, first, last) {
+        [[tiles.slice(0, 3), first], [tiles.slice(3), last]].forEach(([row, line], r) => {
+          const width = row.reduce((sum, t) => sum + t.offsetWidth + GAP, -GAP);
+          let x = Math.max(EDGE, Math.min((line.left + line.right - width) / 2, sec.width - width - EDGE));
+          row.forEach((t, i) => {
+            const nudge = NUDGE[r * 3 + i];
+            t.style.left = x + 'px';
+            t.style.top = (r === 0 ? first.top - t.offsetHeight - LINE_GAP + nudge - 6 : last.bottom + LINE_GAP + nudge + 6) + 'px';
+            x += t.offsetWidth + GAP;
+          });
         });
       }
-      // re-run once things settle after a resize (the bio re-reserves its height)
-      let settle;
-      const later = () => { clearTimeout(settle); settle = setTimeout(layout, 120); };
-      window.addEventListener('resize', later);
-      window.addEventListener('load', layout);
-      if (window.ResizeObserver) new ResizeObserver(later).observe(bio);
-      layout();
-      // fade in, one after another, once the industries have typed out
-      document.addEventListener('bio-cue', (e) => {
-        if (wrap.classList.contains('is-shown') || (e.detail !== 'logos' && e.detail !== 'done')) return;
-        tiles.forEach((t, i) => { t.style.transitionDelay = (i * 0.12) + 's'; });
+      function placeRing(sec, first, last) {
+        const [icici, csb, dish, reliance, hcl] = tiles;
+        const put = (t, x, y) => {
+          x = Math.max(EDGE, Math.min(x, sec.width - t.offsetWidth - EDGE));
+          t.style.left = x + 'px';
+          t.style.top = y + 'px';
+          return x + t.offsetWidth;
+        };
+        const above = (t) => first.top - t.offsetHeight - LINE_GAP;
+        const beside = (t, line) => (line.top + line.bottom - t.offsetHeight) / 2;
+        // above: over the two ends of the first line
+        const iciciRight = put(icici, first.left - LINE_GAP, above(icici) + NUDGE[0]);
+        put(csb, Math.max(first.right + LINE_GAP - csb.offsetWidth, iciciRight + GAP), above(csb) + NUDGE[1]);
+        // right: past the word that follows the last chip
+        const wordGap = parseFloat(getComputedStyle(chips[0]).fontSize) * 2.2;
+        put(dish, first.right + wordGap, beside(dish, first));
+        // left of the last line, or under it if there's no margin for it
+        const leftX = last.left - reliance.offsetWidth - LINE_GAP;
+        const leftFits = leftX >= EDGE;
+        const belowLast = last.bottom + LINE_GAP;
+        const relianceRight = leftFits
+          ? put(reliance, leftX, beside(reliance, last))
+          : put(reliance, last.left, belowLast);
+        // below: under the first line if the last line isn't in the way
+        const wrapped = last.top > first.top;
+        const clear = wrapped && last.right + GAP < first.left;
+        const hclY = (clear ? first.bottom + LINE_GAP : belowLast) + NUDGE[4];
+        const hclX = (first.left + first.right - hcl.offsetWidth) / 2;
+        put(hcl, !clear && !leftFits ? Math.max(hclX, relianceRight + GAP) : hclX, hclY);
+      }
+      function place() {
+        const sec = section.getBoundingClientRect();
+        const rects = chips.flatMap((c) => Array.from(c.getClientRects())).filter((r) => r.width);
+        const top = Math.min(...rects.map((r) => r.top));
+        const bottom = Math.max(...rects.map((r) => r.bottom));
+        // the chips can wrap: measure their first and last lines
+        const lineBox = (line) => ({
+          left: Math.min(...line.map((r) => r.left)) - sec.left,
+          right: Math.max(...line.map((r) => r.right)) - sec.left,
+          top: Math.min(...line.map((r) => r.top)) - sec.top,
+          bottom: Math.max(...line.map((r) => r.bottom)) - sec.top,
+        });
+        const first = lineBox(rects.filter((r) => r.top < top + 4));
+        const last = lineBox(rects.filter((r) => r.bottom > bottom - 4));
+        (matchMedia('(min-width: 768px)').matches ? placeRing : placeRows)(sec, first, last);
+      }
+      function show(chip) {
+        // chips are still hoverable before the typewriter has reached them
+        if (chip.style.opacity === '0') return;
+        clearTimeout(hideTimer);
+        if (wrap.classList.contains('is-shown')) return;
+        place();
         wrap.classList.add('is-shown');
+      }
+      const hide = () => wrap.classList.remove('is-shown');
+      chips.forEach((chip) => {
+        chip.addEventListener('mouseenter', () => show(chip));
+        // short delay so moving between chips doesn't flicker
+        chip.addEventListener('mouseleave', () => { hideTimer = setTimeout(hide, 120); });
+        chip.addEventListener('click', () => show(chip));
       });
+      // touch screens have no mouseleave: a tap anywhere else closes them
+      document.addEventListener('pointerdown', (e) => {
+        if (!e.target.closest('.industry-chip')) hide();
+      });
+      window.addEventListener('resize', hide);
     })();
 
     // Hero "Get to know me" button -> the intro (about me)

@@ -222,6 +222,7 @@
     .cs-body { display: grid; grid-template-columns: 220px 1fr; gap: 24px; }
     .cs-body > .col { grid-column: 2; min-width: 0; }
     .cs-head h2.h2-two { max-width: none; }
+    @media (min-width:700px){ .cs-head h2.h2-one { white-space: nowrap; } }
     .prose { max-width: 62ch; }
     .prose.wide-prose { max-width: 84ch; }
     .prose p { margin: 0 0 1.1em; }
@@ -519,7 +520,7 @@
     .folder .tab .t-short { display: none; }
     .folder .tab .t-num { opacity: 0.55; }
     .folder.dark { --f: #1A1A1A; color: var(--paper); }
-    .folder.ai .tab::before { content: "✦"; color: var(--gold); }
+    /* removed:     .folder.ai .tab::before { content: "✦"; color: var(--gold); } */
     .chapter {
       display: grid; grid-template-columns: 1fr 1.2fr; gap: clamp(28px, 5vw, 72px); align-items: center;
       padding: clamp(40px, 6vw, 72px) 0; border-top: 1px solid var(--rule); scroll-margin-top: 70px;
@@ -752,12 +753,19 @@
     .ch-tab { flex: none; display: inline-flex; align-items: center; gap: 8px; padding: 11px 18px 10px; border: 0; border-radius: 10px 10px 0 0; cursor: pointer;
       background: #E8E3DA; color: var(--ink-3); font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; transition: background 0.2s, color 0.2s; }
     .ch-tab .n { opacity: 0.6; }
-    .ch-tab[data-ai]::after { content: "✦"; color: var(--gold); }
+    /* removed:     .ch-tab[data-ai]::after { content: "✦"; color: var(--gold); } */
     .ch-tab:hover { color: var(--ink); background: #EFEBE4; }
     .ch-tab.on { background: #FBFAF7; color: var(--ink); font-weight: 500; }
     .ch-tab:focus-visible { outline: 2px solid var(--gold); outline-offset: -2px; }
     .ch-panel { position: relative; background: #FBFAF7; border-radius: var(--r-card); padding: clamp(28px, 4vw, 56px); box-shadow: 0 1px 0 var(--rule), 0 40px 70px -50px rgba(40, 30, 10, 0.45); }
     .ch-panel .chapter { border-top: 0; padding: 0; }
+    /* Same panel height across chapters, matched to Closet. Homepages is a long stacked layout and stays as it is. */
+    @media (min-width: 961px) {
+      #ch-panel .ch-pane:not(#ch-home) { min-height: 487px; }
+      #ch-panel .sheet { height: 487px; aspect-ratio: auto; }
+      #ch-panel .masonry, #ch-panel .bag-scene { height: 487px; }
+      #ch-panel .dash-btn { width: 221px; }
+    }
     .ch-pane[hidden] { display: none !important; }
     .ch-pane.on { animation: chIn 0.4s ease both; }
     @keyframes chIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
@@ -859,9 +867,24 @@
     /* shading that sweeps across the leaf while it turns */
     .leaf-shade { position: absolute; inset: 0; opacity: 0; pointer-events: none; background: linear-gradient(90deg, rgba(40, 30, 10, 0.28), rgba(40, 30, 10, 0.04) 55%, transparent); }
     .leaf-face.back .leaf-shade { background: linear-gradient(270deg, rgba(40, 30, 10, 0.28), rgba(40, 30, 10, 0.04) 55%, transparent); }
-    /* Iconography spread (placeholders) */
+    /* Iconography spread */
     .icon-spread { flex: 1; display: grid; grid-template-columns: 1fr 1fr; column-gap: 96px; padding: 8px 18px 40px; }
-    .icon-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 14px; margin: 6px 0 16px; }
+    .icon-grid { display: grid; grid-template-columns: repeat(8, 1fr); gap: 6px; margin: 4px 0 12px; }
+    .icon-grid .ic { margin: 0; display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 9px 2px 7px; border: 1px solid var(--rule); background: #fff; }
+    .icon-grid .ic img, .ic-tabbar img, .ic-ai img { display: block; }
+    .icon-grid figcaption { font-size: 9px; color: var(--ink-3); text-align: center; line-height: 1.2; }
+    .ic-tabbar { display: flex; justify-content: space-around; padding: 12px 6px 10px; border: 1px solid var(--rule); background: #fff; margin: 6px 0 20px; }
+    .ic-tabbar div { display: flex; flex-direction: column; align-items: center; gap: 5px; font-size: 10px; color: var(--ink-3); opacity: .55; }
+    .ic-tabbar div.on { opacity: 1; color: var(--ink); font-weight: 500; }
+    .ic-ai { display: flex; gap: 16px; align-items: center; margin: 6px 0 20px; }
+    .ic-ai p { margin: 0; font-size: 13px; color: var(--ink-2); line-height: 1.5; }
+    .ic-comps { display: flex; flex-direction: column; gap: 14px; margin-top: 4px; }
+    .ic-comps img { display: block; width: 100%; height: auto; }
+    .icc-navs { display: flex; flex-direction: column; gap: 8px; }
+    .icc-navs img { box-shadow: 0 1px 0 var(--rule), 0 0 0 1px var(--rule); }
+    .icc-grid { display: grid; grid-template-columns: 1.5fr 0.8fr 0.8fr; gap: 12px; align-items: start; }
+    .icc-col { display: flex; flex-direction: column; gap: 12px; }
+    .icc-col img.icc-nudge { width: auto; max-width: 100%; height: 18px; align-self: flex-start; }
     .ic-ph { display: block; aspect-ratio: 1; border: 1px dashed #BDB5A8; border-radius: 6px; background: repeating-linear-gradient(135deg, transparent 0 6px, rgba(17,17,17,0.04) 6px 7px), #F4F0E8; }
     .ic-sizes { display: flex; align-items: flex-end; gap: 28px; margin: 6px 0 20px; }
     .ic-sizes > div { display: flex; flex-direction: column; align-items: center; gap: 8px; }
@@ -873,17 +896,32 @@
     .eng div { border-top: 1px solid var(--ink); padding-top: 14px; font-size: 15px; }
     .eng .mono { color: var(--gold); display: block; margin-bottom: 8px; }
 
+    /* Stylist features: list on the left, one slide on the right that follows the hovered feature */
+    .sf { display: grid; grid-template-columns: minmax(0, 1fr) clamp(240px, 22vw, 290px); gap: clamp(32px, 5vw, 72px); align-items: start; }
+    .sf-main { min-width: 0; }
+    .sf-main .cs-body { grid-template-columns: 1fr; }
+    .sf-main .cs-body > .col { grid-column: 1; }
+    .sf-list { list-style: none; margin: clamp(28px, 4vw, 44px) 0 0; padding: 0; columns: 2; column-gap: clamp(20px, 3vw, 40px); }
+    .sf-list li { break-inside: avoid; }
+    .sf-group { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-3); padding: 18px 0 8px; border-bottom: 1px solid var(--rule); }
+    .sf-list li:first-child.sf-group { padding-top: 0; }
+    @media (min-width: 861px) { .sf-col2 { break-before: column; padding-top: 0; } }
+    .sf-item { display: grid; grid-template-columns: 26px 1fr; column-gap: 8px; width: 100%; text-align: left; padding: 10px 0; border: 0; border-bottom: 1px solid var(--rule); background: none; cursor: pointer; font: inherit; color: var(--ink-3); transition: color 0.2s ease; }
+    .sf-n { font-size: 10px; padding-top: 4px; }
+    .sf-t { font-size: 15px; font-weight: 500; color: var(--ink-2); }
+    .sf-item.is-on, .sf-item:hover { color: var(--ink-2); }
+    .sf-item.is-on .sf-t, .sf-item:hover .sf-t { color: var(--ink); }
+    .sf-item.is-on .sf-n { color: var(--gold); }
+    .sf-item:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+    .sf-view { position: sticky; top: 90px; padding: 0; border: 0; background: none; cursor: zoom-in; }
+    .sf-view img { display: block; width: 100%; height: auto; border-radius: 12px; box-shadow: 0 24px 40px -24px rgba(20, 15, 5, 0.55); transition: opacity 0.18s ease; }
+    .sf-view img.is-swapping { opacity: 0; }
+    @media (max-width: 860px) {
+      .sf { grid-template-columns: 1fr; }
+      .sf-list { columns: 1; }
+      .sf-view { position: static; order: -1; width: min(260px, 70%); justify-self: center; }
+    }
     /* ---------- Go-to-market: stylist deck, grouped and scrolling sideways ---------- */
-    .deck-strip { display: flex; gap: clamp(20px, 3vw, 36px); overflow-x: auto; scroll-snap-type: x proximity; padding: 8px 2px 24px; margin-top: clamp(28px, 4vw, 44px);
-      scrollbar-width: thin; -webkit-mask-image: linear-gradient(90deg, #000 92%, transparent); mask-image: linear-gradient(90deg, #000 92%, transparent); }
-    .deck-group { flex: none; display: flex; flex-direction: column; gap: 12px; }
-    .deck-label { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-3); padding-bottom: 8px; border-bottom: 1px solid var(--rule); }
-    .deck-row { display: flex; gap: 12px; }
-    .deck-slide { flex: none; width: clamp(150px, 15vw, 200px); padding: 0; border: 0; background: none; cursor: zoom-in; scroll-snap-align: start; border-radius: 12px; transition: transform 0.25s ease; }
-    .deck-slide img { display: block; width: 100%; height: auto; border-radius: 12px; box-shadow: 0 18px 30px -20px rgba(20, 15, 5, 0.55); }
-    .deck-slide:hover { transform: translateY(-4px); }
-    .deck-slide:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
-    .deck-hint { margin-top: 4px; }
 
     /* ---------- Outcomes ---------- */
     .outcomes { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--rule); border: 1px solid var(--rule); }
@@ -974,6 +1012,7 @@
       .book-spread { visibility: visible; }
       .book-spread + .book-spread { margin-top: 28px; }
       .icon-spread { grid-template-columns: 1fr; padding: 0; }
+      .icon-grid { grid-template-columns: repeat(4, 1fr); }
       .page-corner { display: none; }
       .page-c::after { display: none; }
       .page.left, .page.right { background: #FDFCFA; }
@@ -1123,7 +1162,7 @@
               <div class="stat"><div class="n">200<small>+</small></div><div class="l">components brought into one shared system</div></div>
               <div class="stat"><div class="n">3</div><div class="l">platforms: iOS, web, and CRM</div></div>
               <div class="stat"><div class="n">↑</div><div class="l">organic search traffic and orders after the design overhaul</div></div>
-              <div class="stat pending"><div class="n">↓</div><div class="l">drop-off <span class="tbd">validated metric</span></div></div>
+              <div class="stat pending"><div class="n">↓</div><div class="l">drop-off</div></div>
             </div>
           </div>
         </div>
@@ -1314,7 +1353,7 @@
       <div class="wrap">
         <div class="cs-head reveal">
           <div class="cs-num mono">System</div>
-          <h2>Quiet by design. <em>Built to scale.</em></h2>
+          <h2>Quiet by design. <em style="white-space:nowrap">Built to scale.</em></h2>
         </div>
 
         <div class="book reveal" id="ds-book">
@@ -1369,11 +1408,28 @@
                 <div><b>All</b><span>shared ownership, internal visual check before push</span></div>
               </div>
               <p class="cap type-note"><span class="mono">Type</span> App styles at actual size, headings in the order they appear on a page. On web the same roles scale up: Display 48, Banner title 40, Page title 80, Section heading 24.</p>
-              <button class="page-corner pc-next" type="button" aria-label="Turn the page to see the signature components"><span class="mono">Components</span></button>
+              <button class="page-corner pc-next" type="button" aria-label="Turn the page to see the icons"><span class="mono">Icons</span></button>
             </div>
           </div>
           </div>
           <div class="book-spread s2" data-i="1">
+            <div class="page-c icons-c">
+              <div class="ds-label mono">Iconography</div>
+              <div class="icon-spread">
+                <div class="icon-page">
+                  <div class="sw-group mono">System · 24 px, 1 px stroke</div><div class="icon-grid"><figure class="ic"><img src="img/Vetir/Icons/Home.png" alt="" width="24" height="24" loading="lazy"><figcaption>Home</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Search.png" alt="" width="24" height="24" loading="lazy"><figcaption>Search</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Image-search.png" alt="" width="24" height="24" loading="lazy"><figcaption>Image search</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Camera.png" alt="" width="24" height="24" loading="lazy"><figcaption>Camera</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Add-photo.png" alt="" width="24" height="24" loading="lazy"><figcaption>Add photo</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Listening.png" alt="" width="24" height="24" loading="lazy"><figcaption>Voice</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Chat.png" alt="" width="24" height="24" loading="lazy"><figcaption>Chat</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Send.png" alt="" width="24" height="24" loading="lazy"><figcaption>Send</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Email.png" alt="" width="24" height="24" loading="lazy"><figcaption>Email</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Notification.png" alt="" width="24" height="24" loading="lazy"><figcaption>Notifications</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Pin.png" alt="" width="24" height="24" loading="lazy"><figcaption>Pin</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Play.png" alt="" width="24" height="24" loading="lazy"><figcaption>Play</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Tutorial.png" alt="" width="24" height="24" loading="lazy"><figcaption>Tutorial</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Gridlayout2.png" alt="" width="24" height="24" loading="lazy"><figcaption>Grid view</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Select.png" alt="" width="24" height="24" loading="lazy"><figcaption>Select</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/More.png" alt="" width="24" height="24" loading="lazy"><figcaption>More</figcaption></figure></div><div class="sw-group mono">Styling & AI</div><div class="icon-grid"><figure class="ic"><img src="img/Vetir/Icons/Closet.png" alt="" width="24" height="24" loading="lazy"><figcaption>Closet</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Outfit.png" alt="" width="24" height="24" loading="lazy"><figcaption>Outfit</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Outfit-men.png" alt="" width="24" height="24" loading="lazy"><figcaption>Menswear</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Tryon.png" alt="" width="24" height="24" loading="lazy"><figcaption>Try-on</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Avatar-ai.png" alt="" width="24" height="24" loading="lazy"><figcaption>AI stylist</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/sparkle.png" alt="" width="24" height="24" loading="lazy"><figcaption>AI stylist</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Wand.png" alt="" width="24" height="24" loading="lazy"><figcaption>Magic edit</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/PackingList.png" alt="" width="24" height="24" loading="lazy"><figcaption>Packing list</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Shop.png" alt="" width="24" height="24" loading="lazy"><figcaption>Shop</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Pricetag.png" alt="" width="24" height="24" loading="lazy"><figcaption>Price tag</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Calendar.png" alt="" width="24" height="24" loading="lazy"><figcaption>Calendar</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Trend-graph.png" alt="" width="24" height="24" loading="lazy"><figcaption>Trends</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Analytics.png" alt="" width="24" height="24" loading="lazy"><figcaption>Analytics</figcaption></figure></div><div class="sw-group mono">Orders & business</div><div class="icon-grid"><figure class="ic"><img src="img/Vetir/Icons/Shipped.png" alt="" width="24" height="24" loading="lazy"><figcaption>Shipped</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Returned.png" alt="" width="24" height="24" loading="lazy"><figcaption>Returned</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Cancelled.png" alt="" width="24" height="24" loading="lazy"><figcaption>Cancelled</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Credit%20Card.png" alt="" width="24" height="24" loading="lazy"><figcaption>Card</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Coin.png" alt="" width="24" height="24" loading="lazy"><figcaption>Earnings</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Invoice.png" alt="" width="24" height="24" loading="lazy"><figcaption>Invoice</figcaption></figure></div><div class="sw-group mono">Weather · for daily outfit suggestions</div><div class="icon-grid"><figure class="ic"><img src="img/Vetir/Icons/Sun.png" alt="" width="24" height="24" loading="lazy"><figcaption>Sunny</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Partially%20Cloudy.png" alt="" width="24" height="24" loading="lazy"><figcaption>Partly cloudy</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Rain.png" alt="" width="24" height="24" loading="lazy"><figcaption>Rain</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Windy.png" alt="" width="24" height="24" loading="lazy"><figcaption>Windy</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Snowflake.png" alt="" width="24" height="24" loading="lazy"><figcaption>Snow</figcaption></figure></div>
+                </div>
+                <div class="icon-page">
+                  <div class="sw-group mono">Sizes</div>
+                  <div class="ic-sizes"><div><img src="img/Vetir/Icons/Sizes/Closet-2.png" alt="" style="width:16px;height:16px"><span class="mono">16</span></div><div><img src="img/Vetir/Icons/Sizes/Closet-1.png" alt="" style="width:20px;height:20px"><span class="mono">20</span></div><div><img src="img/Vetir/Icons/Sizes/Closet.png" alt="" style="width:24px;height:24px"><span class="mono">24</span></div><div><img src="img/Vetir/Icons/Sizes/Closet-32.png" alt="" style="width:32px;height:32px"><span class="mono">32</span></div></div>
+                  <div class="ic-comps"><div class="icc-navs"><img class="icc " src="img/Vetir/Icons/iconcomp/web/nav-home.png" width="766" height="128" alt="Bottom navigation, Home active" loading="lazy"></div><div class="icc-grid"><div class="icc-col"><img class="icc " src="img/Vetir/Icons/iconcomp/web/order-status.png" width="758" height="660" alt="Order status list with status icons" loading="lazy"><img class="icc icc-card" src="img/Vetir/Icons/iconcomp/web/card-row.png" width="686" height="123" alt="Saved card row" loading="lazy"></div><div class="icc-col"><img class="icc " src="img/Vetir/Icons/iconcomp/web/outfit-menu.png" width="354" height="664" alt="Outfit actions menu" loading="lazy"></div><div class="icc-col"><img class="icc " src="img/Vetir/Icons/iconcomp/web/add-item.png" width="298" height="446" alt="Add item menu" loading="lazy"><img class="icc icc-avatar" src="img/Vetir/Icons/iconcomp/web/avatar.png" width="253" height="162" alt="Creating your avatar loader" loading="lazy"></div></div></div>
+                </div>
+              </div>
+              <button class="page-corner pc-prev" type="button" aria-label="Turn back to type and colour"><span class="mono">Type &amp; colour</span></button>
+              <button class="page-corner pc-next" type="button" aria-label="Turn the page to see the signature components"><span class="mono">Components</span></button>
+            </div>
+          </div>
+          <div class="book-spread s3" data-i="2">
             <div class="page-c">
               <div class="ds-label mono">Signature components</div>
               <div class="ds-collage">
@@ -1395,29 +1451,7 @@
                 <figure class="ds-piece" tabindex="0" style="--x:76.36%; --y:45.63%; --w:18.18%; --mw:241px; --z:2"><img src="img/Vetir/New%20Work/DesignSys/ProductCard5.png" alt="Collection banner: Paris Vacation '26 with a flat lay of the looks" width="344" height="120"><figcaption class="mono">Collection banner</figcaption></figure>
                 <figure class="ds-piece" tabindex="0" style="--x:76.36%; --y:82.60%; --w:20.00%; --mw:240px; --z:2"><img src="img/Vetir/New%20Work/DesignSys/ProductCard2.png" alt="Cart item: pink satin pumps with size, size chart, price and quantity stepper" width="343" height="130" loading="lazy"><figcaption class="mono">Cart item · full price</figcaption></figure>
               </div>
-              <button class="page-corner pc-prev" type="button" aria-label="Turn back to type and colour"><span class="mono">Type &amp; colour</span></button>
-              <button class="page-corner pc-next" type="button" aria-label="Turn the page to see the icons"><span class="mono">Icons</span></button>
-            </div>
-          </div>
-          <div class="book-spread s3" data-i="2">
-            <div class="page-c icons-c">
-              <div class="ds-label mono">Iconography</div>
-              <div class="icon-spread">
-                <div class="icon-page">
-                  <div class="sw-group mono">System icons · 24 px, 1 px stroke</div>
-                  <div class="icon-grid"><i class="ic-ph"></i><i class="ic-ph"></i><i class="ic-ph"></i><i class="ic-ph"></i><i class="ic-ph"></i><i class="ic-ph"></i><i class="ic-ph"></i><i class="ic-ph"></i><i class="ic-ph"></i><i class="ic-ph"></i><i class="ic-ph"></i><i class="ic-ph"></i><i class="ic-ph"></i><i class="ic-ph"></i><i class="ic-ph"></i><i class="ic-ph"></i><i class="ic-ph"></i><i class="ic-ph"></i><i class="ic-ph"></i><i class="ic-ph"></i><i class="ic-ph"></i><i class="ic-ph"></i><i class="ic-ph"></i><i class="ic-ph"></i></div>
-                  <p class="cap">Placeholder grid: drop in the line icon set (home, chat, closet, outfits, search, camera, mic, bag, heart…).</p>
-                </div>
-                <div class="icon-page">
-                  <div class="sw-group mono">Sizes</div>
-                  <div class="ic-sizes"><div><i class="ic-ph" style="width:16px"></i><span class="mono">16</span></div><div><i class="ic-ph" style="width:20px"></i><span class="mono">20</span></div><div><i class="ic-ph" style="width:24px"></i><span class="mono">24</span></div><div><i class="ic-ph" style="width:32px"></i><span class="mono">32</span></div></div>
-                  <div class="sw-group mono">Navigation</div>
-                  <figure class="ph ic-wide" style="aspect-ratio: 16 / 3.2"><svg><use href="#i-img"/></svg><div class="ph-tag">Tab bar</div><div class="ph-desc">Home · Chat · AI Stylist · Closet · Outfits</div></figure>
-                  <div class="sw-group mono">AI treatment</div>
-                  <figure class="ph ic-wide" style="aspect-ratio: 16 / 4.4"><svg><use href="#i-img"/></svg><div class="ph-tag">Gold sparkle</div><div class="ph-desc">AI icon variants + default vs active states</div></figure>
-                </div>
-              </div>
-              <button class="page-corner pc-prev" type="button" aria-label="Turn back to the components"><span class="mono">Components</span></button>
+              <button class="page-corner pc-prev" type="button" aria-label="Turn back to the icons"><span class="mono">Icons</span></button>
             </div>
           </div>
         </div>
@@ -1429,7 +1463,7 @@
       <div class="wrap">
         <div class="cs-head reveal">
           <div class="cs-num mono">Chapters</div>
-          <h2>Six modules. <em>One product.</em></h2>
+          <h2 class="h2-two h2-one">Six modules. <em>One product.</em></h2>
         </div>
 
         <div class="ch-tabs reveal" role="tablist" aria-label="Chapters">
@@ -1443,8 +1477,8 @@
         <div class="ch-panel" id="ch-panel">
           <article class="ch-pane on chapter" id="ch-outfit" role="tabpanel" aria-labelledby="tab-ch-outfit">
           <div class="ch-text">
-            <span class="mono">Chapter 01 · <span style="color:var(--gold)">✦ AI</span></span>
-            <h3>Curated Looks <em>+ AI Styling</em></h3>
+            <span class="mono">Chapter 01</span>
+            <h3>Curated Looks<br><em>+ AI Styling</em></h3>
             <div class="ba">
               <span class="mono">Before</span><span>A static canvas, one undifferentiated product list, and AI help in a separate chat.</span>
               <span class="mono">After</span><span class="after">The AI Stylist lives inside the canvas. Ask for ideas while you build.</span>
@@ -1492,7 +1526,6 @@
               <span class="mono">Before</span><span>Type a query, get a wall of products. It felt like search.</span>
               <span class="mono">After</span><span class="after">Styled outfits in the chat, and try-ons at the moment of purchase: see it on you, see what pairs with it.</span>
             </div>
-            <p class="cap"><span class="tbd">later: query types itself, grid scrolls, then resolves into one styled look</span></p>
           </div>
           <div class="masonry" aria-label="Search grid with a stylist reply on top">
             <span class="masonry-tag mono">Before: a wall of results</span>
@@ -1634,35 +1667,18 @@
           <div class="cs-num mono">For stylists</div>
           <h2 class="h2-two">The Stylists’ Studio</h2>
         </div>
-        <div class="cs-body reveal">
+        <div class="sf reveal">
+          <div class="sf-main">
+            <div class="cs-body">
           <div class="col prose">
-            <p>Stylists were Vêtir's growth engine: each one brought their own clients. So the product grew a toolkit around a stylist's working day: commissions on every client purchase, digitized client closets, AI-assisted styling, live chat, a look calendar, invoicing and a performance dashboard.</p>
+            <p>Stylists were Vêtir's growth engine: each one brought their own clients. So the product grew a toolkit around a stylist's working day: commissions on every client purchase, digitized client closets, AI-assisted styling, a look calendar, invoicing and a performance dashboard.</p>
             <p>Together, they made Vêtir a place where a stylist could run their whole business.</p>
           </div>
         </div>
-        <div class="deck-strip reveal" aria-label="Stylist features">
-            <div class="deck-group"><span class="deck-label mono">Earn</span><div class="deck-row">
-              <button class="deck-slide" type="button" data-title="Earn with every client purchase"><img src="img/Vetir/New%20Work/StylistDeck/slide-01.webp" alt="Stylist feature: Earn with every client purchase" width="600" height="1299" loading="lazy"></button>
-              <button class="deck-slide" type="button" data-title="Recommend and earn commissions"><img src="img/Vetir/New%20Work/StylistDeck/slide-03.webp" alt="Stylist feature: Recommend and earn commissions" width="600" height="1299" loading="lazy"></button>
-              <button class="deck-slide" type="button" data-title="Social sharing. Earn revenue."><img src="img/Vetir/New%20Work/StylistDeck/slide-11.webp" alt="Stylist feature: Social sharing. Earn revenue." width="600" height="1299" loading="lazy"></button>
-              <button class="deck-slide" type="button" data-title="Top commission rates in the industry"><img src="img/Vetir/New%20Work/StylistDeck/slide-12.webp" alt="Stylist feature: Top commission rates in the industry" width="600" height="1299" loading="lazy"></button>
-            </div></div>
-            <div class="deck-group"><span class="deck-label mono">Run the business</span><div class="deck-row">
-              <button class="deck-slide" type="button" data-title="Digitize your clients' closets"><img src="img/Vetir/New%20Work/StylistDeck/slide-02.webp" alt="Stylist feature: Digitize your clients' closets" width="600" height="1299" loading="lazy"></button>
-              <button class="deck-slide" type="button" data-title="Style faster with AI"><img src="img/Vetir/New%20Work/StylistDeck/slide-04.webp" alt="Stylist feature: Style faster with AI" width="600" height="1299" loading="lazy"></button>
-              <button class="deck-slide" type="button" data-title="Live chat enabled"><img src="img/Vetir/New%20Work/StylistDeck/slide-05.webp" alt="Stylist feature: Live chat enabled" width="600" height="1299" loading="lazy"></button>
-              <button class="deck-slide" type="button" data-title="Calendarize client looks"><img src="img/Vetir/New%20Work/StylistDeck/slide-06.webp" alt="Stylist feature: Calendarize client looks" width="600" height="1299" loading="lazy"></button>
-              <button class="deck-slide" type="button" data-title="Your day, at a glance"><img src="img/Vetir/New%20Work/StylistDeck/slide-09.webp" alt="Stylist feature: Your day, at a glance" width="600" height="1299" loading="lazy"></button>
-              <button class="deck-slide" type="button" data-title="Manage client invoices in one place"><img src="img/Vetir/New%20Work/StylistDeck/slide-10.webp" alt="Stylist feature: Manage client invoices in one place" width="600" height="1299" loading="lazy"></button>
-              <button class="deck-slide" type="button" data-title="See it. Snap it. Own it."><img src="img/Vetir/New%20Work/StylistDeck/slide-13.webp" alt="Stylist feature: See it. Snap it. Own it." width="600" height="1299" loading="lazy"></button>
-            </div></div>
-            <div class="deck-group"><span class="deck-label mono">Grow, with backup</span><div class="deck-row">
-              <button class="deck-slide" type="button" data-title="Your performance dashboard"><img src="img/Vetir/New%20Work/StylistDeck/slide-07.webp" alt="Stylist feature: Your performance dashboard" width="600" height="1299" loading="lazy"></button>
-              <button class="deck-slide" type="button" data-title="Insights to boost sales"><img src="img/Vetir/New%20Work/StylistDeck/slide-08.webp" alt="Stylist feature: Insights to boost sales" width="600" height="1299" loading="lazy"></button>
-              <button class="deck-slide" type="button" data-title="Your dedicated Vêtir support team"><img src="img/Vetir/New%20Work/StylistDeck/slide-14.webp" alt="Stylist feature: Your dedicated Vêtir support team" width="600" height="1299" loading="lazy"></button>
-            </div></div>
+            <ul class="sf-list" aria-label="Stylist features"><li class="sf-group mono">Earn &amp; grow</li><li><button class="sf-item is-on" type="button" data-src="img/Vetir/New%20Work/StylistDeck/slide-03.webp" aria-pressed="true"><span class="sf-n mono">01</span><span class="sf-t">Earn on the pieces you recommend</span></button></li><li><button class="sf-item" type="button" data-src="img/Vetir/New%20Work/StylistDeck/slide-11.webp" aria-pressed="false"><span class="sf-n mono">02</span><span class="sf-t">Earn from looks shared on social</span></button></li><li><button class="sf-item" type="button" data-src="img/Vetir/New%20Work/StylistDeck/slide-07.webp" aria-pressed="false"><span class="sf-n mono">03</span><span class="sf-t">Sales and earnings dashboard</span></button></li><li><button class="sf-item" type="button" data-src="img/Vetir/New%20Work/StylistDeck/slide-08.webp" aria-pressed="false"><span class="sf-n mono">04</span><span class="sf-t">Insights on what to recommend</span></button></li><li><button class="sf-item" type="button" data-src="img/Vetir/New%20Work/StylistDeck/slide-10.webp" aria-pressed="false"><span class="sf-n mono">05</span><span class="sf-t">Client invoices in one place</span></button></li><li class="sf-group sf-col2 mono">Run the business</li><li><button class="sf-item" type="button" data-src="img/Vetir/New%20Work/StylistDeck/slide-02.webp" aria-pressed="false"><span class="sf-n mono">06</span><span class="sf-t">Digitized client closets</span></button></li><li><button class="sf-item" type="button" data-src="img/Vetir/New%20Work/StylistDeck/slide-04.webp" aria-pressed="false"><span class="sf-n mono">07</span><span class="sf-t">Style faster with the AI stylist</span></button></li><li><button class="sf-item" type="button" data-src="img/Vetir/New%20Work/StylistDeck/slide-06.webp" aria-pressed="false"><span class="sf-n mono">08</span><span class="sf-t">Plan client looks on a calendar</span></button></li><li><button class="sf-item" type="button" data-src="img/Vetir/New%20Work/StylistDeck/slide-09.webp" aria-pressed="false"><span class="sf-n mono">09</span><span class="sf-t">Daily to-dos and follow-up nudges</span></button></li><li><button class="sf-item" type="button" data-src="img/Vetir/New%20Work/StylistDeck/slide-13.webp" aria-pressed="false"><span class="sf-n mono">10</span><span class="sf-t">Snap a piece, find it to buy</span></button></li></ul>
+          </div>
+          <button class="sf-view" type="button" aria-label="Enlarge this slide"><img src="img/Vetir/New%20Work/StylistDeck/slide-03.webp" alt="Stylist feature: Earn on the pieces you recommend" width="600" height="1299"></button>
         </div>
-        <p class="cap mono deck-hint">Scroll sideways · click a slide to enlarge</p>
       </div>
     </section>
 
@@ -1682,8 +1698,8 @@
         <div class="outcomes reveal">
           <div class="oc"><div class="n">13×</div><p><b>Stylists on the platform</b> (~14 → 190), as it became something stylists could run their business on.</p></div>
           <div class="oc"><div class="n">↑ <small>organic</small></div><p><b>More search traffic and orders</b> after the type and hierarchy overhaul.</p></div>
-          <div class="oc"><div class="n">–40% <small>drop-off</small></div><p><b>Lower drop-off, higher engagement.</b> More active users, longer sessions. <span class="tbd">placeholder, confirm once analytics are reconciled</span></p></div>
-          <div class="oc"><div class="n">≈0</div><p><b>Complaints about confusing UI.</b> Also faster design-to-build and fewer QA issues.</p></div>
+          <div class="oc"><div class="n">–40% <small>drop-off</small></div><p><b>Lower drop-off, higher engagement.</b> More active users, longer sessions.</p></div>
+          <div class="oc"><div class="n">12K <small>users</small></div><p><b>7.4M interactions since launch.</b></p></div>
         </div>
 
         <div class="spread fav-spread reveal" hidden>
@@ -2022,15 +2038,27 @@
     })();
 
 
-    // Stylist deck: click a slide to open it in the lightbox
-    document.querySelectorAll('.deck-slide').forEach(btn => btn.addEventListener('click', () => {
-      const img = btn.querySelector('img');
-      lbImg.src = img.src; lbImg.alt = img.alt;
-      document.getElementById('lb-title').textContent = btn.dataset.title;
-      lb.classList.remove('lb-wide');
-      lb.showModal(); document.documentElement.style.overflow = 'hidden';
-      lb.querySelector('.lb-scroll').scrollTop = 0;
-    }));
+    // Stylist features: hovering, focusing or tapping a feature swaps the slide; clicking the slide opens it in the lightbox
+    (function () {
+      const view = document.querySelector('.sf-view'); if (!view) return;
+      const img = view.querySelector('img'); const items = [...document.querySelectorAll('.sf-item')];
+      items.forEach(it => { const pre = new Image(); pre.src = it.dataset.src; });
+      let t;
+      const show = it => {
+        if (it.classList.contains('is-on')) return;
+        items.forEach(x => { x.classList.toggle('is-on', x === it); x.setAttribute('aria-pressed', String(x === it)); });
+        img.classList.add('is-swapping'); clearTimeout(t);
+        t = setTimeout(() => { img.src = it.dataset.src; img.alt = 'Stylist feature: ' + it.querySelector('.sf-t').textContent; img.classList.remove('is-swapping'); }, 160);
+      };
+      items.forEach(it => { it.addEventListener('mouseenter', () => show(it)); it.addEventListener('focus', () => show(it)); it.addEventListener('click', () => show(it)); });
+      view.addEventListener('click', () => {
+        lbImg.src = img.src; lbImg.alt = img.alt;
+        document.getElementById('lb-title').textContent = document.querySelector('.sf-item.is-on .sf-t').textContent;
+        lb.classList.remove('lb-wide');
+        lb.showModal(); document.documentElement.style.overflow = 'hidden';
+        lb.querySelector('.lb-scroll').scrollTop = 0;
+      });
+    })();
 
 
     // Roadmap: the receipt prints out of the printer as the section scrolls into view
