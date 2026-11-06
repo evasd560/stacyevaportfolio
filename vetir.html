@@ -90,6 +90,9 @@
     .topbar .back:hover { color: var(--gold); }
     .topbar .brand { font-weight: 700; letter-spacing: -0.02em; font-size: 18px; }
     .topbar .brand span { font-weight: 400; color: var(--ink-3); }
+    .topbar .hire { justify-self: end; padding: 7px 14px; border-radius: 999px; background: #fff; color: var(--ink); box-shadow: 0 0 0 1px var(--rule); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; transition: background 0.2s ease; }
+    .topbar .hire:hover { background: var(--ink); color: #fff; }
+    .topbar .hire:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
 
     /* ---------- Placeholder helpers ---------- */
     .tbd {
@@ -222,7 +225,6 @@
     .cs-body { display: grid; grid-template-columns: 220px 1fr; gap: 24px; }
     .cs-body > .col { grid-column: 2; min-width: 0; }
     .cs-head h2.h2-two { max-width: none; }
-    @media (min-width:700px){ .cs-head h2.h2-one { white-space: nowrap; } }
     .prose { max-width: 62ch; }
     .prose.wide-prose { max-width: 84ch; }
     .prose p { margin: 0 0 1.1em; }
@@ -300,7 +302,7 @@
 
     /* ---------- Insights: blurred photo, centred insight carousel, real messages scattered around it ---------- */
     section.cs.learn { position: relative; overflow: hidden; border-top: 0; padding: 0; background: #14110F; color: #F5F2EC; }
-    .learn-bg { position: absolute; inset: -24px; background: url("img/Vetir/learn-bg.png") center / cover no-repeat; filter: blur(5px) saturate(0.9); }
+    .learn-bg { position: absolute; inset: -24px; background: url("img/Vetir/learn-bg.webp") center / cover no-repeat; filter: blur(5px) saturate(0.9); }
     .learn-bg::after { content: ""; position: absolute; inset: 0; background: radial-gradient(ellipse 46% 60% at 50% 50%, rgba(12, 10, 8, 0.72), rgba(12, 10, 8, 0.38) 70%, rgba(12, 10, 8, 0.55)); }
     .learn-stage { position: relative; z-index: 1; max-width: 1400px; margin: 0 auto; min-height: clamp(760px, 96vh, 940px); display: grid; place-items: center; padding: 72px var(--gutter); --bw: clamp(170px, 14.5vw, 220px); }
     .learn-center { position: relative; z-index: 2; width: min(900px, 100%); text-align: center; }
@@ -432,7 +434,7 @@
       mix-blend-mode: multiply;
     }
     .callout { margin-top: 32px; border-left: 2px solid var(--gold); padding: 4px 0 4px 20px; max-width: 62ch; }
-    .callout .mono { color: var(--gold); display: block; margin-bottom: 6px; }
+    .callout .mono { color: #8A6635; display: block; margin-bottom: 6px; }
     .callout p { margin: 0; }
 
     /* ---------- System: magazine spread ---------- */
@@ -788,7 +790,7 @@
     #ch-panel .dash-btn .shot { border: 0; border-radius: 0; background: none; box-shadow: none; }
     /* dashboard sits inside the real phone outline; .shot is the screen opening (frame is 564 × 1139, screen 42–529 × 39–1099) */
     .pframe { position: relative; display: block; aspect-ratio: 564 / 1139; }
-    .pframe::after { content: ""; position: absolute; inset: 0; z-index: 2; pointer-events: none; background: url("img/Vetir/Cutouts/Phone%20mock.png") center / 100% 100% no-repeat; }
+    .pframe::after { content: ""; position: absolute; inset: 0; z-index: 2; pointer-events: none; background: url("img/Vetir/Cutouts/Phone%20mock.webp") center / 100% 100% no-repeat; }
     #ch-panel .dash-btn .pframe .shot, .pframe > .scroll-frame { position: absolute; top: 3.42%; bottom: 3.42%; left: 7.45%; right: 6.03%; aspect-ratio: auto; border-radius: 14% / 6.6%; background: #fff; }
     /* Chapter 04 homepages: same outline; the scroll-frame button becomes the screen */
     .cover .pframe { width: 100%; filter: drop-shadow(0 26px 22px rgba(40, 30, 10, 0.22)); }
@@ -947,7 +949,7 @@
     .fav-spread .left h3 { font-size: clamp(40px, 5.4vw, 72px); font-weight: 500; }
     .fav-spread .left .row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: auto; }
     .fav-spread .left .row .ph { aspect-ratio: 3/4; border-radius: 2px; }
-    .fav-photo { aspect-ratio: 1.01 / 1; background-image: url("img/vetr-postcard.png"); background-size: 215% auto; background-position: 9.7% 54%; background-repeat: no-repeat; }
+    .fav-photo { aspect-ratio: 1.01 / 1; background-image: url("img/Postcard%20mocks/vetr-postcard.webp"); background-size: 215% auto; background-position: 9.7% 54%; background-repeat: no-repeat; }
     .fav-spread .right blockquote { margin: 22px 0 0; font-size: clamp(18px, 2vw, 24px); line-height: 1.15; text-transform: uppercase; letter-spacing: -0.01em; }
     .fav-spread .right .small-q { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 18px; font-size: 13px; color: var(--ink-2); }
 
@@ -1084,6 +1086,7 @@
     <div class="wrap">
       <a class="back mono" href="index.html">← Homepage</a>
       <div class="brand"><span>case studies /</span> vêtir</div>
+      <a class="hire mono" href="mailto:stacydias005@gmail.com?subject=Hiring%20enquiry">Hire me</a>
     </div>
   </header>
 
@@ -1120,7 +1123,7 @@
 
         <div class="stage" aria-label="Vêtir wordmark with model cutouts">
           <h1 class="word">Vêtir</h1>
-          <img class="model back m1" src="img/Vetir/Cutouts/Avatars/Avatar1.png" alt="Avatar in a camel coat with fur collar and brown flares">
+          <img class="model back m1" src="img/Vetir/Cutouts/Avatars/Avatar1.webp" alt="Avatar in a camel coat with fur collar and brown flares">
           <img class="model front m2" src="img/Vetir/Cutouts/Avatars/Avatar2.webp" alt="Avatar in a cardigan and olive mini skirt">
           <img class="model back m3" src="img/Vetir/Cutouts/Avatars/Avatar3.webp" alt="Vêtir avatar">
           <img class="model front m4" src="img/Vetir/Cutouts/Avatars/Avatar4.webp" alt="Vêtir avatar">
@@ -1158,11 +1161,8 @@
             <div class="glance-label mono">At a glance</div>
             <div class="stats glance">
               <div class="stat"><div class="n">190</div><div class="l">stylists on the platform, up from ~14 when I joined</div></div>
-              <div class="stat"><div class="n">6</div><div class="l">core modules redesigned</div></div>
               <div class="stat"><div class="n">200<small>+</small></div><div class="l">components brought into one shared system</div></div>
-              <div class="stat"><div class="n">3</div><div class="l">platforms: iOS, web, and CRM</div></div>
               <div class="stat"><div class="n">↑</div><div class="l">organic search traffic and orders after the design overhaul</div></div>
-              <div class="stat pending"><div class="n">↓</div><div class="l">drop-off</div></div>
             </div>
           </div>
         </div>
@@ -1187,9 +1187,9 @@
         <div class="prints reveal" aria-label="Old screens as scattered prints">
           <button class="print p1 shot-btn" type="button" data-full="img/Vetir/designs_ss/homepage_desktop_before.webp" data-title="Before · Web homepage" aria-label="View the full old web homepage"><span class="shot desktop"><img src="img/Vetir/designs_ss/homepage_desktop_before.webp" alt="Old Vêtir web homepage"></span><span class="label">web / home</span><span class="hover-note n1"><span class="t">no personalization,<br>one page for everyone</span><svg class="arr" viewBox="0 0 90 56" aria-hidden="true"><path d="M84 4 C 70 30, 42 46, 10 46"/><path d="M19 38 L9 46 L20 53"/></svg></span><span class="hover-note n2"><svg class="arr" viewBox="0 0 90 56" aria-hidden="true"><path d="M84 4 C 70 30, 42 46, 10 46"/><path d="M19 38 L9 46 L20 53"/></svg><span class="t">outdated visuals</span></span><span class="hover-note n3"><svg class="arr" viewBox="0 0 90 56" aria-hidden="true"><path d="M84 4 C 70 30, 42 46, 10 46"/><path d="M19 38 L9 46 L20 53"/></svg><span class="t">3 fonts,<br>no hierarchy</span></span></button>
           <button class="print p2 shot-btn" type="button" data-full="img/Vetir/designs_ss/homepage_mobile_before.webp" data-title="Before · App homepage" aria-label="View the full old app homepage"><span class="shot phone"><img src="img/Vetir/designs_ss/homepage_mobile_before.webp" alt="Old Vêtir app homepage"></span><span class="label">ios / home</span><span class="hover-note b1"><span class="t">AI lives… here?</span><svg class="arr" viewBox="0 0 90 56" aria-hidden="true"><path d="M84 4 C 70 30, 42 46, 10 46"/><path d="M19 38 L9 46 L20 53"/></svg></span><span class="hover-note b2"><svg class="arr" viewBox="0 0 90 56" aria-hidden="true"><path d="M84 4 C 70 30, 42 46, 10 46"/><path d="M19 38 L9 46 L20 53"/></svg><span class="t">where do I shop?</span></span><span class="hover-note b3"><svg class="arr" viewBox="0 0 90 56" aria-hidden="true"><path d="M84 4 C 70 30, 42 46, 10 46"/><path d="M19 38 L9 46 L20 53"/></svg><span class="t">I can't find my<br>styled looks</span></span></button>
-          <div class="print p3"><span class="shot phone static"><img src="img/Vetir/designs_ss/Closet_old.png" alt="Old Vêtir closet screen"></span><span class="label">ios / closet</span><span class="hover-note d1"><span class="t">everything in<br>one list</span><svg class="arr" viewBox="0 0 90 56" aria-hidden="true"><path d="M84 4 C 70 30, 42 46, 10 46"/><path d="M19 38 L9 46 L20 53"/></svg></span><span class="hover-note d2"><svg class="arr" viewBox="0 0 90 56" aria-hidden="true"><path d="M84 4 C 70 30, 42 46, 10 46"/><path d="M19 38 L9 46 L20 53"/></svg><span class="t">owned or<br>wishlist?</span></span><span class="hover-note d3"><svg class="arr" viewBox="0 0 90 56" aria-hidden="true"><path d="M84 4 C 70 30, 42 46, 10 46"/><path d="M19 38 L9 46 L20 53"/></svg><span class="t">stylist picks<br>get lost</span></span></div>
+          <div class="print p3"><span class="shot phone static"><img src="img/Vetir/designs_ss/Closet_old.webp" alt="Old Vêtir closet screen"></span><span class="label">ios / closet</span><span class="hover-note d1"><span class="t">everything in<br>one list</span><svg class="arr" viewBox="0 0 90 56" aria-hidden="true"><path d="M84 4 C 70 30, 42 46, 10 46"/><path d="M19 38 L9 46 L20 53"/></svg></span><span class="hover-note d2"><svg class="arr" viewBox="0 0 90 56" aria-hidden="true"><path d="M84 4 C 70 30, 42 46, 10 46"/><path d="M19 38 L9 46 L20 53"/></svg><span class="t">owned or<br>wishlist?</span></span><span class="hover-note d3"><svg class="arr" viewBox="0 0 90 56" aria-hidden="true"><path d="M84 4 C 70 30, 42 46, 10 46"/><path d="M19 38 L9 46 L20 53"/></svg><span class="t">stylist picks<br>get lost</span></span></div>
           <div class="print p4"><span class="shot phone static"><img src="img/Vetir/designs_ss/AIStylist_old.jpeg" alt="Old Vêtir AI Stylist screen"></span><span class="label">ios / ai</span><span class="hover-note a1"><span class="t">AI help lived in<br>a separate chat</span><svg class="arr" viewBox="0 0 90 56" aria-hidden="true"><path d="M84 4 C 70 30, 42 46, 10 46"/><path d="M19 38 L9 46 L20 53"/></svg></span><span class="hover-note a2"><svg class="arr" viewBox="0 0 90 56" aria-hidden="true"><path d="M84 4 C 70 30, 42 46, 10 46"/><path d="M19 38 L9 46 L20 53"/></svg><span class="t">results felt like<br>search, not styling</span></span><span class="hover-note a3"><svg class="arr" viewBox="0 0 90 56" aria-hidden="true"><path d="M84 4 C 70 30, 42 46, 10 46"/><path d="M19 38 L9 46 L20 53"/></svg><span class="t">products, not<br>styled looks</span></span></div>
-          <button class="print p5 shot-btn" type="button" data-full="img/Vetir/designs_ss/Analytics_old.png" data-title="Before · Stylist analytics" aria-label="View the full old stylist analytics screen"><span class="shot phone"><img src="img/Vetir/designs_ss/Analytics_old.png" alt="Old Vêtir stylist analytics screen"></span><span class="label">ios / stylist</span><span class="hover-note c1"><span class="t">graphs without<br>context</span><svg class="arr" viewBox="0 0 90 56" aria-hidden="true"><path d="M84 4 C 70 30, 42 46, 10 46"/><path d="M19 38 L9 46 L20 53"/></svg></span><span class="hover-note c2"><span class="t">no client data</span><svg class="arr" viewBox="0 0 90 56" aria-hidden="true"><path d="M84 4 C 70 30, 42 46, 10 46"/><path d="M19 38 L9 46 L20 53"/></svg></span><span class="hover-note c3"><svg class="arr" viewBox="0 0 90 56" aria-hidden="true"><path d="M84 4 C 70 30, 42 46, 10 46"/><path d="M19 38 L9 46 L20 53"/></svg><span class="t">nothing to<br>act on</span></span></button>
+          <button class="print p5 shot-btn" type="button" data-full="img/Vetir/designs_ss/Analytics_old.webp" data-title="Before · Stylist analytics" aria-label="View the full old stylist analytics screen"><span class="shot phone"><img src="img/Vetir/designs_ss/Analytics_old.webp" alt="Old Vêtir stylist analytics screen"></span><span class="label">ios / stylist</span><span class="hover-note c1"><span class="t">graphs without<br>context</span><svg class="arr" viewBox="0 0 90 56" aria-hidden="true"><path d="M84 4 C 70 30, 42 46, 10 46"/><path d="M19 38 L9 46 L20 53"/></svg></span><span class="hover-note c2"><span class="t">no client data</span><svg class="arr" viewBox="0 0 90 56" aria-hidden="true"><path d="M84 4 C 70 30, 42 46, 10 46"/><path d="M19 38 L9 46 L20 53"/></svg></span><span class="hover-note c3"><svg class="arr" viewBox="0 0 90 56" aria-hidden="true"><path d="M84 4 C 70 30, 42 46, 10 46"/><path d="M19 38 L9 46 L20 53"/></svg><span class="t">nothing to<br>act on</span></span></button>
         </div>
 
         <div class="layers reveal">
@@ -1197,7 +1197,7 @@
           <div class="layer"><h3 class="mono">Structurally</h3><p>Engineering had developed its own component set independently of design. Every new feature introduced another pattern, making the experience harder to keep coherent.</p></div>
           <div class="layer"><h3 class="mono">Functionally</h3><p>Strong features in silos. Shopping and styling both existed, but neither felt as seamless as it could be. Navigation hid parts of the product. Important functionality was difficult to discover. And the styling proposition wasn't immediately obvious.</p></div>
         </div>
-        <p class="kicker-line end-note reveal">Each feature worked on its own. <em>Together, they didn't add up to one product.</em></p>
+        <p class="kicker-line end-note reveal">Each feature worked on its own.<br><em>Together, they didn't add up to one product.</em></p>
       </div>
     </section>
 
@@ -1206,28 +1206,28 @@
       <div class="learn-bg" aria-hidden="true"></div>
       <div class="learn-stage">
           <button class="lq l" type="button" data-ins="1" style="left:4%; top:9%" aria-label="Show insight 1: I'm not sure what I should actually do next when I open the app.">
-            <img src="img/Vetir/Cutouts/Chat%20bubble%201.png" alt=""><span class="mono">— Shopper</span>
+            <img src="img/Vetir/Cutouts/Chat%20bubble%201.webp" alt=""><span class="mono">— Shopper</span>
           </button>
           <button class="lq r" type="button" data-ins="1" style="right:5%; top:13%" aria-label="Show insight 1: I can't find any personalized suggestions from my closet.">
-            <img src="img/Vetir/Cutouts/Chat%20bubble%207.png" alt=""><span class="mono">— Client</span>
+            <img src="img/Vetir/Cutouts/Chat%20bubble%207.webp" alt=""><span class="mono">— Client</span>
           </button>
           <button class="lq l" type="button" data-ins="2" style="left:3%; top:33%" aria-label="Show insight 2: The recommendations don't always feel like they understand my personal style.">
-            <img src="img/Vetir/Cutouts/Chat%20bubble%202.png" alt=""><span class="mono">— Shopper</span>
+            <img src="img/Vetir/Cutouts/Chat%20bubble%202.webp" alt=""><span class="mono">— Shopper</span>
           </button>
           <button class="lq r" type="button" data-ins="2" style="right:2%; top:35%" aria-label="Show insight 2: I want recommendations based on the occasion, weather, and where I'm going, not just what's in my closet.">
-            <img src="img/Vetir/Cutouts/Chat%20bubble%205.png" alt=""><span class="mono">— Client</span>
+            <img src="img/Vetir/Cutouts/Chat%20bubble%205.webp" alt=""><span class="mono">— Client</span>
           </button>
           <button class="lq l" type="button" data-ins="3" style="left:2%; top:55%" aria-label="Show insight 3: Can it tell me which items in my closet aren't getting enough use?">
-            <img src="img/Vetir/Cutouts/Chat%20bubble%204.png" alt=""><span class="mono">— Shopper</span>
+            <img src="img/Vetir/Cutouts/Chat%20bubble%204.webp" alt=""><span class="mono">— Shopper</span>
           </button>
           <button class="lq r" type="button" data-ins="3" style="right:7%; top:59%" aria-label="Show insight 3: It takes too much effort to keep my wardrobe updated.">
-            <img src="img/Vetir/Cutouts/Chat%20bubble%203.png" alt=""><span class="mono">— Client</span>
+            <img src="img/Vetir/Cutouts/Chat%20bubble%203.webp" alt=""><span class="mono">— Client</span>
           </button>
           <button class="lq l" type="button" data-ins="4" style="left:26%; top:5%" aria-label="Show insight 4: There's no relevant client data to help me manage or improve engagement.">
-            <img src="img/Vetir/Cutouts/Chat%20bubble%208.png" alt=""><span class="mono">— Stylist</span>
+            <img src="img/Vetir/Cutouts/Chat%20bubble%208.webp" alt=""><span class="mono">— Stylist</span>
           </button>
           <button class="lq r" type="button" data-ins="4" style="right:25%; top:7%" aria-label="Show insight 4: Won't I rather just use Excel, ChatGPT, and WhatsApp instead?">
-            <img src="img/Vetir/Cutouts/Chat%20bubble%206.png" alt=""><span class="mono">— Stylist</span>
+            <img src="img/Vetir/Cutouts/Chat%20bubble%206.webp" alt=""><span class="mono">— Stylist</span>
           </button>
         <div class="learn-center">
           <div class="cs-num mono">Insights</div>
@@ -1259,9 +1259,9 @@
         <div class="serve-grid reveal">
           <div class="serve-card" aria-label="A hand serving a styled outfit on a silver tray">
             <div class="title"><span>Serving Looks</span><small class="mono">since 2024</small></div>
-            <img class="hand" src="img/Vetir/Cutouts/Hand%20Serve.png" alt="">
+            <img class="hand" src="img/Vetir/Cutouts/Hand%20Serve.webp" alt="">
             <!-- Further looks (servinglooks2, 3, ...) are added by the script below -->
-            <img class="look is-shown" src="img/Vetir/Cutouts/servinglooks1.png" alt="Model in a styled outfit, standing on the serving tray">
+            <img class="look is-shown" src="img/Vetir/Cutouts/servinglooks1.webp" alt="Model in a styled outfit, standing on the serving tray">
           </div>
           <div>
             <div class="cs-num mono pr-eyebrow">Design principles</div>
@@ -1272,7 +1272,7 @@
             </div>
             <div class="principle">
               <span class="mono">Principle 02</span>
-              <h3>One system, one <em>luxury</em> identity.</h3>
+              <h3>One system,<br>one <em>luxury</em> identity.</h3>
               <p>Minimal and editorial: imagery does the emotional work, restraint does the credibility work. Every new feature is built inside the system, not bolted on as an exception.</p>
             </div>
           </div>
@@ -1304,7 +1304,7 @@
         <div class="receipt-row reveal">
           <div class="receipt-h">
             <div class="cs-num mono">Roadmap</div>
-            <h2 class="receipt-h2">Redesigning <em>through</em> the roadmap.</h2>
+            <h2 class="receipt-h2">Redesigning through<br><em>the roadmap.</em></h2>
           </div>
           <div class="receipt-col">
             <div class="receipt-mock">
@@ -1315,7 +1315,7 @@
                   <h3><span>Redesign</span><small>Roadmap</small></h3>
                   <div class="dash"></div>
                 </div>
-                <img class="receipt-look" src="img/Vetir/Cutouts/Outfit-1.png" alt="A styled outfit: denim jacket and skirt, black bag, sunglasses, gold earrings and black heels">
+                <img class="receipt-look" src="img/Vetir/Cutouts/Outfit-1.webp" alt="A styled outfit: denim jacket and skirt, black bag, sunglasses, gold earrings and black heels">
                 <div class="dash"></div>
               <div class="line"><span class="name">· Research</span><span class="dots"></span><span>May</span></div>
               <div class="line"><span class="name">· Outfit</span><span class="dots"></span><span>Jun</span></div>
@@ -1417,12 +1417,12 @@
               <div class="ds-label mono">Iconography</div>
               <div class="icon-spread">
                 <div class="icon-page">
-                  <div class="sw-group mono">System · 24 px, 1 px stroke</div><div class="icon-grid"><figure class="ic"><img src="img/Vetir/Icons/Home.png" alt="" width="24" height="24" loading="lazy"><figcaption>Home</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Search.png" alt="" width="24" height="24" loading="lazy"><figcaption>Search</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Image-search.png" alt="" width="24" height="24" loading="lazy"><figcaption>Image search</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Camera.png" alt="" width="24" height="24" loading="lazy"><figcaption>Camera</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Add-photo.png" alt="" width="24" height="24" loading="lazy"><figcaption>Add photo</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Listening.png" alt="" width="24" height="24" loading="lazy"><figcaption>Voice</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Chat.png" alt="" width="24" height="24" loading="lazy"><figcaption>Chat</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Send.png" alt="" width="24" height="24" loading="lazy"><figcaption>Send</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Email.png" alt="" width="24" height="24" loading="lazy"><figcaption>Email</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Notification.png" alt="" width="24" height="24" loading="lazy"><figcaption>Notifications</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Pin.png" alt="" width="24" height="24" loading="lazy"><figcaption>Pin</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Play.png" alt="" width="24" height="24" loading="lazy"><figcaption>Play</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Tutorial.png" alt="" width="24" height="24" loading="lazy"><figcaption>Tutorial</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Gridlayout2.png" alt="" width="24" height="24" loading="lazy"><figcaption>Grid view</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Select.png" alt="" width="24" height="24" loading="lazy"><figcaption>Select</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/More.png" alt="" width="24" height="24" loading="lazy"><figcaption>More</figcaption></figure></div><div class="sw-group mono">Styling & AI</div><div class="icon-grid"><figure class="ic"><img src="img/Vetir/Icons/Closet.png" alt="" width="24" height="24" loading="lazy"><figcaption>Closet</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Outfit.png" alt="" width="24" height="24" loading="lazy"><figcaption>Outfit</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Outfit-men.png" alt="" width="24" height="24" loading="lazy"><figcaption>Menswear</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Tryon.png" alt="" width="24" height="24" loading="lazy"><figcaption>Try-on</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Avatar-ai.png" alt="" width="24" height="24" loading="lazy"><figcaption>AI stylist</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/sparkle.png" alt="" width="24" height="24" loading="lazy"><figcaption>AI stylist</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Wand.png" alt="" width="24" height="24" loading="lazy"><figcaption>Magic edit</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/PackingList.png" alt="" width="24" height="24" loading="lazy"><figcaption>Packing list</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Shop.png" alt="" width="24" height="24" loading="lazy"><figcaption>Shop</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Pricetag.png" alt="" width="24" height="24" loading="lazy"><figcaption>Price tag</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Calendar.png" alt="" width="24" height="24" loading="lazy"><figcaption>Calendar</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Trend-graph.png" alt="" width="24" height="24" loading="lazy"><figcaption>Trends</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Analytics.png" alt="" width="24" height="24" loading="lazy"><figcaption>Analytics</figcaption></figure></div><div class="sw-group mono">Orders & business</div><div class="icon-grid"><figure class="ic"><img src="img/Vetir/Icons/Shipped.png" alt="" width="24" height="24" loading="lazy"><figcaption>Shipped</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Returned.png" alt="" width="24" height="24" loading="lazy"><figcaption>Returned</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Cancelled.png" alt="" width="24" height="24" loading="lazy"><figcaption>Cancelled</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Credit%20Card.png" alt="" width="24" height="24" loading="lazy"><figcaption>Card</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Coin.png" alt="" width="24" height="24" loading="lazy"><figcaption>Earnings</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Invoice.png" alt="" width="24" height="24" loading="lazy"><figcaption>Invoice</figcaption></figure></div><div class="sw-group mono">Weather · for daily outfit suggestions</div><div class="icon-grid"><figure class="ic"><img src="img/Vetir/Icons/Sun.png" alt="" width="24" height="24" loading="lazy"><figcaption>Sunny</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Partially%20Cloudy.png" alt="" width="24" height="24" loading="lazy"><figcaption>Partly cloudy</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Rain.png" alt="" width="24" height="24" loading="lazy"><figcaption>Rain</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Windy.png" alt="" width="24" height="24" loading="lazy"><figcaption>Windy</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Snowflake.png" alt="" width="24" height="24" loading="lazy"><figcaption>Snow</figcaption></figure></div>
+                  <div class="sw-group mono">System · 24 px, 1 px stroke</div><div class="icon-grid"><figure class="ic"><img src="img/Vetir/Icons/Home.webp" alt="" width="24" height="24" loading="lazy"><figcaption>Home</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Search.webp" alt="" width="24" height="24" loading="lazy"><figcaption>Search</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Image-search.webp" alt="" width="24" height="24" loading="lazy"><figcaption>Image search</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Camera.webp" alt="" width="24" height="24" loading="lazy"><figcaption>Camera</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Add-photo.webp" alt="" width="24" height="24" loading="lazy"><figcaption>Add photo</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Listening.webp" alt="" width="24" height="24" loading="lazy"><figcaption>Voice</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Chat.webp" alt="" width="24" height="24" loading="lazy"><figcaption>Chat</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Send.webp" alt="" width="24" height="24" loading="lazy"><figcaption>Send</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Email.webp" alt="" width="24" height="24" loading="lazy"><figcaption>Email</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Notification.webp" alt="" width="24" height="24" loading="lazy"><figcaption>Notifications</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Pin.webp" alt="" width="24" height="24" loading="lazy"><figcaption>Pin</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Play.webp" alt="" width="24" height="24" loading="lazy"><figcaption>Play</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Tutorial.webp" alt="" width="24" height="24" loading="lazy"><figcaption>Tutorial</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Gridlayout2.webp" alt="" width="24" height="24" loading="lazy"><figcaption>Grid view</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Select.webp" alt="" width="24" height="24" loading="lazy"><figcaption>Select</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/More.webp" alt="" width="24" height="24" loading="lazy"><figcaption>More</figcaption></figure></div><div class="sw-group mono">Styling & AI</div><div class="icon-grid"><figure class="ic"><img src="img/Vetir/Icons/Closet.webp" alt="" width="24" height="24" loading="lazy"><figcaption>Closet</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Outfit.webp" alt="" width="24" height="24" loading="lazy"><figcaption>Outfit</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Outfit-men.webp" alt="" width="24" height="24" loading="lazy"><figcaption>Menswear</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Tryon.webp" alt="" width="24" height="24" loading="lazy"><figcaption>Try-on</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Avatar-ai.webp" alt="" width="24" height="24" loading="lazy"><figcaption>AI stylist</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/sparkle.webp" alt="" width="24" height="24" loading="lazy"><figcaption>AI stylist</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Wand.webp" alt="" width="24" height="24" loading="lazy"><figcaption>Magic edit</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/PackingList.webp" alt="" width="24" height="24" loading="lazy"><figcaption>Packing list</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Shop.webp" alt="" width="24" height="24" loading="lazy"><figcaption>Shop</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Pricetag.webp" alt="" width="24" height="24" loading="lazy"><figcaption>Price tag</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Calendar.webp" alt="" width="24" height="24" loading="lazy"><figcaption>Calendar</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Trend-graph.webp" alt="" width="24" height="24" loading="lazy"><figcaption>Trends</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Analytics.webp" alt="" width="24" height="24" loading="lazy"><figcaption>Analytics</figcaption></figure></div><div class="sw-group mono">Orders & business</div><div class="icon-grid"><figure class="ic"><img src="img/Vetir/Icons/Shipped.webp" alt="" width="24" height="24" loading="lazy"><figcaption>Shipped</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Returned.webp" alt="" width="24" height="24" loading="lazy"><figcaption>Returned</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Cancelled.webp" alt="" width="24" height="24" loading="lazy"><figcaption>Cancelled</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Credit%20Card.webp" alt="" width="24" height="24" loading="lazy"><figcaption>Card</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Coin.webp" alt="" width="24" height="24" loading="lazy"><figcaption>Earnings</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Invoice.webp" alt="" width="24" height="24" loading="lazy"><figcaption>Invoice</figcaption></figure></div><div class="sw-group mono">Weather · for daily outfit suggestions</div><div class="icon-grid"><figure class="ic"><img src="img/Vetir/Icons/Sun.webp" alt="" width="24" height="24" loading="lazy"><figcaption>Sunny</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Partially%20Cloudy.webp" alt="" width="24" height="24" loading="lazy"><figcaption>Partly cloudy</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Rain.webp" alt="" width="24" height="24" loading="lazy"><figcaption>Rain</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Windy.webp" alt="" width="24" height="24" loading="lazy"><figcaption>Windy</figcaption></figure><figure class="ic"><img src="img/Vetir/Icons/Snowflake.webp" alt="" width="24" height="24" loading="lazy"><figcaption>Snow</figcaption></figure></div>
                 </div>
                 <div class="icon-page">
                   <div class="sw-group mono">Sizes</div>
-                  <div class="ic-sizes"><div><img src="img/Vetir/Icons/Sizes/Closet-2.png" alt="" style="width:16px;height:16px"><span class="mono">16</span></div><div><img src="img/Vetir/Icons/Sizes/Closet-1.png" alt="" style="width:20px;height:20px"><span class="mono">20</span></div><div><img src="img/Vetir/Icons/Sizes/Closet.png" alt="" style="width:24px;height:24px"><span class="mono">24</span></div><div><img src="img/Vetir/Icons/Sizes/Closet-32.png" alt="" style="width:32px;height:32px"><span class="mono">32</span></div></div>
-                  <div class="ic-comps"><div class="icc-navs"><img class="icc " src="img/Vetir/Icons/iconcomp/web/nav-home.png" width="766" height="128" alt="Bottom navigation, Home active" loading="lazy"></div><div class="icc-grid"><div class="icc-col"><img class="icc " src="img/Vetir/Icons/iconcomp/web/order-status.png" width="758" height="660" alt="Order status list with status icons" loading="lazy"><img class="icc icc-card" src="img/Vetir/Icons/iconcomp/web/card-row.png" width="686" height="123" alt="Saved card row" loading="lazy"></div><div class="icc-col"><img class="icc " src="img/Vetir/Icons/iconcomp/web/outfit-menu.png" width="354" height="664" alt="Outfit actions menu" loading="lazy"></div><div class="icc-col"><img class="icc " src="img/Vetir/Icons/iconcomp/web/add-item.png" width="298" height="446" alt="Add item menu" loading="lazy"><img class="icc icc-avatar" src="img/Vetir/Icons/iconcomp/web/avatar.png" width="253" height="162" alt="Creating your avatar loader" loading="lazy"></div></div></div>
+                  <div class="ic-sizes"><div><img src="img/Vetir/Icons/Sizes/Closet-2.webp" alt="" style="width:16px;height:16px"><span class="mono">16</span></div><div><img src="img/Vetir/Icons/Sizes/Closet-1.webp" alt="" style="width:20px;height:20px"><span class="mono">20</span></div><div><img src="img/Vetir/Icons/Sizes/Closet.webp" alt="" style="width:24px;height:24px"><span class="mono">24</span></div><div><img src="img/Vetir/Icons/Sizes/Closet-32.webp" alt="" style="width:32px;height:32px"><span class="mono">32</span></div></div>
+                  <div class="ic-comps"><div class="icc-navs"><img class="icc " src="img/Vetir/Icons/iconcomp/web/nav-home.webp" width="766" height="128" alt="Bottom navigation, Home active" loading="lazy"></div><div class="icc-grid"><div class="icc-col"><img class="icc " src="img/Vetir/Icons/iconcomp/web/order-status.webp" width="758" height="660" alt="Order status list with status icons" loading="lazy"><img class="icc icc-card" src="img/Vetir/Icons/iconcomp/web/card-row.webp" width="686" height="123" alt="Saved card row" loading="lazy"></div><div class="icc-col"><img class="icc " src="img/Vetir/Icons/iconcomp/web/outfit-menu.webp" width="354" height="664" alt="Outfit actions menu" loading="lazy"></div><div class="icc-col"><img class="icc " src="img/Vetir/Icons/iconcomp/web/add-item.webp" width="298" height="446" alt="Add item menu" loading="lazy"><img class="icc icc-avatar" src="img/Vetir/Icons/iconcomp/web/avatar.webp" width="253" height="162" alt="Creating your avatar loader" loading="lazy"></div></div></div>
                 </div>
               </div>
               <button class="page-corner pc-prev" type="button" aria-label="Turn back to type and colour"><span class="mono">Type &amp; colour</span></button>
@@ -1434,22 +1434,22 @@
               <div class="ds-label mono">Signature components</div>
               <div class="ds-collage">
                 <p class="ds-ghost" aria-hidden="true">Quiet by design.<br>Built to scale.</p>
-                <figure class="ds-piece" tabindex="0" style="--x:7.73%; --y:6.01%; --w:12.73%; --mw:159px; --z:2"><img src="img/Vetir/New%20Work/DesignSys/ProductCard3.png" alt="Product card: gold watch with add-to-bag and wishlist actions, brand and price" width="227" height="328"><figcaption class="mono">Product card</figcaption></figure>
-                <figure class="ds-piece pill" tabindex="0" style="--x:6.82%; --y:33.62%; --w:17.27%; --mw:192px; --z:5"><img src="img/Vetir/New%20Work/DesignSys/Molecule-ai-prompt.png" alt="AI Stylist prompt: Hi, what do you want to wear today?" width="275" height="52" loading="lazy"><figcaption class="mono">AI prompt</figcaption></figure>
-                <figure class="ds-piece" tabindex="0" style="--x:5.91%; --y:42.03%; --w:17.27%; --mw:240px; --z:2"><img src="img/Vetir/New%20Work/DesignSys/Component-Premium.png" alt="Premium upsell modal: unlock personalized styling, premium tools, packing lists and virtual try-on" width="343" height="386" loading="lazy"><figcaption class="mono">Premium upsell</figcaption></figure>
-                <figure class="ds-piece" tabindex="0" style="--x:5.00%; --y:72.04%; --w:20.00%; --mw:240px; --z:2"><img src="img/Vetir/New%20Work/DesignSys/ProductCard1.png" alt="Cart item: brown leather jacket with size, return policy, sale price and quantity stepper" width="343" height="130" loading="lazy"><figcaption class="mono">Cart item · sale</figcaption></figure>
-                <figure class="ds-piece" tabindex="0" style="--x:25.45%; --y:15.62%; --w:20.91%; --mw:262px; --z:3"><img src="img/Vetir/New%20Work/DesignSys/Component-WeddingLooks.png" alt="Editorial look card: Wedding Guest Looks, styled for an upcoming event" width="375" height="501" loading="lazy"><figcaption class="mono">Editorial look card</figcaption></figure>
-                <figure class="ds-piece" tabindex="0" style="--x:54.09%; --y:10.81%; --w:17.27%; --mw:262px; --z:4"><img src="img/Vetir/New%20Work/DesignSys/Molecule-events.png" alt="Nudge: You have 2 events coming up! Create outfits" width="375" height="36" loading="lazy"><figcaption class="mono">Events nudge</figcaption></figure>
-                <figure class="ds-piece" tabindex="0" style="--x:54.09%; --y:19.22%; --w:19.09%; --mw:265px; --z:3"><img src="img/Vetir/New%20Work/DesignSys/Component-ShopThisLook.png" alt="Shop This Look sheet: every piece in the look with sizes, added to cart in one tap" width="379" height="454" loading="lazy"><figcaption class="mono">Shop this look</figcaption></figure>
-                <figure class="ds-piece" tabindex="0" style="--x:26.36%; --y:58.34%; --w:20.00%; --mw:262px; --z:5"><img src="img/Vetir/New%20Work/DesignSys/Molecule-listening.png" alt="Voice search bar, listening" width="375" height="40" loading="lazy"><figcaption class="mono">Voice search</figcaption></figure>
-                <figure class="ds-piece" tabindex="0" style="--x:26.36%; --y:64.83%; --w:12.73%; --mw:265px; --z:2"><img src="img/Vetir/New%20Work/DesignSys/Component-SkinTone.png" alt="Skin tone selector for the try-on avatar, from Porcelain to Espresso" width="379" height="560" loading="lazy"><figcaption class="mono">Skin tone · try-on</figcaption></figure>
-                <figure class="ds-piece" tabindex="0" style="--x:54.55%; --y:64.83%; --w:12.73%; --mw:159px; --z:2"><img src="img/Vetir/New%20Work/DesignSys/ProductCard4.png" alt="Outfit card: Classy Evening Look flat lay with try-on, add-to-bag and AI actions" width="227" height="326" loading="lazy"><figcaption class="mono">Outfit card</figcaption></figure>
-                <figure class="ds-piece" tabindex="0" style="--x:68.64%; --y:57.63%; --w:13.64%; --mw:271px; --z:2"><img src="img/Vetir/New%20Work/DesignSys/Component-EmptyState.png" alt="Empty state: Create your next look, with Create Outfit and Ask AI Stylist actions" width="387" height="450" loading="lazy"><figcaption class="mono">Empty state · AI entry</figcaption></figure>
-                <figure class="ds-piece" tabindex="0" style="--x:73.64%; --y:6.01%; --w:20.91%; --mw:262px; --z:2"><img src="img/Vetir/New%20Work/DesignSys/Molecule-friday.png" alt="AI prompt card: Get your Friday fit in an instant" width="375" height="200" loading="lazy"><figcaption class="mono">AI prompt card</figcaption></figure>
-                <figure class="ds-piece pill" tabindex="0" style="--x:76.36%; --y:24.61%; --w:10.00%; --mw:102px; --z:5"><img src="img/Vetir/New%20Work/DesignSys/Molecule-ask-ai.png" alt="Ask AI Stylist pill with the gold AI sparkle" width="146" height="52" loading="lazy"><figcaption class="mono">AI entry</figcaption></figure>
-                <figure class="ds-piece" tabindex="0" style="--x:76.36%; --y:32.42%; --w:18.18%; --mw:262px; --z:2"><img src="img/Vetir/New%20Work/DesignSys/Molecule-earning.png" alt="Earning potential: $356 a stylist could earn from this look" width="375" height="138" loading="lazy"><figcaption class="mono">Stylist earnings</figcaption></figure>
-                <figure class="ds-piece" tabindex="0" style="--x:76.36%; --y:45.63%; --w:18.18%; --mw:241px; --z:2"><img src="img/Vetir/New%20Work/DesignSys/ProductCard5.png" alt="Collection banner: Paris Vacation '26 with a flat lay of the looks" width="344" height="120"><figcaption class="mono">Collection banner</figcaption></figure>
-                <figure class="ds-piece" tabindex="0" style="--x:76.36%; --y:82.60%; --w:20.00%; --mw:240px; --z:2"><img src="img/Vetir/New%20Work/DesignSys/ProductCard2.png" alt="Cart item: pink satin pumps with size, size chart, price and quantity stepper" width="343" height="130" loading="lazy"><figcaption class="mono">Cart item · full price</figcaption></figure>
+                <figure class="ds-piece" tabindex="0" style="--x:7.73%; --y:6.01%; --w:12.73%; --mw:159px; --z:2"><img src="img/Vetir/New%20Work/DesignSys/ProductCard3.webp" alt="Product card: gold watch with add-to-bag and wishlist actions, brand and price" width="227" height="328"><figcaption class="mono">Product card</figcaption></figure>
+                <figure class="ds-piece pill" tabindex="0" style="--x:6.82%; --y:33.62%; --w:17.27%; --mw:192px; --z:5"><img src="img/Vetir/New%20Work/DesignSys/Molecule-ai-prompt.webp" alt="AI Stylist prompt: Hi, what do you want to wear today?" width="275" height="52" loading="lazy"><figcaption class="mono">AI prompt</figcaption></figure>
+                <figure class="ds-piece" tabindex="0" style="--x:5.91%; --y:42.03%; --w:17.27%; --mw:240px; --z:2"><img src="img/Vetir/New%20Work/DesignSys/Component-Premium.webp" alt="Premium upsell modal: unlock personalized styling, premium tools, packing lists and virtual try-on" width="343" height="386" loading="lazy"><figcaption class="mono">Premium upsell</figcaption></figure>
+                <figure class="ds-piece" tabindex="0" style="--x:5.00%; --y:72.04%; --w:20.00%; --mw:240px; --z:2"><img src="img/Vetir/New%20Work/DesignSys/ProductCard1.webp" alt="Cart item: brown leather jacket with size, return policy, sale price and quantity stepper" width="343" height="130" loading="lazy"><figcaption class="mono">Cart item · sale</figcaption></figure>
+                <figure class="ds-piece" tabindex="0" style="--x:25.45%; --y:15.62%; --w:20.91%; --mw:262px; --z:3"><img src="img/Vetir/New%20Work/DesignSys/Component-WeddingLooks.webp" alt="Editorial look card: Wedding Guest Looks, styled for an upcoming event" width="375" height="501" loading="lazy"><figcaption class="mono">Editorial look card</figcaption></figure>
+                <figure class="ds-piece" tabindex="0" style="--x:54.09%; --y:10.81%; --w:17.27%; --mw:262px; --z:4"><img src="img/Vetir/New%20Work/DesignSys/Molecule-events.webp" alt="Nudge: You have 2 events coming up! Create outfits" width="375" height="36" loading="lazy"><figcaption class="mono">Events nudge</figcaption></figure>
+                <figure class="ds-piece" tabindex="0" style="--x:54.09%; --y:19.22%; --w:19.09%; --mw:265px; --z:3"><img src="img/Vetir/New%20Work/DesignSys/Component-ShopThisLook.webp" alt="Shop This Look sheet: every piece in the look with sizes, added to cart in one tap" width="379" height="454" loading="lazy"><figcaption class="mono">Shop this look</figcaption></figure>
+                <figure class="ds-piece" tabindex="0" style="--x:26.36%; --y:58.34%; --w:20.00%; --mw:262px; --z:5"><img src="img/Vetir/New%20Work/DesignSys/Molecule-listening.webp" alt="Voice search bar, listening" width="375" height="40" loading="lazy"><figcaption class="mono">Voice search</figcaption></figure>
+                <figure class="ds-piece" tabindex="0" style="--x:26.36%; --y:64.83%; --w:12.73%; --mw:265px; --z:2"><img src="img/Vetir/New%20Work/DesignSys/Component-SkinTone.webp" alt="Skin tone selector for the try-on avatar, from Porcelain to Espresso" width="379" height="560" loading="lazy"><figcaption class="mono">Skin tone · try-on</figcaption></figure>
+                <figure class="ds-piece" tabindex="0" style="--x:54.55%; --y:64.83%; --w:12.73%; --mw:159px; --z:2"><img src="img/Vetir/New%20Work/DesignSys/ProductCard4.webp" alt="Outfit card: Classy Evening Look flat lay with try-on, add-to-bag and AI actions" width="227" height="326" loading="lazy"><figcaption class="mono">Outfit card</figcaption></figure>
+                <figure class="ds-piece" tabindex="0" style="--x:68.64%; --y:57.63%; --w:13.64%; --mw:271px; --z:2"><img src="img/Vetir/New%20Work/DesignSys/Component-EmptyState.webp" alt="Empty state: Create your next look, with Create Outfit and Ask AI Stylist actions" width="387" height="450" loading="lazy"><figcaption class="mono">Empty state · AI entry</figcaption></figure>
+                <figure class="ds-piece" tabindex="0" style="--x:73.64%; --y:6.01%; --w:20.91%; --mw:262px; --z:2"><img src="img/Vetir/New%20Work/DesignSys/Molecule-friday.webp" alt="AI prompt card: Get your Friday fit in an instant" width="375" height="200" loading="lazy"><figcaption class="mono">AI prompt card</figcaption></figure>
+                <figure class="ds-piece pill" tabindex="0" style="--x:76.36%; --y:24.61%; --w:10.00%; --mw:102px; --z:5"><img src="img/Vetir/New%20Work/DesignSys/Molecule-ask-ai.webp" alt="Ask AI Stylist pill with the gold AI sparkle" width="146" height="52" loading="lazy"><figcaption class="mono">AI entry</figcaption></figure>
+                <figure class="ds-piece" tabindex="0" style="--x:76.36%; --y:32.42%; --w:18.18%; --mw:262px; --z:2"><img src="img/Vetir/New%20Work/DesignSys/Molecule-earning.webp" alt="Earning potential: $356 a stylist could earn from this look" width="375" height="138" loading="lazy"><figcaption class="mono">Stylist earnings</figcaption></figure>
+                <figure class="ds-piece" tabindex="0" style="--x:76.36%; --y:45.63%; --w:18.18%; --mw:241px; --z:2"><img src="img/Vetir/New%20Work/DesignSys/ProductCard5.webp" alt="Collection banner: Paris Vacation '26 with a flat lay of the looks" width="344" height="120"><figcaption class="mono">Collection banner</figcaption></figure>
+                <figure class="ds-piece" tabindex="0" style="--x:76.36%; --y:82.60%; --w:20.00%; --mw:240px; --z:2"><img src="img/Vetir/New%20Work/DesignSys/ProductCard2.webp" alt="Cart item: pink satin pumps with size, size chart, price and quantity stepper" width="343" height="130" loading="lazy"><figcaption class="mono">Cart item · full price</figcaption></figure>
               </div>
               <button class="page-corner pc-prev" type="button" aria-label="Turn back to the icons"><span class="mono">Icons</span></button>
             </div>
@@ -1463,7 +1463,7 @@
       <div class="wrap">
         <div class="cs-head reveal">
           <div class="cs-num mono">Chapters</div>
-          <h2 class="h2-two h2-one">Six modules. <em>One product.</em></h2>
+          <h2 class="h2-two">Six modules.<br><em>One product.</em></h2>
         </div>
 
         <div class="ch-tabs reveal" role="tablist" aria-label="Chapters">
@@ -1488,9 +1488,9 @@
           </div>
           <div class="ootd">
             <div class="sheet">
-              <img class="ootd-look is-shown" src="img/Vetir/New%20Work/Chapter1.png" alt="New outfit canvas with the AI Stylist suggesting flats inside the canvas">
-              <img class="ootd-look" src="img/Vetir/New%20Work/Chapter1a.png" alt="My Outfits screen with a styled Black-tie Gala look">
-              <img class="ootd-look" src="img/Vetir/New%20Work/Chapter1b.png" alt="All Outfits grid of saved looks, filterable by stylist picks, my looks and trending">
+              <img class="ootd-look is-shown" src="img/Vetir/New%20Work/Chapter1.webp" alt="New outfit canvas with the AI Stylist suggesting flats inside the canvas">
+              <img class="ootd-look" src="img/Vetir/New%20Work/Chapter1a.webp" alt="My Outfits screen with a styled Black-tie Gala look">
+              <img class="ootd-look" src="img/Vetir/New%20Work/Chapter1b.webp" alt="All Outfits grid of saved looks, filterable by stylist picks, my looks and trending">
             </div>
           </div>
         <!-- HIDDEN (Oct 2026): before/after compare slider for the outfit canvas. Waiting on real old/new canvas screens + AI Stylist recording. Remove `hidden` to show it again. -->
@@ -1515,7 +1515,7 @@
             </div>
           </div>
           <div class="pair phones single">
-            <figure class="ph closet-card"><img class="ph-fill" src="img/Vetir/New%20Work/Chapter2.png" alt="New closet with closets, cities and categories"></figure>
+            <figure class="ph closet-card"><img class="ph-fill" src="img/Vetir/New%20Work/Chapter2.webp" alt="New closet with closets, cities and categories"></figure>
           </div>
         </article>
           <article class="ch-pane chapter" id="ch-ai" role="tabpanel" aria-labelledby="tab-ch-ai" hidden>
@@ -1530,21 +1530,21 @@
           <div class="masonry" aria-label="Search grid with a stylist reply on top">
             <span class="masonry-tag mono">Before: a wall of results</span>
             <div class="colm">
-              <div class="tile" style="height:190px"><img src="img/Vetir/New%20Work/Chapter3bg/aistylistsearch1.png" alt="" loading="lazy"></div>
-              <div class="tile" style="height:250px"><img src="img/Vetir/New%20Work/Chapter3bg/aistylistsearch6.png" alt="" loading="lazy"></div>
+              <div class="tile" style="height:190px"><img src="img/Vetir/New%20Work/Chapter3bg/aistylistsearch1.webp" alt="" loading="lazy"></div>
+              <div class="tile" style="height:250px"><img src="img/Vetir/New%20Work/Chapter3bg/aistylistsearch6.webp" alt="" loading="lazy"></div>
             </div>
             <div class="colm">
-              <div class="tile" style="height:240px"><img src="img/Vetir/New%20Work/Chapter3bg/aistylistsearch7.png" alt="" loading="lazy"></div>
-              <div class="tile" style="height:210px"><img src="img/Vetir/New%20Work/Chapter3bg/aistylistsearch3.png" alt="" loading="lazy"></div>
-              <div class="tile" style="height:200px"><img src="img/Vetir/New%20Work/Chapter3bg/aistylistsearch8.png" alt="" loading="lazy"></div>
+              <div class="tile" style="height:240px"><img src="img/Vetir/New%20Work/Chapter3bg/aistylistsearch7.webp" alt="" loading="lazy"></div>
+              <div class="tile" style="height:210px"><img src="img/Vetir/New%20Work/Chapter3bg/aistylistsearch3.webp" alt="" loading="lazy"></div>
+              <div class="tile" style="height:200px"><img src="img/Vetir/New%20Work/Chapter3bg/aistylistsearch8.webp" alt="" loading="lazy"></div>
             </div>
             <div class="colm">
-              <div class="tile" style="height:200px"><img src="img/Vetir/New%20Work/Chapter3bg/aistylistsearch2.png" alt="" loading="lazy"></div>
-              <div class="tile" style="height:170px"><img src="img/Vetir/New%20Work/Chapter3bg/aistylistsearch5.png" alt="" loading="lazy"></div>
-              <div class="tile" style="height:220px"><img src="img/Vetir/New%20Work/Chapter3bg/aistylistsearch4.png" alt="" loading="lazy"></div>
+              <div class="tile" style="height:200px"><img src="img/Vetir/New%20Work/Chapter3bg/aistylistsearch2.webp" alt="" loading="lazy"></div>
+              <div class="tile" style="height:170px"><img src="img/Vetir/New%20Work/Chapter3bg/aistylistsearch5.webp" alt="" loading="lazy"></div>
+              <div class="tile" style="height:220px"><img src="img/Vetir/New%20Work/Chapter3bg/aistylistsearch4.webp" alt="" loading="lazy"></div>
             </div>
             <div class="searchbar"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><span>Something chic for dinner<span class="caret"></span></span></div>
-            <figure class="ph phone after after-phone"><img class="ph-fill" src="img/Vetir/New%20Work/Chapter3.png" alt="AI Stylist suggesting summer soiree looks on a try-on avatar"></figure>
+            <figure class="ph phone after after-phone"><img class="ph-fill" src="img/Vetir/New%20Work/Chapter3.webp" alt="AI Stylist suggesting summer soiree looks on a try-on avatar"></figure>
           </div>
         </article>
           <article class="ch-pane chapter stack" id="ch-home" role="tabpanel" aria-labelledby="tab-ch-home" hidden>
@@ -1624,14 +1624,14 @@
           </div>
           <div class="bag-scene" aria-label="Product cards and a vêtir shopping bag">
             <div class="carousel">
-              <div class="card"><div class="pic"><img src="img/Vetir/New%20Work/Chapter3bg/aistylistsearch6.png" alt="" loading="lazy"><svg class="fav" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg></div><div class="pc-meta"><span class="nm">Draped jersey gown</span><span class="pr">$1,180</span></div></div>
-              <div class="card"><div class="pic"><img src="img/Vetir/New%20Work/Chapter3bg/aistylistsearch2.png" alt="" loading="lazy"><svg class="fav" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg></div><div class="pc-meta"><span class="nm">Ruffled chiffon blouse</span><span class="pr">$640</span></div></div>
-              <div class="card"><div class="pic"><img src="img/Vetir/New%20Work/Chapter3bg/aistylistsearch3.png" alt="" loading="lazy"><svg class="fav" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg></div><div class="pc-meta"><span class="nm">Slingback pumps</span><span class="pr">$895</span></div></div>
-              <div class="card"><div class="pic"><img src="img/Vetir/New%20Work/Chapter3bg/aistylistsearch4.png" alt="" loading="lazy"><svg class="fav" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg></div><div class="pc-meta"><span class="nm">One-shoulder swimsuit</span><span class="pr">$320</span></div></div>
+              <div class="card"><div class="pic"><img src="img/Vetir/New%20Work/Chapter3bg/aistylistsearch6.webp" alt="" loading="lazy"><svg class="fav" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg></div><div class="pc-meta"><span class="nm">Draped jersey gown</span><span class="pr">$1,180</span></div></div>
+              <div class="card"><div class="pic"><img src="img/Vetir/New%20Work/Chapter3bg/aistylistsearch2.webp" alt="" loading="lazy"><svg class="fav" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg></div><div class="pc-meta"><span class="nm">Ruffled chiffon blouse</span><span class="pr">$640</span></div></div>
+              <div class="card"><div class="pic"><img src="img/Vetir/New%20Work/Chapter3bg/aistylistsearch3.webp" alt="" loading="lazy"><svg class="fav" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg></div><div class="pc-meta"><span class="nm">Slingback pumps</span><span class="pr">$895</span></div></div>
+              <div class="card"><div class="pic"><img src="img/Vetir/New%20Work/Chapter3bg/aistylistsearch4.webp" alt="" loading="lazy"><svg class="fav" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg></div><div class="pc-meta"><span class="nm">One-shoulder swimsuit</span><span class="pr">$320</span></div></div>
             </div>
             <div class="bag">
               <div class="handle"></div>
-              <div class="peek"><img src="img/Vetir/New%20Work/Chapter3bg/aistylistsearch7.png" alt="" loading="lazy"></div>
+              <div class="peek"><img src="img/Vetir/New%20Work/Chapter3bg/aistylistsearch7.webp" alt="" loading="lazy"></div>
               <div class="body"><span>vêtir</span></div>
               <span class="bag-hint mono">Tap on a product</span>
             </div>
@@ -1646,7 +1646,7 @@
       <div class="wrap">
         <div class="cs-head reveal">
           <div class="cs-num mono">Engineering</div>
-          <h2>From two systems <em>to one language.</em></h2>
+          <h2>From two systems<br><em>to one language.</em></h2>
         </div>
         <div class="cs-body reveal">
           <div class="col prose"><p>Rolling the system out module by module meant components arrived gradually, instead of a disruptive handoff. Engineering adopted the new components, and once we added an AI-assisted Figma-to-code workflow, variables and components mapped almost one-to-one into code.</p></div>
@@ -1730,8 +1730,8 @@
     <section class="next" id="next">
       <div class="wrap">
         <span class="mono" style="color:#8C8883">What's next</span>
-        <h2>A foundation, <em>not a finish line.</em></h2>
-        <p>The redesign was phased on purpose, so the foundation is ready for what's next: the AI Stylist's deeper agentic flows. Next for me: putting hard numbers behind what the redesign already shows.</p>
+        <h2>A foundation,<br><em>not a finish line.</em></h2>
+        <p>The redesign was phased on purpose, so the foundation is ready for what's next: the AI Stylist's deeper agentic flows.</p>
         <div class="next-links">
           <a href="#" aria-disabled="true"><span class="mono">Deep dive · soon</span><b>Outfit Module + AI Stylist</b></a>
           <a href="#" aria-disabled="true"><span class="mono">Deep dive · soon</span><b>Personalized homepages</b></a>

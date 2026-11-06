@@ -6,67 +6,77 @@
 *.md
 versions/
 
+# PNG originals: the site uses the WebP versions; the PNGs are kept here on
+# this Mac only, in the same folder layout as img/
+/pngs/
+
 # Images: only the files the pages actually use are published. Everything
-# else in img/ (PNG originals with WebP twins, raw recordings, the stylist
-# deck, the 178 MB .mov that is over GitHub's 100 MB limit) stays local.
+# else in img/ (raw recordings, the stylist deck, the 178 MB .mov that is
+# over GitHub's 100 MB limit) stays local.
 # To publish a new image, add a "!/img/..." line for it below.
 /img/**
 !/img/**/
-!/img/PhonePlayer.png
-!/img/Phone_closed.png
-!/img/Postcard default.png
-!/img/Selected Work bg/sw-background1.png
-!/img/Selected Work bg/sw-background2.png
-!/img/Selected Work bg/sw-background3.png
-!/img/Vetir/Cutouts/Avatars/Avatar1.png
+!/img/PhonePlayer.webp
+!/img/Phone_closed.webp
+!/img/DesiWordleAppIcon.webp
+!/img/DetourAppIcon.webp
+!/img/BiliGAppIcon.webp
+!/img/sidequests/desiwordle.webp
+!/img/sidequests/bilig.webp
+!/img/sidequests/detour.webp
+!/img/Postcard mocks/Postcard default.webp
+!/img/Selected Work bg/sw-background1.webp
+!/img/Selected Work bg/sw-background2.webp
+!/img/Selected Work bg/sw-background3.webp
+!/img/Vetir/Cutouts/Avatars/Avatar1.webp
 !/img/Vetir/Cutouts/Avatars/Avatar2.webp
 !/img/Vetir/Cutouts/Avatars/Avatar3.webp
 !/img/Vetir/Cutouts/Avatars/Avatar4.webp
-!/img/Vetir/Cutouts/Chat bubble 1.png
-!/img/Vetir/Cutouts/Chat bubble 2.png
-!/img/Vetir/Cutouts/Chat bubble 3.png
-!/img/Vetir/Cutouts/Chat bubble 4.png
-!/img/Vetir/Cutouts/Chat bubble 5.png
-!/img/Vetir/Cutouts/Chat bubble 6.png
-!/img/Vetir/Cutouts/Chat bubble 7.png
-!/img/Vetir/Cutouts/Chat bubble 8.png
-!/img/Vetir/Cutouts/Hand Serve.png
-!/img/Vetir/Cutouts/Outfit-1.png
-!/img/Vetir/Cutouts/Phone mock.png
+!/img/Vetir/Cutouts/Chat bubble 1.webp
+!/img/Vetir/Cutouts/Chat bubble 2.webp
+!/img/Vetir/Cutouts/Chat bubble 3.webp
+!/img/Vetir/Cutouts/Chat bubble 4.webp
+!/img/Vetir/Cutouts/Chat bubble 5.webp
+!/img/Vetir/Cutouts/Chat bubble 6.webp
+!/img/Vetir/Cutouts/Chat bubble 7.webp
+!/img/Vetir/Cutouts/Chat bubble 8.webp
+!/img/Vetir/Cutouts/Hand Serve.webp
+!/img/Vetir/Cutouts/Outfit-1.webp
+!/img/Vetir/Cutouts/Phone mock.webp
 !/img/Vetir/Cutouts/Redesign Receipt.webp
-!/img/Vetir/Cutouts/servinglooks1.png
-!/img/Vetir/New Work/Chapter1.png
-!/img/Vetir/New Work/Chapter1a.png
-!/img/Vetir/New Work/Chapter1b.png
-!/img/Vetir/New Work/Chapter2.png
-!/img/Vetir/New Work/Chapter3.png
-!/img/Vetir/New Work/Chapter3bg/aistylistsearch1.png
-!/img/Vetir/New Work/Chapter3bg/aistylistsearch2.png
-!/img/Vetir/New Work/Chapter3bg/aistylistsearch3.png
-!/img/Vetir/New Work/Chapter3bg/aistylistsearch4.png
-!/img/Vetir/New Work/Chapter3bg/aistylistsearch5.png
-!/img/Vetir/New Work/Chapter3bg/aistylistsearch6.png
-!/img/Vetir/New Work/Chapter3bg/aistylistsearch7.png
-!/img/Vetir/New Work/Chapter3bg/aistylistsearch8.png
+!/img/Vetir/Cutouts/servinglooks1.webp
+!/img/Vetir/New Work/Chapter1.webp
+!/img/Vetir/New Work/Chapter1a.webp
+!/img/Vetir/New Work/Chapter1b.webp
+!/img/Vetir/New Work/Chapter2.webp
+!/img/Vetir/New Work/Chapter3.webp
+!/img/Vetir/New Work/Chapter3bg/aistylistsearch1.webp
+!/img/Vetir/New Work/Chapter3bg/aistylistsearch2.webp
+!/img/Vetir/New Work/Chapter3bg/aistylistsearch3.webp
+!/img/Vetir/New Work/Chapter3bg/aistylistsearch4.webp
+!/img/Vetir/New Work/Chapter3bg/aistylistsearch5.webp
+!/img/Vetir/New Work/Chapter3bg/aistylistsearch6.webp
+!/img/Vetir/New Work/Chapter3bg/aistylistsearch7.webp
+!/img/Vetir/New Work/Chapter3bg/aistylistsearch8.webp
 !/img/Vetir/New Work/Chapter5.webp
 !/img/Vetir/New Work/Chapter5_Guest_Homepage_clean.mp4
 !/img/Vetir/New Work/Chapter5_Guest_Homepage_clean.webm
-!/img/Vetir/New Work/DesignSys/Component-EmptyState.png
-!/img/Vetir/New Work/DesignSys/Component-Premium.png
-!/img/Vetir/New Work/DesignSys/Component-ShopThisLook.png
-!/img/Vetir/New Work/DesignSys/Component-SkinTone.png
-!/img/Vetir/New Work/DesignSys/Component-WeddingLooks.png
-!/img/Vetir/New Work/DesignSys/Molecule-ai-prompt.png
-!/img/Vetir/New Work/DesignSys/Molecule-ask-ai.png
-!/img/Vetir/New Work/DesignSys/Molecule-earning.png
-!/img/Vetir/New Work/DesignSys/Molecule-events.png
-!/img/Vetir/New Work/DesignSys/Molecule-friday.png
-!/img/Vetir/New Work/DesignSys/Molecule-listening.png
-!/img/Vetir/New Work/DesignSys/ProductCard1.png
-!/img/Vetir/New Work/DesignSys/ProductCard2.png
-!/img/Vetir/New Work/DesignSys/ProductCard3.png
-!/img/Vetir/New Work/DesignSys/ProductCard4.png
-!/img/Vetir/New Work/DesignSys/ProductCard5.png
+!/img/Vetir/New Work/DesignSys/Component-EmptyState.webp
+!/img/Vetir/New Work/DesignSys/Component-Premium.webp
+!/img/Vetir/New Work/DesignSys/Component-ShopThisLook.webp
+!/img/Vetir/New Work/DesignSys/Component-SkinTone.webp
+!/img/Vetir/New Work/DesignSys/Component-WeddingLooks.webp
+!/img/Vetir/New Work/DesignSys/Molecule-ai-prompt.webp
+!/img/Vetir/New Work/DesignSys/Molecule-ask-ai.webp
+!/img/Vetir/New Work/DesignSys/Molecule-earning.webp
+!/img/Vetir/New Work/DesignSys/Molecule-events.webp
+!/img/Vetir/New Work/DesignSys/Molecule-friday.webp
+!/img/Vetir/New Work/DesignSys/Molecule-listening.webp
+!/img/Vetir/New Work/DesignSys/ProductCard1.webp
+!/img/Vetir/New Work/DesignSys/ProductCard2.webp
+!/img/Vetir/New Work/DesignSys/ProductCard3.webp
+!/img/Vetir/New Work/DesignSys/ProductCard4.webp
+!/img/Vetir/New Work/DesignSys/ProductCard5.webp
 !/img/Vetir/New Work/StylistDeck/slide-01.webp
 !/img/Vetir/New Work/StylistDeck/slide-02.webp
 !/img/Vetir/New Work/StylistDeck/slide-03.webp
@@ -84,95 +94,99 @@ versions/
 !/img/Vetir/Outcomes_video.mp4
 !/img/Vetir/Outcomes_video.webm
 !/img/Vetir/designs_ss/AIStylist_old.jpeg
-!/img/Vetir/designs_ss/Analytics_old.png
-!/img/Vetir/designs_ss/Closet_old.png
+!/img/Vetir/designs_ss/Analytics_old.webp
+!/img/Vetir/designs_ss/Closet_old.webp
 !/img/Vetir/designs_ss/homepage_desktop_before.webp
 !/img/Vetir/designs_ss/homepage_mobile_before.webp
-!/img/Vetir/learn-bg.png
+!/img/Vetir/learn-bg.webp
 !/img/Vetir/paper-bg.jpg
-!/img/flatlay/airpods-case.png
-!/img/flatlay/airpods.png
-!/img/flatlay/book-stack.png
-!/img/flatlay/coffee.png
-!/img/flatlay/laptop.png
-!/img/flatlay/notebook.png
-!/img/flatlay/passport.png
-!/img/flatlay/pclip.png
-!/img/flatlay/pen.png
-!/img/flatlay/phone-polaroid.png
-!/img/flatlay/shades.png
-!/img/icici-postcard.png
-!/img/paperdown.png
-!/img/paperup.png
-!/img/portrait.png
-!/img/sticker 3.png
-!/img/sticker 4.png
-!/img/sticker 5.png
-!/img/vetr-postcard.png
+!/img/flatlay/airpods-case.webp
+!/img/flatlay/airpods.webp
+!/img/flatlay/book-stack.webp
+!/img/flatlay/coffee.webp
+!/img/flatlay/laptop.webp
+!/img/flatlay/notebook.webp
+!/img/flatlay/passport.webp
+!/img/flatlay/pclip.webp
+!/img/flatlay/pen.webp
+!/img/flatlay/phone-polaroid.webp
+!/img/flatlay/shades.webp
+!/img/Postcard mocks/icici-postcard.webp
+!/img/paperdown.webp
+!/img/paperup.webp
+!/img/portrait.webp
+!/img/sticker 3.webp
+!/img/sticker 4.webp
+!/img/sticker 5.webp
+!/img/Postcard mocks/vetr-postcard.webp
 !/img/flatlay/portfoliolabel.webp
 !/img/favicon.png
 !/img/apple-touch-icon.png
 !/img/og-image.jpg
-!/img/vetr-postcard-v.webp
-!/img/icici-postcard-v.webp
-!/img/Postcard default-v.webp
-!/img/logosportfolio/trimmed/icici.png
-!/img/logosportfolio/trimmed/csb.png
-!/img/logosportfolio/trimmed/dishtv.png
-!/img/logosportfolio/trimmed/reliance.png
-!/img/logosportfolio/trimmed/hcltech.png
-!/img/Vetir/Icons/Add-photo.png
-!/img/Vetir/Icons/Analytics.png
-!/img/Vetir/Icons/Avatar-ai.png
-!/img/Vetir/Icons/Calendar.png
-!/img/Vetir/Icons/Camera.png
-!/img/Vetir/Icons/Cancelled.png
-!/img/Vetir/Icons/Chat.png
-!/img/Vetir/Icons/Closet.png
-!/img/Vetir/Icons/Coin.png
-!/img/Vetir/Icons/Credit Card.png
-!/img/Vetir/Icons/Email.png
-!/img/Vetir/Icons/Gridlayout2.png
-!/img/Vetir/Icons/Home.png
-!/img/Vetir/Icons/Image-search.png
-!/img/Vetir/Icons/Invoice.png
-!/img/Vetir/Icons/Listening.png
-!/img/Vetir/Icons/More.png
-!/img/Vetir/Icons/Notification.png
-!/img/Vetir/Icons/Outfit-men.png
-!/img/Vetir/Icons/Outfit.png
-!/img/Vetir/Icons/PackingList.png
-!/img/Vetir/Icons/Partially Cloudy.png
-!/img/Vetir/Icons/Pin.png
-!/img/Vetir/Icons/Play.png
-!/img/Vetir/Icons/Pricetag.png
-!/img/Vetir/Icons/Rain.png
-!/img/Vetir/Icons/Returned.png
-!/img/Vetir/Icons/Search.png
-!/img/Vetir/Icons/Select.png
-!/img/Vetir/Icons/Send.png
-!/img/Vetir/Icons/Shipped.png
-!/img/Vetir/Icons/Shop.png
-!/img/Vetir/Icons/Sizes/Closet-1.png
-!/img/Vetir/Icons/Sizes/Closet-2.png
-!/img/Vetir/Icons/Sizes/Closet-32.png
-!/img/Vetir/Icons/Sizes/Closet.png
-!/img/Vetir/Icons/Snowflake.png
-!/img/Vetir/Icons/Sun.png
-!/img/Vetir/Icons/Trend-graph.png
-!/img/Vetir/Icons/Tryon.png
-!/img/Vetir/Icons/Tutorial.png
-!/img/Vetir/Icons/Wand.png
-!/img/Vetir/Icons/Windy.png
-!/img/Vetir/Icons/iconcomp/web/add-item.png
-!/img/Vetir/Icons/iconcomp/web/avatar.png
-!/img/Vetir/Icons/iconcomp/web/card-row.png
-!/img/Vetir/Icons/iconcomp/web/nav-home.png
-!/img/Vetir/Icons/iconcomp/web/order-status.png
-!/img/Vetir/Icons/iconcomp/web/outfit-menu.png
-!/img/Vetir/Icons/sparkle.png
+!/img/Postcard mocks/vetr-postcard-v.webp
+!/img/Postcard mocks/icici-postcard-v.webp
+!/img/Postcard mocks/Postcard default-v.webp
+!/img/Postcard mocks/csb-postcard.webp
+!/img/Postcard mocks/csb-postcard-v.webp
+!/img/Postcard mocks/fincare-postcard.webp
+!/img/Postcard mocks/fincare-postcard-v.webp
+!/img/logosportfolio/trimmed/icici.webp
+!/img/logosportfolio/trimmed/csb.webp
+!/img/logosportfolio/trimmed/dishtv.webp
+!/img/logosportfolio/trimmed/reliance.webp
+!/img/logosportfolio/trimmed/hcltech.webp
+!/img/Vetir/Icons/Add-photo.webp
+!/img/Vetir/Icons/Analytics.webp
+!/img/Vetir/Icons/Avatar-ai.webp
+!/img/Vetir/Icons/Calendar.webp
+!/img/Vetir/Icons/Camera.webp
+!/img/Vetir/Icons/Cancelled.webp
+!/img/Vetir/Icons/Chat.webp
+!/img/Vetir/Icons/Closet.webp
+!/img/Vetir/Icons/Coin.webp
+!/img/Vetir/Icons/Credit Card.webp
+!/img/Vetir/Icons/Email.webp
+!/img/Vetir/Icons/Gridlayout2.webp
+!/img/Vetir/Icons/Home.webp
+!/img/Vetir/Icons/Image-search.webp
+!/img/Vetir/Icons/Invoice.webp
+!/img/Vetir/Icons/Listening.webp
+!/img/Vetir/Icons/More.webp
+!/img/Vetir/Icons/Notification.webp
+!/img/Vetir/Icons/Outfit-men.webp
+!/img/Vetir/Icons/Outfit.webp
+!/img/Vetir/Icons/PackingList.webp
+!/img/Vetir/Icons/Partially Cloudy.webp
+!/img/Vetir/Icons/Pin.webp
+!/img/Vetir/Icons/Play.webp
+!/img/Vetir/Icons/Pricetag.webp
+!/img/Vetir/Icons/Rain.webp
+!/img/Vetir/Icons/Returned.webp
+!/img/Vetir/Icons/Search.webp
+!/img/Vetir/Icons/Select.webp
+!/img/Vetir/Icons/Send.webp
+!/img/Vetir/Icons/Shipped.webp
+!/img/Vetir/Icons/Shop.webp
+!/img/Vetir/Icons/Sizes/Closet-1.webp
+!/img/Vetir/Icons/Sizes/Closet-2.webp
+!/img/Vetir/Icons/Sizes/Closet-32.webp
+!/img/Vetir/Icons/Sizes/Closet.webp
+!/img/Vetir/Icons/Snowflake.webp
+!/img/Vetir/Icons/Sun.webp
+!/img/Vetir/Icons/Trend-graph.webp
+!/img/Vetir/Icons/Tryon.webp
+!/img/Vetir/Icons/Tutorial.webp
+!/img/Vetir/Icons/Wand.webp
+!/img/Vetir/Icons/Windy.webp
+!/img/Vetir/Icons/iconcomp/web/add-item.webp
+!/img/Vetir/Icons/iconcomp/web/avatar.webp
+!/img/Vetir/Icons/iconcomp/web/card-row.webp
+!/img/Vetir/Icons/iconcomp/web/nav-home.webp
+!/img/Vetir/Icons/iconcomp/web/order-status.webp
+!/img/Vetir/Icons/iconcomp/web/outfit-menu.webp
+!/img/Vetir/Icons/sparkle.webp
 !/img/Vetir/New Work/Chapter4ClientHP_App.webp
 !/img/Vetir/New Work/Chapter4StylistHP_App.webp
 !/img/Vetir/New Work/Chapter4NewUserHP_App.webp
-!/img/Vetir/Cutouts/servinglooks2.png
-!/img/Vetir/Cutouts/servinglooks3.png
+!/img/Vetir/Cutouts/servinglooks2.webp
+!/img/Vetir/Cutouts/servinglooks3.webp

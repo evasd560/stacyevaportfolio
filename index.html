@@ -657,6 +657,70 @@
       transition: opacity 0.2s ease, scale 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
       transition-delay: calc(var(--i) * 40ms);
     }
+    /* Brands I've designed for: overlapping logo circles under the bio, bottom
+       right (left on phones), with a tilted mono note. They pop in once the
+       bio has finished typing. */
+    .intro-brands {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 22px;
+      margin-top: 56px;
+    }
+    .intro-brands-row {
+      display: flex;
+      list-style: none;
+      margin: 0;
+      padding: 0 0 0 14px;
+    }
+    .brand-dot {
+      position: relative;
+      width: 76px;
+      height: 76px;
+      margin-left: -14px;
+      border-radius: 50%;
+      background: #fff;
+      border: 3px solid #f7f5f0;
+      box-shadow: 0 6px 16px rgba(40, 25, 80, 0.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      scale: 0.6;
+      transition: opacity 0.3s ease, scale 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), translate 0.25s ease;
+      transition-delay: calc(var(--i) * 80ms), calc(var(--i) * 80ms), 0s;
+    }
+    .brand-dot img {
+      max-width: 66%;   /* clear of the next circle's overlap */
+      max-height: 42%;
+      object-fit: contain;
+    }
+    .brand-dot:hover { translate: 0 -5px; z-index: 1; }
+    .intro-brands-note {
+      font-family: 'Geist Mono', monospace;
+      font-size: 13px;
+      line-height: 1.5;
+      color: rgba(45, 42, 78, 0.75);
+      rotate: -6deg;
+      white-space: nowrap;
+      opacity: 0;
+      transition: opacity 0.5s ease 0.5s;
+    }
+    .intro-brands-note svg {
+      display: block;
+      width: 46px;
+      height: 18px;
+      margin-top: 4px;
+      color: rgba(45, 42, 78, 0.6);
+    }
+    .intro-brands.is-shown .brand-dot { opacity: 1; scale: 1; }
+    .intro-brands.is-shown .intro-brands-note { opacity: 1; }
+    @media (max-width: 767px) {
+      .intro-brands { justify-content: flex-start; gap: 12px; margin-top: 40px; }
+      .brand-dot { width: 54px; height: 54px; margin-left: -10px; }
+      .intro-brands-row { padding-left: 10px; }
+      .intro-brands-note { font-size: 11px; }
+    }
     .intro-inner {
       z-index: 1;
       /* Breathing room after View CV before Selected Work starts to show */
@@ -1288,6 +1352,28 @@
       border-radius: 21px;
       box-shadow: 0 12px 24px rgba(28, 20, 15, 0.18);
     }
+    /* An app's real icon in place of a card (the PNG has its own rounded corners) */
+    .sq-app-img {
+      display: block;
+      width: 132px;
+      height: 132px;
+      filter: drop-shadow(0 14px 22px rgba(28, 20, 15, 0.18));
+    }
+    /* A logo with no icon of its own, set on a white app-icon tile to match */
+    .sq-app-tile {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 132px;
+      height: 132px;
+      border-radius: 22%;
+      background: #fff;
+      filter: drop-shadow(0 14px 22px rgba(28, 20, 15, 0.18));
+    }
+    .sq-app-tile img {
+      width: 78%;
+      height: auto;
+    }
     .sq-app-icon svg {
       width: 54%;
       height: 54%;
@@ -1449,11 +1535,11 @@
       <section class="intro-section relative px-6 md:px-16 lg:px-24 py-28 md:py-36 overflow-hidden">
         <!-- Brands worked with: stickers shown around the industry chips on hover -->
         <div class="intro-logos" id="intro-logos" aria-label="Brands I've designed for">
-          <div class="logo-tile" style="--i:0; --tilt:-5deg"><img src="img/logosportfolio/trimmed/icici.png" alt="ICICI Bank"></div>
-          <div class="logo-tile" style="--i:1; --tilt:3deg"><img src="img/logosportfolio/trimmed/csb.png" alt="CSB Bank"></div>
-          <div class="logo-tile" style="--i:2; --tilt:-2deg"><img src="img/logosportfolio/trimmed/dishtv.png" alt="Dish TV"></div>
-          <div class="logo-tile" style="--i:3; --tilt:4deg"><img src="img/logosportfolio/trimmed/reliance.png" alt="Reliance Industries"></div>
-          <div class="logo-tile" style="--i:4; --tilt:-4deg"><img src="img/logosportfolio/trimmed/hcltech.png" alt="HCLTech"></div>
+          <div class="logo-tile" style="--i:0; --tilt:-5deg"><img src="img/logosportfolio/trimmed/icici.webp" alt="ICICI Bank"></div>
+          <div class="logo-tile" style="--i:1; --tilt:3deg"><img src="img/logosportfolio/trimmed/csb.webp" alt="CSB Bank"></div>
+          <div class="logo-tile" style="--i:2; --tilt:-2deg"><img src="img/logosportfolio/trimmed/dishtv.webp" alt="Dish TV"></div>
+          <div class="logo-tile" style="--i:3; --tilt:4deg"><img src="img/logosportfolio/trimmed/reliance.webp" alt="Reliance Industries"></div>
+          <div class="logo-tile" style="--i:4; --tilt:-4deg"><img src="img/logosportfolio/trimmed/hcltech.webp" alt="HCLTech"></div>
         </div>
         <div class="intro-inner max-w-6xl mx-auto relative">
 
@@ -1476,6 +1562,21 @@
           Vietnamese coffee, curating my personal
           foodie database on Google Maps, or vibe-coding the next app that’s going to solve one of my first-world problems.<span class="stamped-sticker-wrapper is-pinned" style="top:59%; right:8%;"><img src="img/sticker 5.webp" class="stamped-sticker" alt="Sticker 5"></span>
 
+          </div>
+
+          <!-- Brands I've designed for -->
+          <div class="intro-brands" id="intro-brands">
+            <ul class="intro-brands-row" aria-label="Brands I've designed for">
+              <li class="brand-dot" style="--i:0" title="ICICI Bank"><img src="img/logosportfolio/trimmed/icici.webp" alt="ICICI Bank"></li>
+              <li class="brand-dot" style="--i:1" title="CSB Bank"><img src="img/logosportfolio/trimmed/csb.webp" alt="CSB Bank"></li>
+              <li class="brand-dot" style="--i:2" title="Reliance Industries"><img src="img/logosportfolio/trimmed/reliance.webp" alt="Reliance Industries"></li>
+              <li class="brand-dot" style="--i:3" title="HCLTech"><img src="img/logosportfolio/trimmed/hcltech.webp" alt="HCLTech"></li>
+              <li class="brand-dot" style="--i:4" title="Dish TV"><img src="img/logosportfolio/trimmed/dishtv.webp" alt="Dish TV"></li>
+            </ul>
+            <p class="intro-brands-note" aria-hidden="true">
+              Brands I've<br>designed for
+              <svg viewBox="0 0 46 18" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M44 4 C 32 15, 16 15, 4 9" /><path d="M10 5 L 4 9 L 10 13" /></svg>
+            </p>
           </div>
 
           <!-- View CV: hidden for now (remove "hidden" to bring it back) -->
@@ -1508,7 +1609,7 @@
           <div class="portfolio-track is-stacked sw-in-2" id="portfolio-track">
               <!-- Card 1: Vetir -->
               <div class="portfolio-card is-art font-bio select-none" id="p-card-vetir">
-                <picture><source media="(max-width: 639px)" srcset="img/vetr-postcard-v.webp"><img src="img/vetr-postcard.webp" class="postcard-art-base" alt="Vêtir postcard"></picture>
+                <picture><source media="(max-width: 639px)" srcset="img/Postcard%20mocks/vetr-postcard-v.webp"><img src="img/Postcard%20mocks/vetr-postcard.webp" class="postcard-art-base" alt="Vêtir postcard"></picture>
                 <div class="postcard-art-copy">
                   <div class="postcard-art-eyebrow">Fashion / AI Styling / 01</div>
                   <!-- kept short so it clears the postal stamp, as in the artwork -->
@@ -1536,7 +1637,7 @@
 
               <!-- Card 2: ICICI Bank Website -->
               <div class="portfolio-card is-art font-bio select-none" id="p-card-0">
-                <picture><source media="(max-width: 639px)" srcset="img/icici-postcard-v.webp"><img src="img/icici-postcard.webp" class="postcard-art-base" alt="ICICI Bank Website postcard"></picture>
+                <picture><source media="(max-width: 639px)" srcset="img/Postcard%20mocks/icici-postcard-v.webp"><img src="img/Postcard%20mocks/icici-postcard.webp" class="postcard-art-base" alt="ICICI Bank Website postcard"></picture>
                 <div class="postcard-art-copy">
                   <div class="postcard-art-eyebrow">Banking / Web Revamp / 02</div>
                   <!-- kept short so it clears the postal stamp, as in the artwork -->
@@ -1562,9 +1663,9 @@
                 </div>
               </div>
 
-              <!-- Card 3: CSB Bank App (default postcard artwork; its photo frame is left empty) -->
+              <!-- Card 3: CSB Bank App -->
               <div class="portfolio-card is-art font-bio select-none" id="p-card-1">
-                <picture><source media="(max-width: 639px)" srcset="img/Postcard%20default-v.webp"><img src="img/Postcard default.webp" class="postcard-art-base" alt="CSB Bank App postcard"></picture>
+                <picture><source media="(max-width: 639px)" srcset="img/Postcard%20mocks/csb-postcard-v.webp"><img src="img/Postcard%20mocks/csb-postcard.webp" class="postcard-art-base" alt="CSB Bank App postcard"></picture>
                 <div class="postcard-art-copy">
                   <div class="postcard-art-eyebrow">Mobile Banking / App / 03</div>
                   <div class="postcard-art-rule" style="margin-top:0.7em; width:44%;"></div>
@@ -1588,9 +1689,9 @@
                 </div>
               </div>
 
-              <!-- Card 4: Fincare Bank Website (default postcard artwork; its photo frame is left empty) -->
+              <!-- Card 4: Fincare Bank Website -->
               <div class="portfolio-card is-art font-bio select-none" id="p-card-2">
-                <picture><source media="(max-width: 639px)" srcset="img/Postcard%20default-v.webp"><img src="img/Postcard default.webp" class="postcard-art-base" alt="Fincare Bank Website postcard"></picture>
+                <picture><source media="(max-width: 639px)" srcset="img/Postcard%20mocks/fincare-postcard-v.webp"><img src="img/Postcard%20mocks/fincare-postcard.webp" class="postcard-art-base" alt="Fincare Bank Website postcard"></picture>
                 <div class="postcard-art-copy">
                   <div class="postcard-art-eyebrow">Financial Services / Web / 04</div>
                   <div class="postcard-art-rule" style="margin-top:0.7em; width:44%;"></div>
@@ -1616,7 +1717,7 @@
 
               <!-- Card 5: HCLTech Employee Portal (default postcard artwork; its photo frame is left empty) -->
               <div class="portfolio-card is-art font-bio select-none" id="p-card-3">
-                <picture><source media="(max-width: 639px)" srcset="img/Postcard%20default-v.webp"><img src="img/Postcard default.webp" class="postcard-art-base" alt="HCLTech Portal postcard"></picture>
+                <picture><source media="(max-width: 639px)" srcset="img/Postcard%20mocks/Postcard%20default-v.webp"><img src="img/Postcard%20mocks/Postcard%20default.webp" class="postcard-art-base" alt="HCLTech Portal postcard"></picture>
                 <div class="postcard-art-copy">
                   <div class="postcard-art-eyebrow">Corporate Intranet / Portal / 05</div>
                   <div class="postcard-art-rule" style="margin-top:0.7em; width:44%;"></div>
@@ -1637,7 +1738,7 @@
 
               <!-- Card 6: Reliance Careers Website (default postcard artwork; its photo frame is left empty) -->
               <div class="portfolio-card is-art font-bio select-none" id="p-card-4">
-                <picture><source media="(max-width: 639px)" srcset="img/Postcard%20default-v.webp"><img src="img/Postcard default.webp" class="postcard-art-base" alt="Reliance Careers postcard"></picture>
+                <picture><source media="(max-width: 639px)" srcset="img/Postcard%20mocks/Postcard%20default-v.webp"><img src="img/Postcard%20mocks/Postcard%20default.webp" class="postcard-art-base" alt="Reliance Careers postcard"></picture>
                 <div class="postcard-art-copy">
                   <div class="postcard-art-eyebrow">Careers Website / Portal / 06</div>
                   <div class="postcard-art-rule" style="margin-top:0.7em; width:44%;"></div>
@@ -1658,7 +1759,7 @@
 
               <!-- Card 7: Edelweiss Alternative Assets Website (default postcard artwork; its photo frame is left empty) -->
               <div class="portfolio-card is-art font-bio select-none" id="p-card-5">
-                <picture><source media="(max-width: 639px)" srcset="img/Postcard%20default-v.webp"><img src="img/Postcard default.webp" class="postcard-art-base" alt="Edelweiss Assets postcard"></picture>
+                <picture><source media="(max-width: 639px)" srcset="img/Postcard%20mocks/Postcard%20default-v.webp"><img src="img/Postcard%20mocks/Postcard%20default.webp" class="postcard-art-base" alt="Edelweiss Assets postcard"></picture>
                 <div class="postcard-art-copy">
                   <div class="postcard-art-eyebrow">Alternative Assets / Web / 07</div>
                   <div class="postcard-art-rule" style="margin-top:0.7em; width:44%;"></div>
@@ -1801,7 +1902,7 @@
 
       <!-- Testimonials / Chat Section -->
       <!-- Client praise: hidden for now (remove "hidden" to bring it back) -->
-      <section id="chat-section" class="hidden text-[#281950] pt-20 pb-0 px-6 md:px-12 w-full select-none flex flex-col items-center justify-center relative overflow-hidden" data-bg="img/testback.png" style="background-size: cover; background-position: center; background-repeat: no-repeat;">
+      <section id="chat-section" class="hidden text-[#281950] pt-20 pb-0 px-6 md:px-12 w-full select-none flex flex-col items-center justify-center relative overflow-hidden" data-bg="img/testback.webp" style="background-size: cover; background-position: center; background-repeat: no-repeat;">
         
         <!-- Header -->
         <div class="text-center mb-4 select-none flex flex-col items-center">
@@ -1959,21 +2060,11 @@
         <!-- Card layer spans both sections so the cards can travel between them -->
         <div id="sq-cards" class="sq-cards-layer">
 
-          <!-- Scattered cards -->
-
-
-          <button type="button" class="sq-card"
-            data-x0="89" data-y0="13" data-r0="5" data-s0="1"
-            data-x1="80" data-y1="6"  data-r1="7"  data-s1="0.58"
-            data-sq-title="Desiw" data-sq-tag="desiw.app" data-sq-gradient="from-cyan-100 to-emerald-50">
-            <span class="sq-card-inner"><span class="sq-card-img bg-gradient-to-br from-cyan-100 to-emerald-50"></span></span>
-            <span class="sq-card-label">desiw.app</span>
-          </button>
 
 
           <!-- Shortcut tiles - hrefs are placeholders, add the real URLs later -->
           <a href="https://pin.it/ttEL3jqrv" target="_blank" rel="noopener noreferrer" class="sq-card" data-sq-link
-            data-x0="26" data-y0="88" data-r0="-4" data-s0="1"
+            data-x0="30" data-y0="82" data-r0="0" data-s0="1"
             data-x1="9"  data-y1="40" data-r1="-6" data-s1="0.32">
             <span class="sq-card-inner">
               <span class="sq-app-icon" style="background:#E60023;">
@@ -1987,7 +2078,7 @@
           </a>
 
           <a href="#" target="_blank" rel="noopener noreferrer" class="sq-card" data-sq-link
-            data-x0="44" data-y0="90" data-r0="3" data-s0="1"
+            data-x0="50" data-y0="82" data-r0="0" data-s0="1"
             data-x1="91" data-y1="36" data-r1="5" data-s1="0.32">
             <span class="sq-card-inner">
               <span class="sq-app-icon" style="background:#EA4C89;">
@@ -2003,7 +2094,7 @@
           </a>
 
           <a href="#" target="_blank" rel="noopener noreferrer" class="sq-card" data-sq-link
-            data-x0="62" data-y0="87" data-r0="-3" data-s0="1"
+            data-x0="70" data-y0="82" data-r0="0" data-s0="1"
             data-x1="40" data-y1="6" data-r1="4" data-s1="0.30">
             <span class="sq-card-inner">
               <span class="sq-app-icon" style="background:#2d2a4e;">
@@ -2020,7 +2111,7 @@
 
           <!-- Folder: My Apps -->
           <button type="button" class="sq-card" data-sq-folder="my-apps"
-            data-x0="32" data-y0="48" data-r0="0" data-s0="1"
+            data-x0="30" data-y0="50" data-r0="0" data-s0="1"
             data-x1="14" data-y1="30" data-r1="8"  data-s1="0.40">
             <span class="sq-card-inner"><span class="sq-folder-icon"></span></span>
             <span class="sq-folder-label">My Apps</span>
@@ -2029,26 +2120,32 @@
           <!-- Three cards fan left, centre-top (fan 4) and right -->
           <button type="button" class="sq-card" data-fan="0" data-sq-parent="my-apps"
             data-x1="38" data-y1="14" data-r1="6"  data-s1="0.43"
-            data-sq-title="Detour" data-sq-tag="my-apps / detour" data-sq-gradient="from-sky-100 to-blue-50">
-            <span class="sq-card-inner"><span class="sq-card-img bg-gradient-to-br from-sky-100 to-blue-50"></span></span>
+            data-sq-title="Detour" data-sq-tag="my-apps / detour" data-sq-gradient="from-sky-100 to-blue-50"
+            data-sq-desc="Discover top places, local dishes, restaurants and unique activities anywhere in the world. Built with Gemini AI."
+            data-sq-image="img/sidequests/detour.webp" data-sq-href="https://evasd560.github.io/Travel_Itinerary/" data-sq-cta="Plan your next trip">
+            <span class="sq-card-inner"><img src="img/DetourAppIcon.webp" class="sq-app-img" alt="Detour app icon"></span>
             <span class="sq-card-label">Detour</span>
           </button>
           <button type="button" class="sq-card" data-fan="4" data-sq-parent="my-apps"
             data-x1="43" data-y1="25" data-r1="-8" data-s1="0.20"
-            data-sq-title="Desi Wordle" data-sq-tag="my-apps / desi wordle" data-sq-gradient="from-amber-100 to-rose-50">
-            <span class="sq-card-inner"><span class="sq-card-img bg-gradient-to-br from-amber-100 to-rose-50"></span></span>
+            data-sq-title="Desi Wordle" data-sq-tag="my-apps / desi wordle" data-sq-gradient="from-amber-100 to-rose-50"
+            data-sq-desc="A daily desi word game. Guess the word in 6 tries."
+            data-sq-image="img/sidequests/desiwordle.webp" data-sq-href="https://desi-wordle.vercel.app/" data-sq-cta="Play today's word">
+            <span class="sq-card-inner"><img src="img/DesiWordleAppIcon.webp" class="sq-app-img" alt="Desi Wordle app icon"></span>
             <span class="sq-card-label">Desi Wordle</span>
           </button>
           <button type="button" class="sq-card" data-fan="3" data-sq-parent="my-apps"
             data-x1="26" data-y1="22" data-r1="-10" data-s1="0.30"
-            data-sq-title="BiliG" data-sq-tag="my-apps / bilig" data-sq-gradient="from-emerald-100 to-teal-50">
-            <span class="sq-card-inner"><span class="sq-card-img bg-gradient-to-br from-emerald-100 to-teal-50"></span></span>
+            data-sq-title="BiliG" data-sq-tag="my-apps / bilig" data-sq-gradient="from-emerald-100 to-teal-50"
+            data-sq-desc="A language diary."
+            data-sq-image="img/sidequests/bilig.webp" data-sq-href="https://evasd560.github.io/BiliG/" data-sq-cta="Learn the word of the day">
+            <span class="sq-card-inner"><span class="sq-app-tile"><img src="img/BiliGAppIcon.webp" alt="BiliG logo"></span></span>
             <span class="sq-card-label">BiliG</span>
           </button>
 
           <!-- Folder: POCs -->
           <button type="button" class="sq-card" data-sq-folder="pocs"
-            data-x0="67" data-y0="62" data-r0="0" data-s0="1"
+            data-x0="70" data-y0="50" data-r0="0" data-s0="1"
             data-x1="88" data-y1="31" data-r1="-6" data-s1="0.39">
             <span class="sq-card-inner"><span class="sq-folder-icon"></span></span>
             <span class="sq-folder-label">POCs</span>
@@ -2095,7 +2192,12 @@
           <div class="p-6">
             <p id="sidequest-modal-tag" class="font-mono text-xs uppercase tracking-widest text-[#1c1c1a]/40 mb-1">sbm.bank</p>
             <h3 id="sidequest-modal-title" class="font-serif-display text-2xl text-[#281950]">Concept</h3>
-            <p class="text-sm text-[#1c1c1a]/60 mt-2 leading-relaxed">Placeholder preview — swap this image (and this text) for the real project shot whenever it's ready.</p>
+            <p id="sidequest-modal-desc" class="text-sm text-[#1c1c1a]/60 mt-2 leading-relaxed">Placeholder preview — swap this image (and this text) for the real project shot whenever it's ready.</p>
+            <!-- Shown for cards with a live link (data-sq-href / data-sq-cta) -->
+            <a id="sidequest-modal-cta" href="#" target="_blank" rel="noopener noreferrer"
+              class="hidden mt-5 inline-flex items-center gap-2 rounded-full bg-[#281950] text-white px-5 py-2.5 text-sm font-semibold hover:bg-[#3a2a6e] transition-colors">
+              <span id="sidequest-modal-cta-label">Open</span><span aria-hidden="true">&rarr;</span>
+            </a>
           </div>
         </div>
       </div>
@@ -2115,16 +2217,19 @@
             <div class="mt-10 flex flex-wrap items-center justify-center gap-4">
               <a href="mailto:stacydias005@gmail.com"
                 class="inline-flex items-center gap-2 rounded-full border-2 border-[#ffabd2] text-[#ffabd2] hover:bg-[#ffabd2] hover:text-[#281950] px-7 py-3 font-bio text-xs font-semibold tracking-[0.15em] uppercase antialiased transition-colors">
+                <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M3.5 7l8.5 6 8.5-6"/></svg>
                 Email
               </a>
               <a href="https://www.linkedin.com/in/stacyevadias/" target="_blank" rel="noopener noreferrer"
                 class="inline-flex items-center gap-2 rounded-full border-2 border-[#ffabd2] text-[#ffabd2] hover:bg-[#ffabd2] hover:text-[#281950] px-7 py-3 font-bio text-xs font-semibold tracking-[0.15em] uppercase antialiased transition-colors">
-                LinkedIn <span aria-hidden="true">↗&#xFE0E;</span>
+                <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M8 11v6"/><circle cx="8" cy="7.6" r="0.6" fill="currentColor"/><path d="M12 17v-6m0 2.8c0-1.6 1.2-2.8 2.6-2.8s2.4 1 2.4 2.6V17"/></svg>
+                LinkedIn
               </a>
               <!-- TODO: replace # with your resume URL -->
               <a href="#" target="_blank" rel="noopener noreferrer"
                 class="inline-flex items-center gap-2 rounded-full border-2 border-[#ffabd2] text-[#ffabd2] hover:bg-[#ffabd2] hover:text-[#281950] px-7 py-3 font-bio text-xs font-semibold tracking-[0.15em] uppercase antialiased transition-colors">
-                Resume <span aria-hidden="true">↗&#xFE0E;</span>
+                <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h6"/></svg>
+                Resume
               </a>
             </div>
           </div>
@@ -2172,13 +2277,13 @@
         <!-- Sized to the frame's screen cut-out (measured from PhonePlayer.png) -->
         <div id="phone-game-screen" class="phone-open-part absolute z-30 overflow-hidden bg-[#E4D3AC] pointer-events-auto"
              style="left: 33.32%; top: 13.17%; width: 33.64%; height: 25.77%; border-radius: 2px;">
-          <iframe id="phone-game-frame" title="Desi Wordle" data-src="https://evasd560.github.io/desiwordle/"
+          <iframe id="phone-game-frame" title="Desi Wordle" data-src="https://desi-wordle.vercel.app/"
                   class="absolute top-0 left-0 border-0 origin-top-left" style="width: 360px;"></iframe>
           <!-- Boot screen: a soft glow with "Play" for 1.4s each time the phone opens,
                then it fades to reveal the game (which loads underneath meanwhile) -->
           <div id="phone-boot" class="phone-boot" aria-hidden="true"><span>Play</span></div>
           <!-- Tapping the screen opens the game in a new tab -->
-          <a href="https://evasd560.github.io/desiwordle/" target="_blank" rel="noopener noreferrer"
+          <a href="https://desi-wordle.vercel.app/" target="_blank" rel="noopener noreferrer"
              class="phone-game-link" aria-label="Play Desi Wordle (opens in a new tab)"></a>
         </div>
 
@@ -2439,6 +2544,7 @@
             const sticker = w.querySelector('.stamped-sticker');
             if (sticker) sticker.classList.add('visible');
           });
+          document.dispatchEvent(new CustomEvent('bio-typed'));
           return;
         }
         
@@ -3183,6 +3289,12 @@
       window.addEventListener('resize', hide);
     })();
 
+    // Brand circles pop in once the bio has finished typing
+    document.addEventListener('bio-typed', () => {
+      const brands = document.getElementById('intro-brands');
+      if (brands) brands.classList.add('is-shown');
+    });
+
     // Hero "Get to know me" button -> the intro (about me)
     (function () {
       const cta = document.getElementById('hero-cta');
@@ -3230,6 +3342,11 @@
       const modalImage = document.getElementById('sidequest-modal-image');
       const modalTitle = document.getElementById('sidequest-modal-title');
       const modalTag = document.getElementById('sidequest-modal-tag');
+      const modalPanel = document.getElementById('sidequest-modal-panel');
+      const modalDesc = document.getElementById('sidequest-modal-desc');
+      const modalCta = document.getElementById('sidequest-modal-cta');
+      const modalCtaLabel = document.getElementById('sidequest-modal-cta-label');
+      const placeholderDesc = modalDesc ? modalDesc.textContent : '';
 
       // Fan offsets (px from the folder centre) when a folder is opened by click
       // (index 4 is a centre-top spot, for folders with three cards)
@@ -3298,15 +3415,17 @@
         // fan spread shrink with it so rows stay inside and apart.
         // On narrow screens the width limits too, so icons get room between them
         const k = clamp(Math.min(deskRect.height / 640, deskRect.width / 720), 0.5, 1);
-        // Narrow screens: push the desktop layout out from the centre a little so
-        // neighbouring icons get more breathing room (kept inside 10-90%)
-        const spreadX = deskRect.width < 600 ? 1.22 : 1;
-        const sx = (x) => clamp(50 + (x - 50) * spreadX, 10, 90);
+        // Narrow screens: the icons shrink but the screen stays tall, so pull the
+        // rows in towards the middle rather than leave big gaps between them
+        const squeezeY = deskRect.width < 600 ? 0.6 : 1;
+        const sy = (y) => 50 + (y - 50) * squeezeY;
 
         cards.forEach((card, i) => {
           const a = desktopPose(card);
-          const x0 = dx + sx(a.x) / 100 * deskRect.width + a.px * k;
-          const y0 = dy + a.y / 100 * deskRect.height + a.py * k;
+          // keep fanned-out cards on screen (a folder near the edge of a phone)
+          const halfW = 88 * k;   // a tilted card is wider than its 132px
+          const x0 = clamp(dx + a.x / 100 * deskRect.width + a.px * k, halfW + 8, wrap.width - halfW - 8);
+          const y0 = dy + sy(a.y) / 100 * deskRect.height + a.py * k;
           const x1 = cx + num(card, 'data-x1', a.x) / 100 * collRect.width;
           const y1 = cy + num(card, 'data-y1', a.y) / 100 * collRect.height;
           card.style.setProperty('--x', lerp(x0, x1, e) + 'px');
@@ -3360,8 +3479,24 @@
       function openSidequestModal(btn) {
         const gradient = btn.getAttribute('data-sq-gradient') || 'from-rose-100 to-orange-50';
         modalImage.className = 'w-full aspect-[4/5] bg-gradient-to-br ' + gradient;
+        // Projects with a screenshot (data-sq-image) show it in a wider popup
+        const shot = btn.getAttribute('data-sq-image');
+        Object.assign(modalImage.style, shot
+          ? { backgroundImage: `url("${shot}")`, backgroundSize: 'cover', backgroundPosition: 'top center', aspectRatio: '2000 / 1099' }
+          : { backgroundImage: '', backgroundSize: '', backgroundPosition: '', aspectRatio: '' });
+        modalPanel.style.maxWidth = shot ? '42rem' : '';
         modalTitle.textContent = btn.getAttribute('data-sq-title') || 'Concept';
         modalTag.textContent = btn.getAttribute('data-sq-tag') || '';
+        if (modalDesc) modalDesc.textContent = btn.getAttribute('data-sq-desc') || placeholderDesc;
+        // Live projects get a button to their site (opens in a new tab)
+        const href = btn.getAttribute('data-sq-href');
+        if (modalCta) {
+          modalCta.classList.toggle('hidden', !href);
+          if (href) {
+            modalCta.href = href;
+            modalCtaLabel.textContent = btn.getAttribute('data-sq-cta') || 'Take a look';
+          }
+        }
         modal.classList.remove('hidden');
         modal.classList.add('flex', 'is-open');
         document.body.style.overflow = 'hidden';
