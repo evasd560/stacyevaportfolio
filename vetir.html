@@ -916,7 +916,7 @@
     .sf-item.is-on .sf-n { color: var(--gold); }
     .sf-item:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
     .sf-view { position: sticky; top: 90px; padding: 0; border: 0; background: none; cursor: zoom-in; }
-    .sf-view img { display: block; width: 100%; height: auto; border-radius: 12px; box-shadow: 0 24px 40px -24px rgba(20, 15, 5, 0.55); transition: opacity 0.18s ease; }
+    .sf-view img { display: block; width: 100%; height: auto; aspect-ratio: 600 / 1100; object-fit: cover; object-position: top; border-radius: 12px; box-shadow: 0 24px 40px -24px rgba(20, 15, 5, 0.55); transition: opacity 0.18s ease; }
     .sf-view img.is-swapping { opacity: 0; }
     @media (max-width: 860px) {
       .sf { grid-template-columns: 1fr; }
@@ -1467,90 +1467,18 @@
         </div>
 
         <div class="ch-tabs reveal" role="tablist" aria-label="Chapters">
-          <button class="ch-tab on" type="button" role="tab" id="tab-ch-outfit" aria-controls="ch-outfit" aria-selected="true" data-ai><span class="n">01</span>Outfits and Styling</button>
-          <button class="ch-tab" type="button" role="tab" id="tab-ch-closet" aria-controls="ch-closet" aria-selected="false"><span class="n">02</span>Closet</button>
-          <button class="ch-tab" type="button" role="tab" id="tab-ch-ai" aria-controls="ch-ai" aria-selected="false" data-ai><span class="n">03</span>AI Stylist</button>
-          <button class="ch-tab" type="button" role="tab" id="tab-ch-home" aria-controls="ch-home" aria-selected="false"><span class="n">04</span>Homepages</button>
+          <button class="ch-tab on" type="button" role="tab" id="tab-ch-home" aria-controls="ch-home" aria-selected="true"><span class="n">01</span>Homepage</button>
+          <button class="ch-tab" type="button" role="tab" id="tab-ch-outfit" aria-controls="ch-outfit" aria-selected="false" data-ai><span class="n">02</span>Outfits and Styling</button>
+          <button class="ch-tab" type="button" role="tab" id="tab-ch-closet" aria-controls="ch-closet" aria-selected="false"><span class="n">03</span>Closet</button>
+          <button class="ch-tab" type="button" role="tab" id="tab-ch-ai" aria-controls="ch-ai" aria-selected="false" data-ai><span class="n">04</span>AI Stylist</button>
           <button class="ch-tab" type="button" role="tab" id="tab-ch-dash" aria-controls="ch-dash" aria-selected="false"><span class="n">05</span>Stylist dashboard</button>
           <button class="ch-tab" type="button" role="tab" id="tab-ch-checkout" aria-controls="ch-checkout" aria-selected="false"><span class="n">06</span>Checkout</button>
         </div>
         <div class="ch-panel" id="ch-panel">
-          <article class="ch-pane on chapter" id="ch-outfit" role="tabpanel" aria-labelledby="tab-ch-outfit">
-          <div class="ch-text">
-            <span class="mono">Chapter 01</span>
-            <h3>Curated Looks<br><em>+ AI Styling</em></h3>
-            <div class="ba">
-              <span class="mono">Before</span><span>A static canvas, one undifferentiated product list, and AI help in a separate chat.</span>
-              <span class="mono">After</span><span class="after">The AI Stylist lives inside the canvas. Ask for ideas while you build.</span>
-            </div>
-            <p>Auto-arranged compositions, auto-filled outfit details, image-based search, looks built from a reference photo, and a calendar to plan ahead. The canvas <em class="serif-i">is</em> a flat lay, so that's how it's shown here.</p>
-            <a class="deep" href="#" aria-disabled="true">Deep dive <span class="soon">· coming soon</span></a>
-          </div>
-          <div class="ootd">
-            <div class="sheet">
-              <img class="ootd-look is-shown" src="img/Vetir/New%20Work/Chapter1.webp" alt="New outfit canvas with the AI Stylist suggesting flats inside the canvas">
-              <img class="ootd-look" src="img/Vetir/New%20Work/Chapter1a.webp" alt="My Outfits screen with a styled Black-tie Gala look">
-              <img class="ootd-look" src="img/Vetir/New%20Work/Chapter1b.webp" alt="All Outfits grid of saved looks, filterable by stylist picks, my looks and trending">
-            </div>
-          </div>
-        <!-- HIDDEN (Oct 2026): before/after compare slider for the outfit canvas. Waiting on real old/new canvas screens + AI Stylist recording. Remove `hidden` to show it again. -->
-        <div class="ch-wide" hidden>
-          <div class="compare" data-compare style="aspect-ratio: 16/7">
-            <figure class="ph after-ph"><svg><use href="#i-img"/></svg><div class="ph-tag">After · new canvas</div><div class="ph-desc">Embedded AI Stylist, closet/wishlist tags, auto-composition</div></figure>
-            <figure class="ph before-ph"><svg><use href="#i-img"/></svg><div class="ph-tag">Before · old canvas</div><div class="ph-desc">Bottom-sheet product list</div></figure>
-            <span class="tag b mono">Before</span><span class="tag a mono">After</span>
-            <div class="handle"></div>
-            <input type="range" min="0" max="100" value="50" aria-label="Compare before and after">
-          </div>
-          <p class="cap"><b>Drag to compare</b> the real screens. Plus an 8–10s recording of the AI Stylist inside the canvas.</p>
-        </div>
-        </article>
-          <article class="ch-pane chapter flip" id="ch-closet" role="tabpanel" aria-labelledby="tab-ch-closet" hidden>
-          <div class="ch-text">
-            <span class="mono">Chapter 02</span>
-            <h3>Closets <em>and wardrobe management</em></h3>
-            <div class="ba">
-              <span class="mono">Before</span><span>Everything in one list.</span>
-              <span class="mono">After</span><span class="after">Closet, wishlist and stylist-recommended pieces, each with its own clear treatment.</span>
-            </div>
-          </div>
-          <div class="pair phones single">
-            <figure class="ph closet-card"><img class="ph-fill" src="img/Vetir/New%20Work/Chapter2.webp" alt="New closet with closets, cities and categories"></figure>
-          </div>
-        </article>
-          <article class="ch-pane chapter" id="ch-ai" role="tabpanel" aria-labelledby="tab-ch-ai" hidden>
-          <div class="ch-text">
-            <span class="mono">Chapter 03 · <span style="color:var(--gold)">✦ AI</span></span>
-            <h3>AI Stylist <em>+ try-on</em></h3>
-            <div class="ba">
-              <span class="mono">Before</span><span>Type a query, get a wall of products. It felt like search.</span>
-              <span class="mono">After</span><span class="after">Styled outfits in the chat, and try-ons at the moment of purchase: see it on you, see what pairs with it.</span>
-            </div>
-          </div>
-          <div class="masonry" aria-label="Search grid with a stylist reply on top">
-            <span class="masonry-tag mono">Before: a wall of results</span>
-            <div class="colm">
-              <div class="tile" style="height:190px"><img src="img/Vetir/New%20Work/Chapter3bg/aistylistsearch1.webp" alt="" loading="lazy"></div>
-              <div class="tile" style="height:250px"><img src="img/Vetir/New%20Work/Chapter3bg/aistylistsearch6.webp" alt="" loading="lazy"></div>
-            </div>
-            <div class="colm">
-              <div class="tile" style="height:240px"><img src="img/Vetir/New%20Work/Chapter3bg/aistylistsearch7.webp" alt="" loading="lazy"></div>
-              <div class="tile" style="height:210px"><img src="img/Vetir/New%20Work/Chapter3bg/aistylistsearch3.webp" alt="" loading="lazy"></div>
-              <div class="tile" style="height:200px"><img src="img/Vetir/New%20Work/Chapter3bg/aistylistsearch8.webp" alt="" loading="lazy"></div>
-            </div>
-            <div class="colm">
-              <div class="tile" style="height:200px"><img src="img/Vetir/New%20Work/Chapter3bg/aistylistsearch2.webp" alt="" loading="lazy"></div>
-              <div class="tile" style="height:170px"><img src="img/Vetir/New%20Work/Chapter3bg/aistylistsearch5.webp" alt="" loading="lazy"></div>
-              <div class="tile" style="height:220px"><img src="img/Vetir/New%20Work/Chapter3bg/aistylistsearch4.webp" alt="" loading="lazy"></div>
-            </div>
-            <div class="searchbar"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><span>Something chic for dinner<span class="caret"></span></span></div>
-            <figure class="ph phone after after-phone"><img class="ph-fill" src="img/Vetir/New%20Work/Chapter3.webp" alt="AI Stylist suggesting summer soiree looks on a try-on avatar"></figure>
-          </div>
-        </article>
-          <article class="ch-pane chapter stack" id="ch-home" role="tabpanel" aria-labelledby="tab-ch-home" hidden>
+          <article class="ch-pane on chapter stack" id="ch-home" role="tabpanel" aria-labelledby="tab-ch-home">
           <div class="stack-top">
             <div class="ch-text">
-              <span class="mono">Chapter 04</span>
+              <span class="mono">Chapter 01</span>
               <h3>Personalized <em>homepages</em></h3>
               <p>Three audiences, three homepages. Shoppers and clients open on weekly try-ons across diverse avatars, followed by stylist picks, new arrivals, edits and a direct way into the AI Stylist. Guests get a lighter introduction to the product.</p>
               <a class="deep" href="#" aria-disabled="true">Deep dive <span class="soon">· coming soon</span></a>
@@ -1601,6 +1529,78 @@
               </video>
             </div>
           </figure>
+        </article>
+          <article class="ch-pane chapter" id="ch-outfit" role="tabpanel" aria-labelledby="tab-ch-outfit" hidden>
+          <div class="ch-text">
+            <span class="mono">Chapter 02</span>
+            <h3>Curated Looks<br><em>+ AI Styling</em></h3>
+            <div class="ba">
+              <span class="mono">Before</span><span>A static canvas, one undifferentiated product list, and AI help in a separate chat.</span>
+              <span class="mono">After</span><span class="after">The AI Stylist lives inside the canvas. Ask for ideas while you build.</span>
+            </div>
+            <p>Auto-arranged compositions, auto-filled outfit details, image-based search, looks built from a reference photo, and a calendar to plan ahead. The canvas <em class="serif-i">is</em> a flat lay, so that's how it's shown here.</p>
+            <a class="deep" href="#" aria-disabled="true">Deep dive <span class="soon">· coming soon</span></a>
+          </div>
+          <div class="ootd">
+            <div class="sheet">
+              <img class="ootd-look is-shown" src="img/Vetir/New%20Work/Chapter1.webp" alt="New outfit canvas with the AI Stylist suggesting flats inside the canvas">
+              <img class="ootd-look" src="img/Vetir/New%20Work/Chapter1a.webp" alt="My Outfits screen with a styled Black-tie Gala look">
+              <img class="ootd-look" src="img/Vetir/New%20Work/Chapter1b.webp" alt="All Outfits grid of saved looks, filterable by stylist picks, my looks and trending">
+            </div>
+          </div>
+        <!-- HIDDEN (Oct 2026): before/after compare slider for the outfit canvas. Waiting on real old/new canvas screens + AI Stylist recording. Remove `hidden` to show it again. -->
+        <div class="ch-wide" hidden>
+          <div class="compare" data-compare style="aspect-ratio: 16/7">
+            <figure class="ph after-ph"><svg><use href="#i-img"/></svg><div class="ph-tag">After · new canvas</div><div class="ph-desc">Embedded AI Stylist, closet/wishlist tags, auto-composition</div></figure>
+            <figure class="ph before-ph"><svg><use href="#i-img"/></svg><div class="ph-tag">Before · old canvas</div><div class="ph-desc">Bottom-sheet product list</div></figure>
+            <span class="tag b mono">Before</span><span class="tag a mono">After</span>
+            <div class="handle"></div>
+            <input type="range" min="0" max="100" value="50" aria-label="Compare before and after">
+          </div>
+          <p class="cap"><b>Drag to compare</b> the real screens. Plus an 8–10s recording of the AI Stylist inside the canvas.</p>
+        </div>
+        </article>
+          <article class="ch-pane chapter flip" id="ch-closet" role="tabpanel" aria-labelledby="tab-ch-closet" hidden>
+          <div class="ch-text">
+            <span class="mono">Chapter 03</span>
+            <h3>Closets <em>and wardrobe management</em></h3>
+            <div class="ba">
+              <span class="mono">Before</span><span>Everything in one list.</span>
+              <span class="mono">After</span><span class="after">Closet, wishlist and stylist-recommended pieces, each with its own clear treatment.</span>
+            </div>
+          </div>
+          <div class="pair phones single">
+            <figure class="ph closet-card"><img class="ph-fill" src="img/Vetir/New%20Work/Chapter2.webp" alt="New closet with closets, cities and categories"></figure>
+          </div>
+        </article>
+          <article class="ch-pane chapter" id="ch-ai" role="tabpanel" aria-labelledby="tab-ch-ai" hidden>
+          <div class="ch-text">
+            <span class="mono">Chapter 04 · <span style="color:var(--gold)">✦ AI</span></span>
+            <h3>AI Stylist <em>+ try-on</em></h3>
+            <div class="ba">
+              <span class="mono">Before</span><span>Type a query, get a wall of products. It felt like search.</span>
+              <span class="mono">After</span><span class="after">Styled outfits in the chat, and try-ons at the moment of purchase: see it on you, see what pairs with it.</span>
+            </div>
+          </div>
+          <div class="masonry" aria-label="Search grid with a stylist reply on top">
+            <span class="masonry-tag mono">Before: a wall of results</span>
+            <div class="colm">
+              <div class="tile" style="height:190px"><img src="img/Vetir/New%20Work/Chapter3bg/aistylistsearch1.webp" alt="" loading="lazy"></div>
+              <div class="tile" style="height:250px"><img src="img/Vetir/New%20Work/Chapter3bg/aistylistsearch6.webp" alt="" loading="lazy"></div>
+            </div>
+            <div class="colm">
+              <div class="tile" style="height:240px"><img src="img/Vetir/New%20Work/Chapter3bg/aistylistsearch7.webp" alt="" loading="lazy"></div>
+              <div class="tile" style="height:210px"><img src="img/Vetir/New%20Work/Chapter3bg/aistylistsearch3.webp" alt="" loading="lazy"></div>
+              <div class="tile" style="height:200px"><img src="img/Vetir/New%20Work/Chapter3bg/aistylistsearch8.webp" alt="" loading="lazy"></div>
+            </div>
+            <div class="colm">
+              <div class="tile" style="height:200px"><img src="img/Vetir/New%20Work/Chapter3bg/aistylistsearch2.webp" alt="" loading="lazy"></div>
+              <div class="tile" style="height:170px"><img src="img/Vetir/New%20Work/Chapter3bg/aistylistsearch5.webp" alt="" loading="lazy"></div>
+              <div class="tile" style="height:220px"><img src="img/Vetir/New%20Work/Chapter3bg/aistylistsearch4.webp" alt="" loading="lazy"></div>
+            </div>
+            <div class="searchbar"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><span>Something chic for dinner<span class="caret"></span></span></div>
+            <figure class="ph phone after after-phone"><img class="ph-fill" src="img/Vetir/New%20Work/Chapter3.webp" alt="AI Stylist suggesting summer soiree looks on a try-on avatar"></figure>
+          </div>
         </article>
           <article class="ch-pane chapter" id="ch-dash" role="tabpanel" aria-labelledby="tab-ch-dash" hidden>
           <div class="ch-text">

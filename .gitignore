@@ -135,6 +135,10 @@ versions/
 !/img/logosportfolio/trimmed/dishtv.webp
 !/img/logosportfolio/trimmed/reliance.webp
 !/img/logosportfolio/trimmed/hcltech.webp
+!/img/logosportfolio/trimmed/edelweiss.webp
+!/img/sidequests/ps-poc.mp4
+!/img/sidequests/ps-poc.webm
+!/img/sidequests/ps-poc-poster.webp
 !/img/Vetir/Icons/Add-photo.webp
 !/img/Vetir/Icons/Analytics.webp
 !/img/Vetir/Icons/Avatar-ai.webp
@@ -190,3 +194,6 @@ versions/
 !/img/Vetir/New Work/Chapter4NewUserHP_App.webp
 !/img/Vetir/Cutouts/servinglooks2.webp
 !/img/Vetir/Cutouts/servinglooks3.webp
+
+# Raw POC recordings (web versions live in img/sidequests/)
+/POCs/
