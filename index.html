@@ -1444,6 +1444,30 @@
       transform: scale(1) translateY(0);
       opacity: 1;
     }
+
+    /* Vêtir postcard -> case study: the postcard's "VÊTIR" grows into the case
+       study's wordmark while the page fades across (cross-document View
+       Transition; Chrome/Edge/Safari, other browsers just open the page).
+       Only this one click animates: every other navigation skips it (JS). */
+    @view-transition { navigation: auto; }
+    ::view-transition-group(vetir-word) {
+      animation-duration: 0.9s;
+      animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1);
+    }
+    /* both words fill the moving box; the small one hands over to the big
+       one mid-flight rather than both showing at once */
+    ::view-transition-old(vetir-word),
+    ::view-transition-new(vetir-word) { mix-blend-mode: normal; }
+    ::view-transition-old(vetir-word) { animation: 0.9s cubic-bezier(0.65, 0, 0.35, 1) both vt-word-out; }
+    ::view-transition-new(vetir-word) { animation: 0.9s cubic-bezier(0.65, 0, 0.35, 1) both vt-word-in; }
+    @keyframes vt-word-out { 0%, 35% { opacity: 1; } 65%, 100% { opacity: 0; } }
+    @keyframes vt-word-in { 0%, 35% { opacity: 0; } 65%, 100% { opacity: 1; } }
+    ::view-transition-old(root) { animation: 0.45s ease both vt-out; }
+    ::view-transition-new(root) { animation: 0.6s ease 0.3s both vt-in; }
+    @keyframes vt-out { to { opacity: 0; } }
+    @keyframes vt-in { from { opacity: 0; } }
+    #p-card-vetir { cursor: pointer; }
+    .vt-word { display: inline-block; }
   </style>
   <script src="analytics.js" defer></script>
 </head>
@@ -1660,7 +1684,7 @@
                   <!-- kept short so it clears the postal stamp, as in the artwork -->
                   <div class="postcard-art-rule" style="margin-top:0.7em; width:44%;"></div>
 
-                  <h3 class="postcard-art-title" style="margin-top:0.8em;">Vêtir</h3>
+                  <h3 class="postcard-art-title" style="margin-top:0.8em; text-transform:none;"><span class="vt-word">Vêtir</span></h3>
                   <div class="postcard-art-rule" style="margin-top:0.7em;"></div>
 
                   <p class="postcard-art-desc" style="margin-top:0.8em;">
@@ -3259,6 +3283,34 @@
         setPhoneClosed(true);
       });
     }
+
+    // Vêtir postcard -> case study (see the @view-transition CSS). Clicking the
+    // postcard or its View Project names the title "vetir-word" and leaves a
+    // flag for vetir.html, which gives its wordmark the same name.
+    (function () {
+      const card = document.getElementById('p-card-vetir');
+      // just the word (a box hugging its letters), so it grows in place
+      const title = card && card.querySelector('.vt-word');
+      if (!card || !title) return;
+      const FLAG = 'vt-vetir';
+      card.addEventListener('click', (e) => {
+        if (e.defaultPrevented || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button > 0) return;
+        e.preventDefault();
+        e.stopPropagation();   // not a "spread the pile" click
+        if (document.startViewTransition !== undefined || 'onpagereveal' in window) {
+          try { sessionStorage.setItem(FLAG, '1'); } catch (err) {}
+          title.style.viewTransitionName = 'vetir-word';
+        }
+        location.href = 'vetir.html';
+      });
+      // Only that click animates; any other page change skips the transition
+      window.addEventListener('pageswap', (e) => {
+        if (e.viewTransition && title.style.viewTransitionName !== 'vetir-word') e.viewTransition.skipTransition();
+      });
+      window.addEventListener('pagereveal', (e) => { if (e.viewTransition) e.viewTransition.skipTransition(); });
+      // back from the case study: clear the name for next time
+      window.addEventListener('pageshow', () => { title.style.viewTransitionName = ''; });
+    })();
 
     // Hero books -> Selected work, on click (hovering only shows the tag)
     (function () {

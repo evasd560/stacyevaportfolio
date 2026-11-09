@@ -931,6 +931,18 @@
     #outcomes > .wrap { position: relative; z-index: 1; }
     .oc-bg { position: absolute; inset: 0; z-index: -1; pointer-events: none; }
     .oc-bg video { width: 100%; height: 100%; object-fit: cover; display: block; }
+    /* Outcomes stamp: a small perforated stamp of the outcomes footage sits in Engineering's empty column.
+       On scroll it slides down, loses its perforations and grows into the Outcomes background (JS below). */
+    .oc-stamp { --pad: 0px; --tilt: -4deg; grid-column: 3; grid-row: 1; justify-self: end; align-self: start; width: 150px; aspect-ratio: 4 / 5; margin-top: 6px;
+      padding: var(--pad); rotate: var(--tilt); box-shadow: 0 10px 22px -12px rgba(40, 30, 10, 0.45); }
+    @media (min-width: 961px) { #engineering .cs-body { grid-template-columns: 220px minmax(0, 1fr) auto; } }
+    .oc-stamp-in { position: relative; width: 100%; height: 100%; overflow: hidden; }
+    .oc-stamp video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+    /* the travelling copy: fixed to the viewport while it morphs */
+    .oc-stamp.is-flying { position: fixed; z-index: -1; margin: 0; rotate: none; pointer-events: none; aspect-ratio: auto; }
+    .oc-stamp-slot { visibility: hidden; }
+    #outcomes.is-morphing .oc-bg { opacity: 0; }
+    @media (max-width: 960px) { .oc-stamp:not(.is-flying) { display: none; } }
     /* paper veil keeps the type legible over the footage */
     .oc-bg::after { content: ""; position: absolute; inset: 0; background: color-mix(in srgb, var(--paper) 18%, transparent); }
     /* frosted stat cards over the footage, same glass as the insight card */
@@ -1054,7 +1066,44 @@
       .carousel .card { width: 32%; }
       .bag { width: 70%; }
     }
+
+    /* Arriving from the homepage's Vêtir postcard: the wordmark is the other
+       end of that morph (see index.html). Other arrivals skip it. */
+    @view-transition { navigation: auto; }
+    ::view-transition-group(vetir-word) {
+      animation-duration: 0.9s;
+      animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1);
+    }
+    /* both words fill the moving box; the small one hands over to the big
+       one mid-flight rather than both showing at once */
+    ::view-transition-old(vetir-word),
+    ::view-transition-new(vetir-word) { mix-blend-mode: normal; }
+    ::view-transition-old(vetir-word) { animation: 0.9s cubic-bezier(0.65, 0, 0.35, 1) both vt-word-out; }
+    ::view-transition-new(vetir-word) { animation: 0.9s cubic-bezier(0.65, 0, 0.35, 1) both vt-word-in; }
+    @keyframes vt-word-out { 0%, 35% { opacity: 1; } 65%, 100% { opacity: 0; } }
+    @keyframes vt-word-in { 0%, 35% { opacity: 0; } 65%, 100% { opacity: 1; } }
+    ::view-transition-old(root) { animation: 0.45s ease both vt-out; }
+    ::view-transition-new(root) { animation: 0.6s ease 0.3s both vt-in; }
+    @keyframes vt-out { to { opacity: 0; } }
+    @keyframes vt-in { from { opacity: 0; } }
   </style>
+  <script>
+    (function () {
+      // Runs before the first paint: pagereveal decides whether this arrival animates
+      window.addEventListener('pagereveal', function (e) {
+        // the flag is single-use, whether or not this arrival animates
+        var flagged = false;
+        try { flagged = sessionStorage.getItem('vt-vetir') === '1'; sessionStorage.removeItem('vt-vetir'); } catch (err) {}
+        if (!e.viewTransition) return;
+        var word = document.querySelector('.stage .word');
+        if (!flagged || !word) return e.viewTransition.skipTransition();
+        if (window.scrollY > 0) window.scrollTo(0, 0);
+        word.style.viewTransitionName = 'vetir-word';
+        e.viewTransition.finished.finally(function () { word.style.viewTransitionName = ''; });
+      });
+      window.addEventListener('pageswap', function (e) { if (e.viewTransition) e.viewTransition.skipTransition(); });
+    })();
+  </script>
   <script src="analytics.js" defer></script>
 </head>
 
@@ -1086,7 +1135,7 @@
   <header class="topbar">
     <div class="wrap">
       <a class="back mono" href="index.html">← Homepage</a>
-      <div class="brand"><span>case studies /</span> vêtir</div>
+      <div class="brand"><span>case studies /</span> Vêtir</div>
       <a class="hire mono" href="mailto:stacydias005@gmail.com?subject=Hiring%20enquiry">Hire me</a>
     </div>
   </header>
@@ -1106,10 +1155,10 @@
     <div class="g-act"><span class="g-act-name">The work</span>
       <a href="#system"><i></i><span>System</span></a>
       <a href="#chapters"><i></i><span>Chapters</span></a>
+      <a href="#deck"><i></i><span>For stylists</span></a>
       <a href="#engineering"><i></i><span>Engineering</span></a>
     </div>
     <div class="g-act"><span class="g-act-name">The result</span>
-      <a href="#deck"><i></i><span>For stylists</span></a>
       <a href="#outcomes"><i></i><span>Outcomes</span></a>
     </div>
   </nav>
@@ -1642,25 +1691,6 @@
       </div>
     </section>
 
-    <!-- ============ 09 ENGINEERING ============ -->
-    <section class="cs" id="engineering">
-      <div class="wrap">
-        <div class="cs-head reveal">
-          <div class="cs-num mono">Engineering</div>
-          <h2>From two systems<br><em>to one language.</em></h2>
-        </div>
-        <div class="cs-body reveal">
-          <div class="col prose"><p>Rolling the system out module by module meant components arrived gradually, instead of a disruptive handoff. Engineering adopted the new components, and once we added an AI-assisted Figma-to-code workflow, variables and components mapped almost one-to-one into code.</p></div>
-        </div>
-        <div class="eng reveal">
-          <div><span class="mono">01</span>Design QA pass after every feature ships</div>
-          <div><span class="mono">02</span>Interaction docs for each redesigned module</div>
-          <div><span class="mono">03</span>On-call handovers for edge cases and missing states</div>
-          <div><span class="mono">04</span>Design work tracked in Jira alongside engineering</div>
-        </div>
-      </div>
-    </section>
-
     <!-- ============ 09b GO-TO-MARKET: the stylist deck ============ -->
     <section class="cs" id="deck">
       <div class="wrap">
@@ -1679,6 +1709,26 @@
             <ul class="sf-list" aria-label="Stylist features"><li class="sf-group mono">Earn &amp; grow</li><li><button class="sf-item is-on" type="button" data-src="img/Vetir/New%20Work/StylistDeck/slide-03.webp" aria-pressed="true"><span class="sf-n mono">01</span><span class="sf-t">Earn on the pieces you recommend</span></button></li><li><button class="sf-item" type="button" data-src="img/Vetir/New%20Work/StylistDeck/slide-11.webp" aria-pressed="false"><span class="sf-n mono">02</span><span class="sf-t">Earn from looks shared on social</span></button></li><li><button class="sf-item" type="button" data-src="img/Vetir/New%20Work/StylistDeck/slide-07.webp" aria-pressed="false"><span class="sf-n mono">03</span><span class="sf-t">Sales and earnings dashboard</span></button></li><li><button class="sf-item" type="button" data-src="img/Vetir/New%20Work/StylistDeck/slide-08.webp" aria-pressed="false"><span class="sf-n mono">04</span><span class="sf-t">Insights on what to recommend</span></button></li><li><button class="sf-item" type="button" data-src="img/Vetir/New%20Work/StylistDeck/slide-10.webp" aria-pressed="false"><span class="sf-n mono">05</span><span class="sf-t">Client invoices in one place</span></button></li><li class="sf-group sf-col2 mono">Run the business</li><li><button class="sf-item" type="button" data-src="img/Vetir/New%20Work/StylistDeck/slide-02.webp" aria-pressed="false"><span class="sf-n mono">06</span><span class="sf-t">Digitized client closets</span></button></li><li><button class="sf-item" type="button" data-src="img/Vetir/New%20Work/StylistDeck/slide-04.webp" aria-pressed="false"><span class="sf-n mono">07</span><span class="sf-t">Style faster with the AI stylist</span></button></li><li><button class="sf-item" type="button" data-src="img/Vetir/New%20Work/StylistDeck/slide-06.webp" aria-pressed="false"><span class="sf-n mono">08</span><span class="sf-t">Plan client looks on a calendar</span></button></li><li><button class="sf-item" type="button" data-src="img/Vetir/New%20Work/StylistDeck/slide-09.webp" aria-pressed="false"><span class="sf-n mono">09</span><span class="sf-t">Daily to-dos and follow-up nudges</span></button></li><li><button class="sf-item" type="button" data-src="img/Vetir/New%20Work/StylistDeck/slide-13.webp" aria-pressed="false"><span class="sf-n mono">10</span><span class="sf-t">Snap a piece, find it to buy</span></button></li></ul>
           </div>
           <button class="sf-view" type="button" aria-label="Enlarge this slide"><img src="img/Vetir/New%20Work/StylistDeck/slide-03.webp" alt="Stylist feature: Earn on the pieces you recommend" width="600" height="1299"></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 09 ENGINEERING ============ -->
+    <section class="cs" id="engineering">
+      <div class="wrap">
+        <div class="cs-head reveal">
+          <div class="cs-num mono">Engineering</div>
+          <h2>From two systems<br><em>to one language.</em></h2>
+        </div>
+        <div class="cs-body reveal">
+          <div class="oc-stamp" aria-hidden="true"><div class="oc-stamp-in"><video muted loop playsinline preload="metadata"><source src="img/Vetir/Outcomes_video.webm" type="video/webm"><source src="img/Vetir/Outcomes_video.mp4" type="video/mp4"></video></div></div>
+          <div class="col prose"><p>Rolling the system out module by module meant components arrived gradually, instead of a disruptive handoff. Engineering adopted the new components, and once we added an AI-assisted Figma-to-code workflow, variables and components mapped almost one-to-one into code.</p></div>
+        </div>
+        <div class="eng reveal">
+          <div><span class="mono">01</span>Design QA pass after every feature ships</div>
+          <div><span class="mono">02</span>Interaction docs for each redesigned module</div>
+          <div><span class="mono">03</span>On-call handovers for edge cases and missing states</div>
+          <div><span class="mono">04</span>Design work tracked in Jira alongside engineering</div>
         </div>
       </div>
     </section>
@@ -2197,6 +2247,42 @@
     // Deep-dive links aren't live yet
     document.querySelectorAll('a[aria-disabled="true"]').forEach(a => a.addEventListener('click', e => e.preventDefault()));
   
+    // Outcomes stamp: as Engineering scrolls away, the stamp drops and grows into the Outcomes background.
+    // A fixed copy is driven by scroll progress between the stamp's own spot and the visible part of Outcomes.
+    (() => {
+      const stamp = document.querySelector('.oc-stamp'), oc = document.getElementById('outcomes');
+      if (!stamp || !oc || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      const wide = matchMedia('(min-width: 961px)');
+      const sv = stamp.querySelector('video');
+      const fly = stamp.cloneNode(true); fly.classList.add('is-flying'); fly.style.display = 'none'; oc.prepend(fly);   // inside Outcomes so its copy and cards stay on top
+      const fv = fly.querySelector('video');
+      new IntersectionObserver(([e]) => { if (e.isIntersecting) sv.play().catch(() => {}); else sv.pause(); }).observe(stamp);
+      const lerp = (a, b, t) => a + (b - a) * t;
+      const ease = t => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+      let raf = 0;
+      const update = () => {
+        raf = 0;
+        const vh = innerHeight, vw = document.documentElement.clientWidth;
+        const off = () => { fly.style.display = 'none'; stamp.classList.remove('oc-stamp-slot'); oc.classList.remove('is-morphing'); if (!fv.paused) fv.pause(); };
+        if (!wide.matches) return off();
+        const s0 = stamp.getBoundingClientRect(), o = oc.getBoundingClientRect();
+        // starts when the stamp reaches the middle of the screen, ends when Outcomes reaches the top;
+        // in between the copy holds that line (so it drops with you) while it grows
+        const start = vh * 0.5 - s0.height / 2;
+        const p = (start - s0.top) / Math.max(1, (o.top - s0.top) + start);
+        if (p >= 1) { fly.style.display = 'none'; stamp.classList.add('oc-stamp-slot'); oc.classList.remove('is-morphing'); if (!fv.paused) fv.pause(); return; }
+        if (p <= 0) return off();
+        const t = ease(p);
+        const top = Math.max(o.top, 0), bottom = Math.min(o.bottom, vh);
+        const L = lerp(s0.left, 0, t), T = lerp(start, top, t), W = lerp(s0.width, vw, t), H = lerp(s0.height, bottom - top, t);
+        Object.assign(fly.style, { display: 'block', left: L + 'px', top: T + 'px', width: W + 'px', height: H + 'px', rotate: lerp(-4, 0, t) + 'deg' });
+        stamp.classList.add('oc-stamp-slot'); oc.classList.add('is-morphing');
+        if (fv.paused) { try { fv.currentTime = sv.currentTime || 0; } catch (e) {} fv.play().catch(() => {}); }
+      };
+      const onScroll = () => { if (!raf) raf = requestAnimationFrame(update); };
+      addEventListener('scroll', onScroll, { passive: true }); addEventListener('resize', onScroll); update();
+    })();
+
     // Outcomes background video: hold still for reduced motion
     (() => {
       const v = document.querySelector('.oc-bg video');
